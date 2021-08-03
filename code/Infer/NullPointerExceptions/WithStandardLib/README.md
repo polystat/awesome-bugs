@@ -1,12 +1,14 @@
-# Trivial NPE tests
+# Standard library NPE tests
 
 ```
-# Name        : Infer trivial null pointer exceptions tests
+# Name        : Infer standard library NPE tests
 # FailureType : Null Pointer Exceptions
 # ErrorType   : Programming error
 # Source      : FB Infer
 # CodeType    : Artificial
 ```
+
+## Error description
 
 Extracted from FB Infer tests located at:
 
