@@ -6,6 +6,7 @@
 # ErrorType   : Programming error
 # Source      : FB Infer
 # CodeType    : Artificial
+# Lines       : 25, 31, 53, 74
 ```
 
 In this scenarios, native methods are used to describe functions with unknown behaviour.

@@ -12,21 +12,21 @@ public class InferSTDLibNPETests {
     public static void nullPointerExceptionFromFaillingResourceConstructor() throws IOException {
         FileInputStream fis = null;
         try {
-        fis = new FileInputStream(new File("whatever.txt"));
+            fis = new FileInputStream(new File("whatever.txt"));
         } catch (IOException e) {
         } finally {
-        fis.close();
+            fis.close();
         }
     }
 
     public static void nullPointerExceptionFromFailingFileOutputStreamConstructor()
         throws IOException {
-        FileOutputStream fos = null;
+            FileOutputStream fos = null;
         try {
-        fos = new FileOutputStream(new File("whatever.txt"));
+            fos = new FileOutputStream(new File("whatever.txt"));
         } catch (IOException e) {
         } finally {
-        fos.close();
+            fos.close();
         }
     }
 
@@ -36,7 +36,7 @@ public class InferSTDLibNPETests {
 
     String NPEhashmapProtectedByContainsKey(HashMap h, Object o) {
         if (h.containsKey(o)) {
-        return (h.get(o).toString());
+            return (h.get(o).toString());
         }
         return "aa";
     }
@@ -67,11 +67,11 @@ public class InferSTDLibNPETests {
 
     String tryLockThrows(FileChannel chan) {
         try {
-        FileLock lock = chan.tryLock();
-        return (lock != null ? lock.toString() : "");
+            FileLock lock = chan.tryLock();
+            return (lock != null ? lock.toString() : "");
         } catch (IOException e) {
-        Object o = null;
-        return o.toString(); // expect NullPointerException as tryLock can throw
+            Object o = null;
+            return o.toString(); // expect NullPointerException as tryLock can throw
         }
     }
 

@@ -6,6 +6,7 @@
 # ErrorType   : Programming error
 # Source      : FB Infer
 # CodeType    : Artificial
+# Lines       : 15, 25, 37
 ```
 
 Extracted from FB Infer tests located at:
