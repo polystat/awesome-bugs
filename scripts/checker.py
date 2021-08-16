@@ -138,7 +138,7 @@ def validate_input(parameters):
 	return True
 
 if __name__ == "__main__":
-	logging.basicConfig(level=logging.DEBUG)
+	logging.basicConfig(level=logging.INFO)
 
 	logging.debug("Current working dir: {}".format(os.getcwd()))
 
