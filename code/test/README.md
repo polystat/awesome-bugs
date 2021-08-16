@@ -9,8 +9,7 @@ It is a legal comment about anything in this header
 # ErrorType   : Programming error
 # Source      : Wikipedia
 # CodeType    : Artificial
-
-Also "Lines" parameter is missing
+# Lines       : 4
 ```
 
 Just a test to check if CI works correctly
