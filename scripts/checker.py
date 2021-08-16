@@ -137,7 +137,9 @@ def validate_input(parameters):
 	return True
 
 if __name__ == "__main__":
-	logging.basicConfig(level=logging.INFO)
+	logging.basicConfig(level=logging.DEBUG)
+
+	logging.debug("Current working dir: {}".format(os.getcwd()))
 
 	paths = detect_code_samples(CODE_PATH)
 	print("detected code samples: {}".format(str(paths)))
@@ -156,20 +158,3 @@ if __name__ == "__main__":
 			print("OK")
 
 	print("Done!")
-
-
-# 	parameters = parse_input("""# Error name
-
-# ```
-# # Name        	: Error name
-# # FailureType 	: Type of failure caused by this error
-# # ErrorType   	: Type of error
-# # Source      	: Source
-# # CodeType    	: Artificial | Real
-# # Lines 			: 10
-# ```
-
-# Details about the code snippet containing fault""")
-
-	# if parameters == None or not validate_input(parameters):
-	# 	exit(1)
