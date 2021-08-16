@@ -3,7 +3,8 @@ import re
 
 import logging
 
-CODE_PATH = "../code/"
+# Script is being run from the repo root dir
+CODE_PATH = "./code/"
 COMMON_FILES = ["README.md"]
 
 def detect_code_samples(code_path):
