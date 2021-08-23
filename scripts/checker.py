@@ -1,11 +1,14 @@
 import os
 import re
+import json
 
 import logging
 
 # Script is being run from the repo root dir
-CODE_PATH = "./code/"
+CODE_PATH = "code"
 COMMON_FILES = ["README.md"]
+ARTIFACT_NAME = "samples_parameters.json"
+ARTIFACT_PATH = "./samples_parameters.json"
 
 def detect_code_samples(code_path):
 
@@ -41,31 +44,46 @@ def check_if_lines(input_str):
 			return False
 	return True
 
-# Structure: { parameter_name : (is_required : bool , checker : (input_str) => bool) }
+def preprocess_lines(input_str):
+	raw_line_numbers = input_str.split(",")
+	line_numbers = []
+	for raw_line_no in raw_line_numbers:
+		line_numbers.append(int(raw_line_no))
+	return line_numbers
+
+# Structure: { parameter_name : (is_required : bool , 
+#                                checker : (input_str) => bool), 
+#                                preprocessor : (input_str) => Object }
 allowed_parameters = {
 	"Name" : {
 		"is_required" : True,
 		"checker" : None,
+		"preprocessor" : None,
 	},
 	"FailureType" : {
 		"is_required" : True,
 		"checker" : None,
+		"preprocessor" : None,
 	},
 	"ErrorType" : {
 		"is_required" : True,
 		"checker" : None,
+		"preprocessor" : None,
 	},
 	"Source" : {
 		"is_required" : True,
 		"checker" : None,
+		"preprocessor" : None,
 	},
 	"CodeType" : {
 		"is_required" : True,
 		"checker" : None,
+		"preprocessor" : None,
 	},
 	"Lines" : {
 		"is_required" : True,
 		"checker" : check_if_lines,
+		"preprocessor" : preprocess_lines,
 	},
 }
 		
@@ -137,6 +155,20 @@ def validate_input(parameters):
 
 	return True
 
+def preprocess_input(parameters):
+	"""Preprocesses input. Modifies input dict!
+	"""
+
+	for key, value in parameters.items():
+
+		if allowed_parameters[key]["preprocessor"] == None:
+			continue
+
+		parameters[key] = allowed_parameters[key]["preprocessor"](value)
+
+	return parameters
+
+
 if __name__ == "__main__":
 	logging.basicConfig(level=logging.INFO)
 
@@ -144,6 +176,8 @@ if __name__ == "__main__":
 
 	paths = detect_code_samples(CODE_PATH)
 	print("detected code samples: {}".format(str(paths)))
+
+	samples_parameters = {}
 
 	for sample_path in paths:
 		readme_path = os.path.join(sample_path, "README.md")
@@ -156,6 +190,15 @@ if __name__ == "__main__":
 			if parameters == None or not validate_input(parameters):
 				exit(1)
 
+			parameters = preprocess_input(parameters)
+
+			samples_parameters[sample_path] = parameters
+
 			print("OK")
+
+	logging.info("Saving parameters to the file")
+
+	with open(ARTIFACT_PATH, "w+") as artifact_file:
+		json.dump(samples_parameters, artifact_file, indent=4)
 
 	print("Done!")

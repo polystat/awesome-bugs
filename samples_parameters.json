@@ -1,0 +1,94 @@
+{
+    "code/Infer/DivideByZero": {
+        "Name": "Infer divide by zero tests",
+        "FailureType": "Divide by zero",
+        "ErrorType": "Programming error",
+        "Source": "FB Infer",
+        "CodeType": "Artificial",
+        "Lines": [
+            15,
+            25,
+            37
+        ]
+    },
+    "code/Infer/NullPointerExceptions/Native": {
+        "Name": "Infer native methods null pointer exceptions tests",
+        "FailureType": "Null Pointer Exceptions",
+        "ErrorType": "Programming error",
+        "Source": "FB Infer",
+        "CodeType": "Artificial",
+        "Lines": [
+            25,
+            31,
+            53,
+            74
+        ]
+    },
+    "code/Infer/NullPointerExceptions/Nullable": {
+        "Name": "Infer nullable fields tests",
+        "FailureType": "Null Pointer Exceptions",
+        "ErrorType": "Programming error",
+        "Source": "FB Infer",
+        "CodeType": "Artificial",
+        "Lines": [
+            8,
+            12,
+            17,
+            21
+        ]
+    },
+    "code/Infer/NullPointerExceptions/Trivial": {
+        "Name": "Infer trivial null pointer exceptions tests",
+        "FailureType": "Null Pointer Exceptions",
+        "ErrorType": "Programming error",
+        "Source": "FB Infer",
+        "CodeType": "Artificial",
+        "Lines": [
+            14,
+            34,
+            43,
+            56,
+            66,
+            71,
+            76,
+            84,
+            100,
+            112,
+            118,
+            130,
+            141,
+            147,
+            164
+        ]
+    },
+    "code/Infer/NullPointerExceptions/WithStandardLib": {
+        "Name": "Infer standard library NPE tests",
+        "FailureType": "Null Pointer Exceptions",
+        "ErrorType": "Programming error",
+        "Source": "FB Infer",
+        "CodeType": "Artificial",
+        "Lines": [
+            18,
+            29,
+            39,
+            45,
+            49,
+            54,
+            60,
+            65,
+            74,
+            82,
+            91
+        ]
+    },
+    "code/test": {
+        "Name": "Hello world test",
+        "FailureType": "Divide by zero",
+        "ErrorType": "Programming error",
+        "Source": "Wikipedia",
+        "CodeType": "Artificial",
+        "Lines": [
+            4
+        ]
+    }
+}

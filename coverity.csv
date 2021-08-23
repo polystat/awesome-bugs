@@ -1,0 +1,54 @@
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,21,USELESS_CALL:Useless call:Incorrect expression,1
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,130,NULL_RETURNS:Dereference null return value:Null pointer dereferences,2
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,164,USELESS_CALL:Useless call:Incorrect expression,3
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,100,USELESS_CALL:Useless call:Incorrect expression,4
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,12,USELESS_CALL:Useless call:Incorrect expression,5
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,94,USELESS_CALL:Useless call:Incorrect expression,6
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,25,USELESS_CALL:Useless call:Incorrect expression,7
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,30,USELESS_CALL:Useless call:Incorrect expression,8
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,67,USELESS_CALL:Useless call:Incorrect expression,9
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,112,USELESS_CALL:Useless call:Incorrect expression,10
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,76,USELESS_CALL:Useless call:Incorrect expression,11
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,147,NULL_RETURNS:Dereference null return value:Null pointer dereferences,12
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,105,USELESS_CALL:Useless call:Incorrect expression,13
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,55,USELESS_CALL:Useless call:Incorrect expression,14
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,17,USELESS_CALL:Useless call:Incorrect expression,15
+code/Infer/NullPointerExceptions/WithStandardLib,code/Infer/NullPointerExceptions/WithStandardLib/InferSTDLibNPETests.java,91,USELESS_CALL:Useless call:Incorrect expression,16
+code/Infer/DivideByZero,code/Infer/DivideByZero/DivideByZero.java,25,DIVIDE_BY_ZERO:Division or modulo by zero:Integer handling issues,17
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,53,USELESS_CALL:Useless call:Incorrect expression,18
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,88,NULL_RETURNS:Dereference null return value:Null pointer dereferences,19
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,112,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,20
+code/Infer/NullPointerExceptions/WithStandardLib,code/Infer/NullPointerExceptions/WithStandardLib/InferSTDLibNPETests.java,60,NULL_RETURNS:Dereference null return value:Null pointer dereferences,21
+code/Infer/NullPointerExceptions/WithStandardLib,code/Infer/NullPointerExceptions/WithStandardLib/InferSTDLibNPETests.java,74,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,22
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,44,USELESS_CALL:Useless call:Incorrect expression,23
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,83,USELESS_CALL:Useless call:Incorrect expression,24
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,25,USELESS_CALL:Useless call:Incorrect expression,25
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,43,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,26
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,147,USELESS_CALL:Useless call:Incorrect expression,27
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,141,USELESS_CALL:Useless call:Incorrect expression,28
+code/Infer/NullPointerExceptions/WithStandardLib,code/Infer/NullPointerExceptions/WithStandardLib/InferSTDLibNPETests.java,91,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,29
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,32,USELESS_CALL:Useless call:Incorrect expression,30
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,83,FORWARD_NULL:Dereference after null check:Null pointer dereferences,31
+code/Infer/DivideByZero,code/Infer/DivideByZero/DivideByZero.java,15,DIVIDE_BY_ZERO:Division or modulo by zero:Integer handling issues,32
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,74,FORWARD_NULL:Dereference after null check:Null pointer dereferences,33
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,124,USELESS_CALL:Useless call:Incorrect expression,34
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,88,USELESS_CALL:Useless call:Incorrect expression,35
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,8,USELESS_CALL:Useless call:Incorrect expression,36
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,74,USELESS_CALL:Useless call:Incorrect expression,37
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,39,USELESS_CALL:Useless call:Incorrect expression,38
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,62,USELESS_CALL:Useless call:Incorrect expression,39
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,28,USELESS_CALL:Useless call:Incorrect expression,40
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,118,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,41
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,34,NULL_RETURNS:Dereference null return value:Null pointer dereferences,42
+code/Infer/NullPointerExceptions/WithStandardLib,code/Infer/NullPointerExceptions/WithStandardLib/InferSTDLibNPETests.java,82,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,43
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,88,USELESS_CALL:Useless call:Incorrect expression,44
+code/Infer/NullPointerExceptions/Nullable,code/Infer/NullPointerExceptions/Nullable/InferNullableTests.java,46,USELESS_CALL:Useless call:Incorrect expression,45
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,38,USELESS_CALL:Useless call:Incorrect expression,46
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,65,USELESS_CALL:Useless call:Incorrect expression,47
+code/Infer/NullPointerExceptions/Native,code/Infer/NullPointerExceptions/Native/InferNativeNPETests.java,25,NULL_RETURNS:Dereference null return value:Null pointer dereferences,48
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,71,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,49
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,130,USELESS_CALL:Useless call:Incorrect expression,50
+code/Infer/NullPointerExceptions/WithStandardLib,code/Infer/NullPointerExceptions/WithStandardLib/InferSTDLibNPETests.java,82,USELESS_CALL:Useless call:Incorrect expression,51
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,100,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,52
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,76,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,53
+code/Infer/NullPointerExceptions/Trivial,code/Infer/NullPointerExceptions/Trivial/InferTrivialNPETests.java,14,FORWARD_NULL:Explicit null dereferenced:Null pointer dereferences,54
