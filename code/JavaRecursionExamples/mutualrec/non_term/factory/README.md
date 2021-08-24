@@ -1,4 +1,4 @@
-# A derived class overrides one of the methods of the inner class of Base in such a way that the other method becomes mutually recursive with the override method.
+# A derived class overrides one of the methods of the inner class of Base in such a way that the other method becomes mutually recursive with the overridden method.
 
 ```
 # Name        : A derived class overrides one of the methods of the inner class of Base
