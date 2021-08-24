@@ -1,14 +1,79 @@
 import logging
 import json
 import copy
+import re
 
 from parser import Parser
 from analyzer_results import AnalyzerResults, ResCols
 from coverity_parser import CoverityParser
+from filters import read_sample_filters, read_global_filters 
 
 INPUT_ARTIFACT_PATH = "./samples_parameters.json"
 
+def filter_error_types(plain_res, global_filters, filters_by_sample):
+	"""plain_res - list of tuples of analyzer's results and returns a new list with filtered input
+	filters - lists of regex filters
+	"""
+	filtered_res = []
+
+	for r in plain_res:
+		ok = True
+
+		sample_path = r[ResCols.code_sample.value]
+		error_type_val = r[ResCols.error_type.value]
+
+		for f in global_filters:
+			if re.fullmatch(f, error_type_val) is not None:
+				ok = False
+
+		for f in filters_by_sample[sample_path]:
+			if re.fullmatch(f, error_type_val) is not None:
+				ok = False
+
+		if ok:
+			filtered_res.append(r)
+
+	return filtered_res
+
+
+def check_for_any_hit(params, results, global_filters, filters_by_sample):
+
+	"""Returns dict with 3 lists:
+	hits - any error that was found in one of the lines specified in sample parameters
+	misses - any error that is not considered a hit
+	not_found - errors specified in sample parameters but not found by analyzer
+	"""
+
+	# XXX : can be resource consuming
+	safe_samples_parameters = copy.deepcopy(samples_parameters)
+
+	curr_hits = []
+	curr_misses = []
+	curr_not_found = set(safe_samples_parameters.keys())
+
+	for res in results:
+
+		params = safe_samples_parameters[res[ResCols.code_sample.value]]
+
+		# Any hit in any specified line = hit in the sample
+		if res[ResCols.code_line.value] in params["Lines"] and \
+			res[ResCols.code_sample.value] in curr_not_found:
+
+			curr_hits.append(res[ResCols.source_ref_line.value])
+			curr_not_found.remove(res[ResCols.code_sample.value])
+		else:
+			curr_misses.append(res[ResCols.source_ref_line.value])
+
+	return {
+		"hits" : curr_hits, 
+		"misses" : curr_misses, 
+		"not_found" : list(curr_not_found),
+		}
+
+
 if __name__ == "__main__":
+
+	logging.basicConfig(level=logging.DEBUG)
 
 	parsers = (
 		CoverityParser(),
@@ -30,6 +95,15 @@ if __name__ == "__main__":
 		logging.error("Can't load samples parameters!")
 		exit(1)
 
+	# Retreiving filters
+
+	filters_by_sample = {}
+
+	for sample_path in samples_parameters.keys():
+		filters_by_sample[sample_path] = read_sample_filters(sample_path)
+
+	global_filters = read_global_filters()
+
 	# In hits and misses 
 	# keys are analyzers' names
 	# values are list of source_ref_line (can be used as a key for .csv)
@@ -42,30 +116,13 @@ if __name__ == "__main__":
 
 	for an_res in analyzer_results:
 
-		# XXX : can be resource consuming
-		safe_samples_parameters = copy.deepcopy(samples_parameters)
+		filtered_results = filter_error_types(an_res.results, global_filters, filters_by_sample)
 
-		curr_hits = []
-		curr_misses = []
-		curr_not_found = set(safe_samples_parameters.keys())
+		stat = check_for_any_hit(samples_parameters, filtered_results, global_filters, filters_by_sample)
 
-		for res in an_res.results:
-			# TODO : Filter out sample specific ignored error types
-			params = safe_samples_parameters[res[ResCols.code_sample.value]]
-
-			# Any hit in any specified line = hit in the sample
-			if res[ResCols.code_line.value] in params["Lines"] and \
-				res[ResCols.code_sample.value] in curr_not_found:
-
-				curr_hits.append(res[ResCols.source_ref_line.value])
-				curr_not_found.remove(res[ResCols.code_sample.value])
-			else:
-				curr_misses.append(res[ResCols.source_ref_line.value])
-
-		hits[an_res.analyzer] = curr_hits
-		misses[an_res.analyzer] = curr_misses
-		not_found[an_res.analyzer] = list(curr_not_found)
-
+		hits[an_res.analyzer] = stat["hits"]
+		misses[an_res.analyzer] = stat["misses"]
+		not_found[an_res.analyzer] = stat["not_found"]
 
 	# Generate artifacts
 	for an_res in analyzer_results:
@@ -82,13 +139,13 @@ if __name__ == "__main__":
 
 	# Generate output
 	for an_res in analyzer_results:
-		max_hits = len(safe_samples_parameters.keys())
+		max_hits = len(samples_parameters.keys())
 		an_name = an_res.analyzer
 
 		print("'{}' analyzer produced: ".format(an_name))
 		print("{} hits ({} of max {})".format(str(len(hits[an_name])), str(len(hits[an_name]) / max_hits), str(max_hits)))
 		print("{} ({} of all results)".format(str(len(misses[an_name])), str(len(misses[an_name]) / len(an_res.results))))
-		print("{} samples were not found. They are:".format(len(not_found[an_name])))
+		print("{} samples were not found. They are:\n".format(len(not_found[an_name])))
 		print("\n".join(not_found[an_name]))
 		print("")
 
