@@ -9,10 +9,10 @@ class ResCols (Enum):
 	error_type = 3
 	source_ref_line = 4
 
-class AnalyzerResults:
+class AnalyzerReport:
 	"""Class that stores data from a single run of specific static analyzer"""
 
-	def __init__(self, results, analyzer, report):
+	def __init__(self, results, analyzer, report_ref):
 		self.results = results
 		"""Results hold a list of tuples with results. The format is:
 		   [(code_sample, file, code_line, error_type, source_ref_line), ...]
@@ -20,13 +20,13 @@ class AnalyzerResults:
 		   source_ref_line is a line number inside the report"""
 
 		# Invariant: results are always validated
-		if not AnalyzerResults.validate_results(results):
+		if not AnalyzerReport.validate_results(results):
 			raise ValueError("Results values for report '{}' by '{}' are in incorrect format!".format(report, analyzer))
 
 		self.analyzer = analyzer
 		"""Analyzer id"""
 
-		self.report = report
+		self.report_ref = report_ref
 		"""Report location. Can be either path ot URL to an artifact"""
 
 	def save(self, dir_path, file_name=None):

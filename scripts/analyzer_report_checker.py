@@ -4,7 +4,7 @@ import copy
 import re
 
 from parser import Parser
-from analyzer_results import AnalyzerResults, ResCols
+from analyzer_report import AnalyzerReport, ResCols
 from coverity_parser import CoverityParser
 from filters import read_sample_filters, read_global_filters 
 
@@ -79,10 +79,10 @@ if __name__ == "__main__":
 		CoverityParser(),
 	)
 
-	analyzer_results = []
+	analyzer_reports = []
 
 	for p in parsers:
-		analyzer_results.append(p.parse())
+		analyzer_reports.append(p.parse())
 
 	# Compare to labels
 
@@ -114,19 +114,19 @@ if __name__ == "__main__":
 	# for each analyzer
 	not_found = {}
 
-	for an_res in analyzer_results:
+	for an_rep in analyzer_reports:
 
-		filtered_results = filter_error_types(an_res.results, global_filters, filters_by_sample)
+		filtered_results = filter_error_types(an_rep.results, global_filters, filters_by_sample)
 
 		stat = check_for_any_hit(samples_parameters, filtered_results, global_filters, filters_by_sample)
 
-		hits[an_res.analyzer] = stat["hits"]
-		misses[an_res.analyzer] = stat["misses"]
-		not_found[an_res.analyzer] = stat["not_found"]
+		hits[an_rep.analyzer] = stat["hits"]
+		misses[an_rep.analyzer] = stat["misses"]
+		not_found[an_rep.analyzer] = stat["not_found"]
 
 	# Generate artifacts
-	for an_res in analyzer_results:
-		an_res.save("")
+	for an_rep in analyzer_reports:
+		an_rep.save("")	# to the working directory
 
 	with open("hits.json", "w+") as f:
 		json.dump(hits, f)
@@ -138,13 +138,13 @@ if __name__ == "__main__":
 		json.dump(not_found, f)
 
 	# Generate output
-	for an_res in analyzer_results:
+	for an_rep in analyzer_reports:
 		max_hits = len(samples_parameters.keys())
-		an_name = an_res.analyzer
+		an_name = an_rep.analyzer
 
 		print("'{}' analyzer produced: ".format(an_name))
 		print("{} hits ({} of max {})".format(str(len(hits[an_name])), str(len(hits[an_name]) / max_hits), str(max_hits)))
-		print("{} ({} of all results)".format(str(len(misses[an_name])), str(len(misses[an_name]) / len(an_res.results))))
+		print("{} ({} of all results)".format(str(len(misses[an_name])), str(len(misses[an_name]) / len(an_rep.results))))
 		print("{} samples were not found. They are:\n".format(len(not_found[an_name])))
 		print("\n".join(not_found[an_name]))
 		print("")
