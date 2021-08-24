@@ -10,4 +10,4 @@
 # Lines       : (34, 42), (34, 50)
 ```
 
-## *NOTE*: the pairs of numbers in parentheses indicate the lines containing mutually recursive calls.
+## *NOTE*: the groups of numbers in parentheses indicate the lines containing mutually recursive calls.

@@ -9,4 +9,5 @@
 # CodeType    : Artificial
 # Lines       : (45, 50), (57, 62)
 ```
-## *NOTE*: the pairs of numbers in parentheses indicate the lines containing mutually recursive calls.
+
+## *NOTE*: the groups of numbers in parentheses indicate the lines containing mutually recursive calls.
