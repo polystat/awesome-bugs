@@ -44,5 +44,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: csv-reports
-          path: *.csv
+          path: |
+            *.csv
 
