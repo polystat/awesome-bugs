@@ -31,6 +31,11 @@ jobs:
           # Version range or exact version of a Python version to use, using SemVer's version range syntax.
           python-version: 3.9.6
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
+
       # Checking format of code samples
       - name: Format checker
         run: python scripts/format_checker.py
