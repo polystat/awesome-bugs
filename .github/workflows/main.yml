@@ -45,10 +45,11 @@ jobs:
         run: python scripts/analyzer_report_checker.py
 
       # Saving artifacts
-      - name: Upload all .csv reports
+      - name: Upload all .csv and .json reports
         uses: actions/upload-artifact@v2
         with:
-          name: csv-reports
+          name: reports
           path: |
             *.csv
+            *.json
 
