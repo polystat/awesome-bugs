@@ -61,7 +61,7 @@ class CoverityParser (Parser):
 
 				code_sample_val = os.path.dirname(file_val)
 				line_val = x[line_col]
-				error_type_val = ":".join([x[col] for col in error_type_cols])
+				error_type_val = "cov:" + ":".join([x[col] for col in error_type_cols])
 
 				results.append((
 						code_sample_val,
