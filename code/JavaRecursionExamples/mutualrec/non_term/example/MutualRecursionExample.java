@@ -1,4 +1,4 @@
-package mutualrec.example;
+package mutualrec.non_term.example;
 
 /*
  * EO code:
