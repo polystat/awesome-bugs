@@ -31,7 +31,18 @@ jobs:
           # Version range or exact version of a Python version to use, using SemVer's version range syntax.
           python-version: 3.9.6
 
-      # Runs a single command using the runners shell
-      - name: Running checker
-        run: python scripts/checker.py
+      # Checking format of code samples
+      - name: Format checker
+        run: python scripts/format_checker.py
+
+      # Comparing results to analyzers reports
+      - name: Reports analysis
+        run: python scripts/analyzer_report_checker.py
+
+      # Saving artifacts
+      - name: Upload all .csv reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: csv-reports
+          path: *.csv
 
