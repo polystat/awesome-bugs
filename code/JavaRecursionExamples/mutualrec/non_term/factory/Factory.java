@@ -1,4 +1,4 @@
-package mutualrec.non_term_factory;
+package mutualrec.non_term.factory;
 
 /*
 +package sandbox
@@ -40,7 +40,7 @@ class Derived extends BaseFactory.GetBase {
     }
 }
 
-public class NonTermFactory {
+public class Factory {
     public static void main(String[] args) {
         Derived derivedInstance = new Derived();
         derivedInstance.m(12);

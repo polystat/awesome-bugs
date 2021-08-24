@@ -1,4 +1,4 @@
-package mutualrec.non_term_long_chain;
+package mutualrec.non_term.long_chain;
 
 /*
 +package sandbox
@@ -49,7 +49,7 @@ class DerivedAgain extends Derived {
     }
 }
 
-public class NonTermLongChain {
+public class LongChain {
     public static void main(String[] args) {
         DerivedAgain derivedAgainInstance = new DerivedAgain();
         derivedAgainInstance.n(12);

@@ -1,4 +1,4 @@
-package mutualrec.non_term_derived_again;
+package mutualrec.non_term.derived_again;
 
 /*
 +package sandbox
@@ -45,7 +45,7 @@ class DerivedAgain extends Derived {
 }
 
 
-public class NonTermDerivedAgain {
+public class DerivedAgainExample {
     public static void main(String[] args) {
         DerivedAgain derivedAgainInstance = new DerivedAgain();
         derivedAgainInstance.n(12);

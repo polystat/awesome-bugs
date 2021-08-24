@@ -1,4 +1,4 @@
-package mutualrec.non_term_2_derived_explicit_decoration;
+package mutualrec.non_term.two_derived;
 
 /*
 +package sandbox
@@ -14,11 +14,15 @@ package mutualrec.non_term_2_derived_explicit_decoration;
 
 [] > derived1
   base > @
+  [self v] > m
+    self.n self v > @
   [self v] > n
     self.m self v > @
 
 [] > derived2
   base > @
+  [self v] > m
+    self.n self v > @
   [self v] > n
     self.m self v > @
  */
@@ -36,6 +40,10 @@ class Base {
 }
 
 class Derived1 extends Base {
+    @Override
+    public void m(int v) {
+        this.n(v);
+    }
 
     @Override
     public void n(int v) {
@@ -44,6 +52,10 @@ class Derived1 extends Base {
 }
 
 class Derived2 extends Base {
+    @Override
+    public void m(int v) {
+        this.n(v);
+    }
 
     @Override
     public void n(int v) {
@@ -51,12 +63,13 @@ class Derived2 extends Base {
     }
 }
 
+public class TwoDerived {
 
-public class NonTerm2DerivedExplicitDecoration {
     public static void main(String[] args) {
         Derived1 derived1Instance = new Derived1();
         Derived2 derived2Instance = new Derived2();
         derived1Instance.m(12);
         derived2Instance.m(12);
     }
+
 }
