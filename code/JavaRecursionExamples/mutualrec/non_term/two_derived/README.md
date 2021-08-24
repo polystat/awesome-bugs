@@ -2,7 +2,7 @@
 
 ```
 # Name        : 2 derived classes override the 2 base methods in such a way
-                that the derived methods besome mutually recursive
+                that the derived methods become mutually recursive
 # FailureType : StackOverflowError
 # ErrorType   : Programming error
 # Source      : https://github.com/Sitiritis/eo-static-analyzer/blob/demo/sandbox/src/main/resources/mutual_rec_non_term_2_derived.eo
