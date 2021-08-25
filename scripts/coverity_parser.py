@@ -4,7 +4,7 @@ import os
 from openpyxl import Workbook, load_workbook
 
 from parser import Parser
-from analyzer_results import AnalyzerResults
+from analyzer_report import AnalyzerReport
 
 class CoverityParser (Parser):
 
@@ -61,7 +61,7 @@ class CoverityParser (Parser):
 
 				code_sample_val = os.path.dirname(file_val)
 				line_val = x[line_col]
-				error_type_val = ":".join([x[col] for col in error_type_cols])
+				error_type_val = "cov:" + ":".join([x[col] for col in error_type_cols])
 
 				results.append((
 						code_sample_val,
@@ -75,6 +75,6 @@ class CoverityParser (Parser):
 
 		print(results[0])
 
-		total_results = AnalyzerResults(results, self.ANALYZER_NAME, self.REPORT_PATH)
+		total_results = AnalyzerReport(results, self.ANALYZER_NAME, self.REPORT_PATH)
 
 		return total_results
