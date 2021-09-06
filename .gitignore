@@ -1,3 +1,4 @@
 # Generated artifacts
 *.csv
 *.json
+scripts/__pycache__/
