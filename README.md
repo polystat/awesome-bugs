@@ -24,11 +24,13 @@ Defects are represented by code samples containing them. Each code sample is a s
 
 ## Structure of this repository
 
+```
 ├── `code` - Contains code samples
 ├── `docs` - Documentation
 ├── `res` - Resources. For now, only analyzers reports
 ├── `scripts` - Scripts for CI and report analysis
 └── `global_filters.txt` - global error filters
+```
 
 ## Structure of code samples
 
