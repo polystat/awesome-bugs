@@ -1,3 +1,4 @@
+
 /*
 +package sandbox
 +alias stdout org.eolang.io.stdout
@@ -12,46 +13,58 @@
 
 [] > derived1
   base > @
+  [self v] > m
+    self.n self v > @
   [self v] > n
     self.m self v > @
 
 [] > derived2
   base > @
+  [self v] > m
+    self.n self v > @
   [self v] > n
     self.m self v > @
  */
 
 class Base {
 public:
+    int x;
+
     Base() {
         this->x = 0;
-    };
-    int x;
+    }
 
     virtual void n(int v) {
         this->x = v;
     }
 
-    void m(int v) {
+    virtual void m(int v) {
         this->n(v);
     }
 };
 
 class Derived1 : public Base {
 
+public:
+    void m(int v) override {
+        this->n(v);
+    }
+
     void n(int v) override {
         this->m(v);
     }
-
 };
 
 class Derived2 : public Base {
 
 public:
+    void m(int v) override {
+        this->n(v);
+    }
+
     void n(int v) override {
         this->m(v);
     }
-
 };
 
 

@@ -14,6 +14,6 @@ add_executable(AwesomeBugs
         code/JavaRecursionExamples/mutualrec/non_term/example/c++/TODO_in_c++_MutualRecursionExample.cpp
         code/JavaRecursionExamples/mutualrec/non_term/factory/c++/TODO_in_c++_Factory.cpp
         code/JavaRecursionExamples/mutualrec/non_term/long_chain/c++/TODO_in_c++_LongChain.cpp
-        code/JavaRecursionExamples/mutualrec/non_term/two_derived/c++/TODO_in_c++_TwoDerived.cpp
+        code/JavaRecursionExamples/mutualrec/non_term/two_derived/c++/TwoDerived.cpp
         code/JavaRecursionExamples/mutualrec/non_term/two_derived_explicit_decoration/c++/TwoDerivedExplicitDecoration.cpp
         code/test/c++/hello_world.cpp)
