@@ -1,36 +1,41 @@
-import javax.annotation.Nullable;
+#include <iostream>
+#include <memory>
 
-public class InferNullableTests {
+class InferNullableTests {
 
-    private @Nullable Object mFld;
+private:
+    std::shared_ptr<int> mFld = nullptr;
 
     void nullableFieldNPE() {
-        mFld.toString();
+        std::cout << mFld.get();
     }
 
     void guardedNullableFieldDeref() {
-        if (mFld != null) mFld.toString();
+        if (mFld) {
+            std::cout << mFld.get();
+        }
     }
 
     void allocNullableFieldDeref() {
-        mFld = new Object();
-        mFld.toString();
+        mFld = std::make_shared<int>(12);
+        std::cout << mFld.get();
     }
 
-    void nullableParamNPE(@Nullable Object param) {
-        param.toString();
+    void nullableParamNPE(const std::shared_ptr<int>& param) {
+        std::cout << param.get();
     }
 
-    void guardedNullableParamDeref(@Nullable Object param) {
-        if (param != null) param.toString();
+    void guardedNullableParamDeref(const std::shared_ptr<int>& param) {
+        if (param) std::cout << param.get();
     }
 
-    void allocNullableParamDeref(@Nullable Object param) {
-        param = new Object();
-        param.toString();
+    void allocNullableParamDeref(std::shared_ptr<int> param) {
+        param = std::make_shared<int>(12);
+        std::cout << param.get();
     }
 
-    private Object mOkObj = new Object();
+private:
+    std::shared_ptr<int> mOkObj = std::make_shared<int>(12);
 
     public void nullableParamReassign1(@Nullable Object o) {
         if (o == null) {

@@ -36,14 +36,14 @@ public:
         return divideByZeroInterProc(x);
     }
 
-
     // divide by zero with static fields
 private:
     int x;
 
-}
+};
 
-int main(int argc, std::string* argv) {
+int main() {
     DivideByZero divBy0;
-    divBy0.divByZeroLocal("stuff")
+    divBy0.divByZeroLocal("stuff");
+    return 0;
 }
