@@ -7,33 +7,43 @@
 
 // package codetoanalyze.java.infer;
 
-public class DivideByZero {
+#include "string"
 
-  public int divByZeroLocal(String s) {
-    int denominator = 0;
-    int nominator = 10;
-    int result = nominator / denominator;
-    return result;
-  }
+class DivideByZero {
 
-  public int divideByZeroInterProc(int denominator) {
-    return 10 / denominator;
-  }
+public:
+    int divByZeroLocal(std::string s) {
+        int denominator = 0;
+        int nominator = 10;
+        int result = nominator / denominator;
+        return result;
+    }
 
-  // DO NOT MOVE, test relies on line number
-  public int callDivideByZeroInterProc() {
-    return divideByZeroInterProc(0);
-  }
+    int divideByZeroInterProc(int denominator) {
+        return 10 / denominator;
+    }
 
-  // divide by zero with static fields
-  private static int x;
+    int callDivideByZeroInterProc() {
+        return divideByZeroInterProc(0);
+    }
 
-  public void setXToZero() {
-    x = 0;
-  }
+    void setXToZero() {
+        x = 0;
+    }
 
-  public int divideByZeroWithStaticField() {
-    setXToZero();
-    return divideByZeroInterProc(x);
-  }
+    int divideByZeroWithStaticField() {
+        setXToZero();
+        return divideByZeroInterProc(x);
+    }
+
+
+    // divide by zero with static fields
+private:
+    int x;
+
+}
+
+int main(int argc, std::string* argv) {
+    DivideByZero divBy0;
+    divBy0.divByZeroLocal("stuff")
 }
