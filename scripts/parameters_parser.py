@@ -10,20 +10,32 @@ COMMON_FILES = ["README.md"]
 ARTIFACT_NAME = "samples_parameters.json"
 ARTIFACT_PATH = "./samples_parameters.json"
 
-def detect_code_samples(code_path):
+FILE_FILTERS = [
+	".*\.eo",	# EO translations
+	"filters\.txt"	# error filters
+]
+
+def _analyze_dirs(os_walk_list):
 
 	code_samples_paths = []
 
-	for root, dirs, files in os.walk(code_path):
+	for root, dirs, files in os_walk_list:
 		# Finding leaf dirs
 		if (len(dirs) == 0):
-			# Assuming that .eo files are translations and skipping them
-			filtered_files = [f for f in files if not f.endswith(".eo")]
+
+			filtered_files = [f for f in files if all(
+					re.fullmatch(f_filter, f) is None for f_filter in FILE_FILTERS
+				)]
 
 			# Checking if structure is correct
 			if (not "README.md" in filtered_files):
 				logging.error("Path '{}' should contain code sample, but there is no README.md (it is case sensitive)".format(root))
 				return None
+
+			if (len(filtered_files) == 1):
+				logging.error("Path '{}' does not contain source file".format(root))
+				return None
+
 			if (len(filtered_files) > 2):
 				logging.error("Path '{}' contains more than one source files".format(root))
 				return None
@@ -32,6 +44,10 @@ def detect_code_samples(code_path):
 			code_samples_paths.append(root)
 
 	return code_samples_paths
+
+
+def detect_code_samples(code_path):
+	return _analyze_dirs(os.walk(code_path))
 
 
 def check_if_lines(input_str):
