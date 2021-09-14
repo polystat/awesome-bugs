@@ -57,9 +57,9 @@ public:
     }
 
 };
-
-int main() {
-    auto *derivedAgainInstance = new DerivedAgain();
-    derivedAgainInstance->n(12);
-    return 0;
-}
+//
+//int main() {
+//    auto *derivedAgainInstance = new DerivedAgain();
+//    derivedAgainInstance->n(12);
+//    return 0;
+//}

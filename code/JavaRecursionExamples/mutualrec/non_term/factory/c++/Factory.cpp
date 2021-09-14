@@ -48,8 +48,8 @@ public:
 };
 
 
-int main() {
-    auto *derivedInstance = new Derived();
-    derivedInstance->m(12);
-    return 0;
-}
+//int main() {
+//    auto *derivedInstance = new Derived();
+//    derivedInstance->m(12);
+//    return 0;
+//}

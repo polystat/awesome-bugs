@@ -122,8 +122,8 @@ public:
 //    }
 
 };
-
-int main() {
-    auto *nullableTests = new InferNullableTests();
-    return 0;
-}
+//
+//int main() {
+//    auto *nullableTests = new InferNullableTests();
+//    return 0;
+//}

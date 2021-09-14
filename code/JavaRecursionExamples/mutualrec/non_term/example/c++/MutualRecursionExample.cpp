@@ -48,7 +48,7 @@ public:
 
 };
 
-int main() {
-    auto *derivedInstance = new Derived();
-    derivedInstance->g(10);
-}
+//int main() {
+//    auto *derivedInstance = new Derived();
+//    derivedInstance->g(10);
+//}

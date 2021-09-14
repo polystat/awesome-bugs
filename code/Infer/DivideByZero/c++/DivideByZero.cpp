@@ -12,6 +12,7 @@
 class DivideByZero {
 
 public:
+    DivideByZero() = default;
     int divByZeroLocal(std::string s) {
         int denominator = 0;
         int nominator = 10;
@@ -42,8 +43,8 @@ private:
 
 };
 
-int main() {
-    DivideByZero divBy0;
-    divBy0.divByZeroLocal("stuff");
-    return 0;
-}
+//int main() {
+//    auto* divBy0 = new DivideByZero();
+//    divBy0->divByZeroLocal("stuff");
+//    return 0;
+//}

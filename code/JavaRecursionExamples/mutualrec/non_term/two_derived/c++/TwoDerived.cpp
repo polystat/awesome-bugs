@@ -68,10 +68,10 @@ public:
 };
 
 
-int main() {
-    auto *derived1Instance = new Derived1();
-    auto *derived2Instance = new Derived2();
-    derived1Instance->m(12);
-    derived2Instance->m(12);
-    return 0;
-}
+//int main() {
+//    auto *derived1Instance = new Derived1();
+//    auto *derived2Instance = new Derived2();
+//    derived1Instance->m(12);
+//    derived2Instance->m(12);
+//    return 0;
+//}

@@ -50,7 +50,7 @@ class DerivedAgain : public Derived {
 
 };
 
-int main() {
-    auto *derivedAgainInstance = new DerivedAgain();
-    derivedAgainInstance->n(12);
-}
+//int main() {
+//    auto *derivedAgainInstance = new DerivedAgain();
+//    derivedAgainInstance->n(12);
+//}
