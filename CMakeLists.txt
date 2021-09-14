@@ -5,9 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(AwesomeBugs
         code/Infer/DivideByZero/c++/DivideByZero.cpp
-        code/Infer/DivideByZero/c++/InferNullableTests.cpp
         code/Infer/NullPointerExceptions/Native/c++/TODO_in_c++_InferNativeNPETests.cpp
-        code/Infer/NullPointerExceptions/Nullable/c++/TODO_in_c++_InferNullableTests.cpp
+        code/Infer/NullPointerExceptions/Nullable/c++/InferNullableTests.cpp
         code/Infer/NullPointerExceptions/Trivial/c++/TODO_in_c++_InferTrivialNPETests.cpp
         code/Infer/NullPointerExceptions/WithStandardLib/c++/TODO_in_c++_InferSTDLibNPETests.cpp
         code/JavaRecursionExamples/mutualrec/non_term/derived_again/c++/DerivedAgainExample.cpp
