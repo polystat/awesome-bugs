@@ -4,54 +4,13 @@
 
 Make a collection of code samples containing various bugs related to OOP together with their description and references. They should be generic and applicable to most object-oriented languages.
 
-## Taxonomy of defects:
+## What defects are considered:
 
-Type of defects given below are supposed to either produce runtime errors or to make a program hang.
+Any defects that are:
 
-> The taxonomy is not complete yet and soon to be moved to the separate document
-
-### Non-OOP related:
-
-- Access restrictions
-  - Memory (segmentation faults)
-- Underflows and overflows
-  - Integers
-  - Arrays
-  - Buffers
-  - Stacks
-- Infinite execution paths
-- Synchronization issues
-  - Deadlock
-  - Livelock
-  - Starvation
-- Resource leaks
-  - Memory leak
-- Logical errors
-  - Violated contracts
-
-### OOP related:
-
-- Nulls
-  - Null pointer exception
-  - Null pointer dereferencing
-- Type mismatches
-  - Upcast-downcast problems
-  - Missing methods/fields
-- Uncaught exceptions
-
-### Common design antipatterns
-
-> TBD
-
-## Reasoning
-
-### OOP errors
-
-OOP can be viewed as the way to structure the imperative or procedural code. Generally, all collisions that this structure may produce are found on the stage of compilation if the code is pure object-oriented. We may assume two general categories of problems related to OOP:
-- Anti-patterns and bad design. Poorly designed code may work completely fine, however, it will have more weak spots that may produce errors with future modifications.
-- Violations of OOP principles. They may produce errors that cannot be caught during compilation.
-
-## What defects are not considered:
+- related to misuse of OOP techniques
+- common for most OOP languages
+- lead to any runtime error.
 
 Some defects are not going to be included in this list because they might be ambiguous and dependant on the context.
 
@@ -59,11 +18,47 @@ Some defects are not going to be included in this list because they might be amb
 - Maintainability
 - Performance
 
+## Ideology
+
+Defects are represented by code samples containing them. Each code sample is a single source of file that is containing code which represents a single occurrence of the defect. Those code samples are assumed to be the input for static analyzers. Some metadata is needed and an exact structure of code samples is described below.
+
 ## Structure of this repository
 
-Main requirements:
-- Ability to run static analysis on each of the code sample
-- Each code sample should have corresponding tags according to its place in taxonomy
-- Several samples of a similar bug can be provided
+```
+├── `code` - Contains code samples
+├── `docs` - Documentation
+├── `res` - Resources. For now, only analyzers reports
+├── `scripts` - Scripts for CI and report analysis
+└── `global_filters.txt` - global error filters
+```
 
-> The exact structure to be defined later
+## Structure of code samples
+
+A valid code sample is a directory that does not contain any subdirectories and has following files:
+
+- `README.md` - contains description and special header with metadata
+- Single file with the source code of the sample
+- Any number of files with EO translations
+- `fitlers.txt` containing regex filters for static analysis results
+
+`README.md` file should have a specific "header". It is a block of code with the following content
+
+
+	```
+	# Name        : Name of the code sample
+	# FailureType : Type of failure (runtime error type)
+	# ErrorType   : Type of error
+	# Source      : Source from which this error was taken
+	# CodeType    : Type of the code sample. For now only "Artificial" type is valid 
+	# Lines       : Comma separated list of lines that contain the error
+	```
+
+For a detailed example of `README.md` refer to `code/test/README.md`
+
+The way to organize code samples is to put them in directories. For example, a valid path to code sample directory is `./code/error_type_1/error_sub_type_2/sample_1`
+
+The structure of code samples is validated using CI scripts configured in this repository. If pipeline fails due to incorrect `README.md` format or incorrect code sample directory structure, the error message could be found in the pipeline logs on `Format checker` stage.
+
+## Integration with static analyzers
+
+<TODO>
