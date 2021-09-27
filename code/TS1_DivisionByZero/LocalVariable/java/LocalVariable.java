@@ -7,7 +7,7 @@
 
 // package codetoanalyze.java.infer;
 
-public class DivideByZero {
+public class LocalVariable {
 
   public int divByZeroLocal() {
     int denominator = 0;

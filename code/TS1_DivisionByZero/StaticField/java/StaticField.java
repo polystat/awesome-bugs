@@ -7,15 +7,16 @@
 
 // package codetoanalyze.java.infer;
 
-public class DivideByZero {
+public class StaticField {
+  // divide by zero with static fields
+  private static int x;
 
-  public int divideByZeroInterProc(int denominator) {
-    return 10 / denominator;
+  public void setXToZero() {
+    x = 0;
   }
 
-  // DO NOT MOVE, test relies on line number
-  public int callDivideByZeroInterProc() {
-    return divideByZeroInterProc(0);
+  public int divideByZeroWithStaticField() {
+    setXToZero();
+    return divideByZeroInterProc(x);
   }
-
 }

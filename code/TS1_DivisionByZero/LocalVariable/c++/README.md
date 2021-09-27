@@ -11,4 +11,4 @@
 
 Extracted from FB Infer tests located at:
 
-- https://github.com/facebook/infer/blob/master/infer/tests/codetoanalyze/java/biabduction/DivideByZero.java
+- https://github.com/facebook/infer/blob/master/infer/tests/codetoanalyze/java/biabduction/LocalVariable.java
