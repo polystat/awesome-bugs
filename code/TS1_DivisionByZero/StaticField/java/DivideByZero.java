@@ -8,12 +8,15 @@
 // package codetoanalyze.java.infer;
 
 public class DivideByZero {
+  // divide by zero with static fields
+  private static int x;
 
-  public int divByZeroLocal() {
-    int denominator = 0;
-    int nominator = 10;
-    int result = nominator / denominator;
-    return result;
+  public void setXToZero() {
+    x = 0;
   }
 
+  public int divideByZeroWithStaticField() {
+    setXToZero();
+    return divideByZeroInterProc(x);
+  }
 }
