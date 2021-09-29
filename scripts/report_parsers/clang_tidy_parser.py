@@ -42,8 +42,10 @@ class ClangTidyParser(Parser):
                     colon_space >> error_type,
                     colon_space >> error_message
                 ) << newline <<
-                code_snippet << newline <<
-                highlighting << newline
+                (
+                    string(" " * 8) << code_snippet << newline <<
+                    string(" " * 8) << highlighting << newline
+                ).optional()
         ).map(
             lambda lst: AnalyzerReportRow(
                 file=lst[0],
@@ -62,13 +64,13 @@ class ClangTidyParser(Parser):
             lambda lst: {
                 "checks": lst[0],
                 "errors": list(chain.from_iterable(
-                        [lst[0] for lst in lst[1]]
-                    ))
+                    [lst[0] for lst in lst[1]]
+                ))
             }
         )
         with open(self.REPORT_PATH) as report:
             return AnalyzerReport(
-                clang_tidy_report.parse(report.read())['errors'],
+                clang_tidy_report.parse(report.read().strip() + "\n")['errors'],
                 self.ANALYZER_NAME,
                 self.REPORT_PATH
             )

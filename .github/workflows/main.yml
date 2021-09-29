@@ -33,27 +33,28 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip pipenv
-          cd scripts
-          pipenv install
+          python3 -m pip install --upgrade pip wheel
+          python3 -m pip install -r scripts/requirements.txt
+
 
       - name: Run clang-tidy and save reports to "res" folder
         run: |
-          apt-get update -y
-          apt-get install -y clang-tidy cmake
+          sudo apt-get update -y
+          sudo apt-get install -y clang-tidy cmake
           mkdir build
           cd build
           cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
           cd ..
-          pipenv run python3 scripts/run-clang-tidy.py -p build > res/clang-out
+          python3 scripts/run-clang-tidy.py -p build > res/clang-out
+          cat res/clang-out
 
       # Checking format of code samples
       - name: Format checker
-        run: pipenv run python3 scripts/format_checker.py
+        run: python3 scripts/format_checker.py
 
       # Comparing results to analyzers reports
       - name: Reports analysis
-        run: pipenv run python3 scripts/analyzer_report_checker.py
+        run: python3 scripts/analyzer_report_checker.py
 
       # Saving artifacts
       - name: Upload all .csv and .json reports
