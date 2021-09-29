@@ -1,10 +1,9 @@
-import logging
-import json
 import copy
+import json
+import logging
 import re
 
-from parser import Parser
-from analyzer_report import AnalyzerReport, ResCols
+from analyzer_report import ResCols
 from coverity_parser import CoverityParser
 from filters import read_sample_filters, read_global_filters
 
@@ -143,11 +142,11 @@ if __name__ == "__main__":
 
         print("'{}' analyzer produced: ".format(an_name))
         print(
-            "{} hits ({} of max {})".format(str(len(hits[an_name])), str(len(hits[an_name]) / max_hits), str(max_hits)))
+            f"{len(hits[an_name])} hits ({len(hits[an_name]) / max_hits} of max {max_hits})")
         print(
-            "{} ({} of all results)".format(str(len(misses[an_name])), str(len(misses[an_name]) / len(an_rep.results))))
-        print("{} samples were not found. They are:\n".format(len(not_found[an_name])))
+            f"{len(misses[an_name])} ({len(misses[an_name]) / len(an_rep.results)} of all results)")
+        print(f"{len(not_found[an_name])} samples were not found. They are:\n")
         print("\n".join(not_found[an_name]))
-        print("")
+        print()
 
     print("Done!")
