@@ -15,6 +15,11 @@ public:
         x = 0;
     }
 
+    int divideByZeroInterProc(int denominator) {
+        return 10 / denominator;
+    }
+
+
     int divideByZeroWithStaticField() {
         setXToZero();
         return divideByZeroInterProc(x);
