@@ -1,7 +1,8 @@
 from parameters_parser import *
+import json
 
 if __name__ == "__main__":
-	logging.basicConfig(level=logging.DEBUG)
+	logging.basicConfig(level=logging.INFO)
 
 	logging.debug(f"Current working dir: {os.getcwd()}")
 
