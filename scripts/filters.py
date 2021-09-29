@@ -9,20 +9,18 @@ def read_sample_filters(sample_path):
     try:
         with open(os.path.join(sample_path, FILTER_FILE_NAME), "r") as f_file:
             return f_file.read().split("\n")
-    except Exception as e:
-        logging.info("Didn't find filters for '{}'".format(sample_path))
+    except OSError:
+        logging.info(f"Didn't find filters for '{sample_path}'")
         return []
 
 
 def read_global_filters():
-    res = []
-
     try:
         with open(GLOBAL_FILTER_PATH, "r") as f_file:
-            res = f_file.read().split("\n")
-    except Exception as e:
-        logging.info("Didn't global_filters '{}'".format(sample_path))
+            res = list(filter(lambda fltr: len(fltr) > 0, f_file.read().split("\n")))
+    except OSError:
+        logging.info(f"Didn't find global_filters at '{GLOBAL_FILTER_PATH}'")
         return []
 
-    logging.info("global_filters are '{}'".format(str(res)))
+    logging.info(f"global_filters are '{res}'")
     return res
