@@ -36,7 +36,16 @@ jobs:
           python3 -m pip install --upgrade pip pipenv
           cd scripts
           pipenv install
-#          if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
+
+      - name: Run clang-tidy and save reports to "res" folder
+        run: |
+          apt-get update -y
+          apt-get install -y clang-tidy cmake
+          mkdir build
+          cd build
+          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+          cd ..
+          pipenv run python3 scripts/run-clang-tidy.py -p build > res/clang-out
 
       # Checking format of code samples
       - name: Format checker

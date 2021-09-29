@@ -4,7 +4,7 @@ import os
 from openpyxl import load_workbook
 
 from analyzer_report import AnalyzerReport
-from report_parser import Parser
+from report_parsers.base_parser import Parser
 
 
 class CoverityParser(Parser):
@@ -56,7 +56,7 @@ class CoverityParser(Parser):
             else:
 
                 file_val = x[file_col].strip("/\\")
-                if (not file_val.startswith("code")):
+                if not file_val.startswith("code"):
                     file_val = os.path.join("code", file_val)
 
                 code_sample_val = os.path.dirname(file_val)

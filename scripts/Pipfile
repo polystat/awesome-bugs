@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 et-xmlfile = "*"
 openpyxl = "*"
+pyyaml = "*"
+parsy = "*"
 
 [dev-packages]
 
