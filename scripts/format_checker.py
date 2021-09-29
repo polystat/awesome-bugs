@@ -1,12 +1,12 @@
 from parameters_parser import *
 
 if __name__ == "__main__":
-	logging.basicConfig(level=logging.INFO)
+	logging.basicConfig(level=logging.DEBUG)
 
-	logging.debug("Current working dir: {}".format(os.getcwd()))
+	logging.debug(f"Current working dir: {os.getcwd()}")
 
 	paths = detect_code_samples(CODE_PATH)
-	print("detected code samples: {}".format(str(paths)))
+	print(f"detected code samples: {str(paths)}")
 
 	samples_parameters = {}
 
@@ -18,7 +18,7 @@ if __name__ == "__main__":
 			text = f.read()
 			parameters = parse_input(text)
 
-			if parameters == None or not validate_input(parameters):
+			if parameters is None or not validate_input(parameters):
 				exit(1)
 
 			parameters = preprocess_input(parameters)

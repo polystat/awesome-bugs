@@ -1,4 +1,4 @@
 class Parser:
 
-	def parse():
-		pass
+    def parse(self):
+        pass
