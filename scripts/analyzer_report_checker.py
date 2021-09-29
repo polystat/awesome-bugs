@@ -4,7 +4,7 @@ import logging
 import re
 
 from analyzer_report import ResCols
-from coverity_parser import CoverityParser
+# from coverity_parser import CoverityParser
 from filters import read_sample_filters, read_global_filters
 
 INPUT_ARTIFACT_PATH = "./samples_parameters.json"
@@ -22,12 +22,12 @@ def filter_error_types(plain_res, global_filters, filters_by_sample):
         sample_path = r[ResCols.code_sample.value]
         error_type_val = r[ResCols.error_type.value]
 
-        for f in global_filters:
-            if re.fullmatch(f, error_type_val) is not None:
+        for fltr in global_filters:
+            if re.fullmatch(fltr, error_type_val) is not None:
                 ok = False
 
-        for f in filters_by_sample[sample_path]:
-            if re.fullmatch(f, error_type_val) is not None:
+        for fltr in filters_by_sample[sample_path]:
+            if re.fullmatch(fltr, error_type_val) is not None:
                 ok = False
 
         if ok:
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     parsers = (
-        CoverityParser(),
+        # CoverityParser(),
     )
 
     analyzer_reports = []
@@ -85,17 +85,14 @@ if __name__ == "__main__":
 
     # Compare to labels
 
-    samples_parameters = None
-
-    with open(INPUT_ARTIFACT_PATH, "r") as f:
-        samples_parameters = json.load(f)
-
-    if samples_parameters == None:
+    try:
+        with open(INPUT_ARTIFACT_PATH, "r") as f:
+            samples_parameters = json.load(f)
+    except FileNotFoundError as e:
         logging.error("Can't load samples parameters!")
         exit(1)
 
-    # Retreiving filters
-
+    # Retrieving filters
     filters_by_sample = {}
 
     for sample_path in samples_parameters.keys():

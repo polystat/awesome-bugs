@@ -1,10 +1,10 @@
 import logging
 import os
 
-from openpyxl import Workbook, load_workbook
+from openpyxl import load_workbook
 
-from parser import Parser
 from analyzer_report import AnalyzerReport
+from report_parser import Parser
 
 
 class CoverityParser(Parser):
