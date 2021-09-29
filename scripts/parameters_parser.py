@@ -1,11 +1,9 @@
+import logging
 import os
 import re
-import json
-
-import logging
 
 # Script is being run from the repo root dir
-CODE_PATH = "../code"
+CODE_PATH = "code"
 COMMON_FILES = ["README.md"]
 ARTIFACT_NAME = "samples_parameters.json"
 ARTIFACT_PATH = "./samples_parameters.json"

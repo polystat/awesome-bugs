@@ -8,7 +8,7 @@
 # ErrorType   : Programming error
 # Source      : https://github.com/Sitiritis/eo-static-analyzer/blob/demo/sandbox/src/main/resources/mutual_rec_non_term_long_chain.eo
 # CodeType    : Artificial
-# Lines       : (34, 41, 48)
+# Lines       : 34, 41, 48
 ```
 
 ## *NOTE*: the groups of numbers in parentheses indicate the lines containing mutually recursive calls.

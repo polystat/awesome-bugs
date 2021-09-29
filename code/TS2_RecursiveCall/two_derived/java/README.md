@@ -7,7 +7,7 @@
 # ErrorType   : Programming error
 # Source      : https://github.com/Sitiritis/eo-static-analyzer/blob/demo/sandbox/src/main/resources/mutual_rec_non_term_2_derived.eo
 # CodeType    : Artificial
-# Lines       : (45, 50), (57, 62)
+# Lines       : 45, 50, 57, 62
 ```
 
 ## *NOTE*: the groups of numbers in parentheses indicate the lines containing mutually recursive calls.
