@@ -29,20 +29,22 @@ jobs:
         uses: actions/setup-python@v2.2.2
         with:
           # Version range or exact version of a Python version to use, using SemVer's version range syntax.
-          python-version: 3.9.6
+          python-version: 3.9.7
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
+          python3 -m pip install --upgrade pip pipenv
+          cd scripts
+          pipenv install
+#          if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
 
       # Checking format of code samples
       - name: Format checker
-        run: python scripts/format_checker.py
+        run: pipenv run python3 scripts/format_checker.py
 
       # Comparing results to analyzers reports
       - name: Reports analysis
-        run: python scripts/analyzer_report_checker.py
+        run: pipenv run python3 scripts/analyzer_report_checker.py
 
       # Saving artifacts
       - name: Upload all .csv and .json reports
