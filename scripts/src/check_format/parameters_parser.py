@@ -14,7 +14,7 @@ FILE_FILTERS = [
 ]
 
 
-def _analyze_dirs(code_path):
+def analyze_dirs(code_path):
     code_samples_paths = []
 
     for root, dirs, files in os.walk(code_path):
@@ -47,7 +47,7 @@ def _analyze_dirs(code_path):
 
 
 def detect_code_samples(code_path):
-    return _analyze_dirs(code_path)
+    return analyze_dirs(code_path)
 
 
 def check_if_lines(input_str):

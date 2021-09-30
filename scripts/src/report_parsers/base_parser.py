@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from analyzer_report import AnalyzerReport
+from scripts.src.analyze_reports import AnalyzerReport
 
 
 class Parser:

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "562fb7cddfe56ad341ca8d44594c2aa4663ef865878c4d255e103722d91dc242"
+            "sha256": "828f9a99e955ca20f9812de6dc4120669676932f3663238214b9ea89f27761b4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,10 @@
         ]
     },
     "default": {
+        "ci": {
+            "editable": true,
+            "path": "."
+        },
         "et-xmlfile": {
             "hashes": [
                 "sha256:8eb9e2bc2f8c97e37a2dc85a09ecdcdec9d8a396530a6d5a33b30b9a92da0c5c",

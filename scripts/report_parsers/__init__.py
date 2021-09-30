@@ -1,3 +1,0 @@
-from report_parsers.clang_tidy_parser import ClangTidyParser
-from report_parsers.coverity_parser import CoverityParser
-

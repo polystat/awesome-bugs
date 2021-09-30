@@ -1,7 +1,7 @@
 from parsy import string, regex, seq
 
-from analyzer_report import AnalyzerReport, AnalyzerReportRow
-from report_parsers.base_parser import Parser
+from scripts.src.analyze_reports import AnalyzerReport, AnalyzerReportRow
+from scripts.src.report_parsers.base_parser import Parser
 from itertools import chain
 
 
@@ -18,14 +18,16 @@ class ClangTidyParser(Parser):
         checks = string("Enabled checks:") >> newline >> check.at_least(1)
 
         filename = regex(r"[a-zA-Z0-9_\+\-\.]+")
-        path = (
+        rel_path = filename.sep_by(sep=string("/"), min=1)
+        abs_path = (
                 string("/") >>
-                filename.sep_by(sep=string("/"), min=0)
-        ) \
-            .map(lambda parsed: "/".join(parsed[parsed.index("code"):]))
-        command = string("clang-tidy") >> space >> \
-                  string("-p=build") >> space \
-                  >> path << newline
+                rel_path
+        ).map(lambda parsed: "/".join(parsed[parsed.index("code"):]))
+        command = (
+                string("clang-tidy") >> space >>
+                string("-p=") >> rel_path >> space
+                >> abs_path << newline
+        )
         colon = string(":")
         colon_space = seq(colon, space)
         line_number = regex(r"[0-9]+").map(int)
@@ -36,15 +38,15 @@ class ClangTidyParser(Parser):
         highlighting = regex(".*")
         analyzer_error = (
                 seq(
-                    path,
+                    abs_path,
                     colon >> line_number,
                     colon >> column_number,
                     colon_space >> error_type,
                     colon_space >> error_message
                 ) << newline <<
                 (
-                    string(" " * 8) << code_snippet << newline <<
-                    string(" " * 8) << highlighting << newline
+                        string(" " * 8) << code_snippet << newline <<
+                        string(" " * 8) << highlighting << newline
                 ).optional()
         ).map(
             lambda lst: AnalyzerReportRow(

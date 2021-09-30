@@ -3,8 +3,8 @@ import os
 
 from openpyxl import load_workbook
 
-from analyzer_report import AnalyzerReport
-from report_parsers.base_parser import Parser
+from scripts.src.analyze_reports.report import AnalyzerReport
+from scripts.src.report_parsers.base_parser import Parser
 
 
 class CoverityParser(Parser):
