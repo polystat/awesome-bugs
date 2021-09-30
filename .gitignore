@@ -1,6 +1,6 @@
 # Generated artifacts
 *.csv
 *.json
-**/__pycache__
 build/
 .idea/
+res/clang-out
