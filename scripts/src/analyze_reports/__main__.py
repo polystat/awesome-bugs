@@ -13,10 +13,7 @@ def run():
         ClangTidyParser(),
     )
 
-    analyzer_reports: list[AnalyzerReport] = []
-
-    for p in parsers:
-        analyzer_reports.append(p.parse())
+    analyzer_reports: list[AnalyzerReport] = [p.parse() for p in parsers]
 
     # Compare to labels
     try:
