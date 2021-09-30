@@ -1,4 +1,6 @@
 # Generated artifacts
 *.csv
 *.json
-scripts/__pycache__/
+build/
+.idea/
+res/clang-out
