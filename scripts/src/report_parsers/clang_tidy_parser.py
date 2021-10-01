@@ -66,7 +66,7 @@ class ClangTidyParser(Parser):
             lambda lst: {
                 "checks": lst[0],
                 "errors": list(chain.from_iterable(
-                    [lst[0] for lst in lst[1]]
+                    chain.from_iterable(lst[1])
                 ))
             }
         )
