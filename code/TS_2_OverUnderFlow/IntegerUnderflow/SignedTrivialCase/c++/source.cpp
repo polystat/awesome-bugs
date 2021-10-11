@@ -1,7 +1,7 @@
 #include <iostream>
 
 int main() {
-    std::cout << "Hello World!";
-	int a = 5/0;
+	int a = -2147483648;
+	int b = a - 1;
     return 0;
 }
