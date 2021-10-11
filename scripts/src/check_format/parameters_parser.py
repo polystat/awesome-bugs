@@ -74,22 +74,22 @@ def preprocess_lines(input_str):
 #                                preprocessor : (input_str) => Object }
 allowed_parameters = {
     "Name": {
-        "is_required": True,
+        "is_required": False,
         "checker": None,
         "preprocessor": None,
     },
     "FailureType": {
-        "is_required": True,
+        "is_required": False,
         "checker": None,
         "preprocessor": None,
     },
     "ErrorType": {
-        "is_required": True,
+        "is_required": False,
         "checker": None,
         "preprocessor": None,
     },
     "Source": {
-        "is_required": True,
+        "is_required": False,
         "checker": None,
         "preprocessor": None,
     },
