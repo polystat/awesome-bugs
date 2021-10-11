@@ -42,10 +42,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y clang-tidy cmake
-          mkdir build
-          cd build
-          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-          cd ..
+          python3 -m cmake
           python3 -m clang_tidy -p ./build > res/clang-out
           cat res/clang-out
 

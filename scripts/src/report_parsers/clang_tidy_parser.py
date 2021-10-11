@@ -45,8 +45,8 @@ class ClangTidyParser(Parser):
                     colon_space >> error_message
                 ) << newline <<
                 (
-                        string(" " * 8) << code_snippet << newline <<
-                        string(" " * 8) << highlighting << newline
+                        string(" " * 4) << code_snippet << newline <<
+                        string(" " * 4) << highlighting << newline
                 ).optional()
         ).map(
             lambda lst: AnalyzerReportRow(
@@ -65,9 +65,10 @@ class ClangTidyParser(Parser):
         ).map(
             lambda lst: {
                 "checks": lst[0],
-                "errors": list(chain.from_iterable(
-                    chain.from_iterable(lst[1])
-                ))
+                "errors": filter(
+                    lambda row: row.error_type != "note",
+                    list(chain.from_iterable(chain.from_iterable(lst[1])))
+                )
             }
         )
         with open(self.REPORT_PATH) as report:
