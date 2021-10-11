@@ -65,10 +65,10 @@ class ClangTidyParser(Parser):
         ).map(
             lambda lst: {
                 "checks": lst[0],
-                "errors": filter(
+                "errors": list(filter(
                     lambda row: row.error_type != "note",
                     list(chain.from_iterable(chain.from_iterable(lst[1])))
-                )
+                ))
             }
         )
         with open(self.REPORT_PATH) as report:
