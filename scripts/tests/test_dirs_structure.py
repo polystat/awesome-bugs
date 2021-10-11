@@ -3,7 +3,6 @@ from check_format.parameters_parser import analyze_dirs
 
 
 class TestStringMethods(unittest.TestCase):
-
     def test_ok(self):
         ok_input = [
             ("/", ["a", "b"], ["d.txt"]),
@@ -19,29 +18,21 @@ class TestStringMethods(unittest.TestCase):
         self.assertIsNotNone(analyze_dirs(ok_input))
 
     def test_no_readme(self):
-        test_input = [
-            ("/", [], ["s.cc"])
-        ]
+        test_input = [("/", [], ["s.cc"])]
         self.assertIsNone(analyze_dirs(test_input))
 
     def test_no_source_file(self):
-        test_input = [
-            ("/", [], ["README.md"])
-        ]
+        test_input = [("/", [], ["README.md"])]
         self.assertIsNone(analyze_dirs(test_input))
 
     def test_multiple_source_file(self):
-        test_input = [
-            ("/", [], ["s1.cc", "s2.cc", "README.md"])
-        ]
+        test_input = [("/", [], ["s1.cc", "s2.cc", "README.md"])]
         self.assertIsNone(analyze_dirs(test_input))
 
     def test_unnecessary_file(self):
-        test_input = [
-            ("/", [], ["s1.cc", "README.md", "hello.txt"])
-        ]
+        test_input = [("/", [], ["s1.cc", "README.md", "hello.txt"])]
         self.assertIsNone(analyze_dirs(test_input))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

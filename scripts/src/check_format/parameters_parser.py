@@ -8,10 +8,7 @@ COMMON_FILES = ["README.md"]
 ARTIFACT_NAME = "samples_parameters.json"
 ARTIFACT_PATH = "./samples_parameters.json"
 
-FILE_FILTERS = [
-    r".*\.eo",  # EO translations
-    r"filters\.txt"  # error filters
-]
+FILE_FILTERS = [r".*\.eo", r"filters\.txt"]  # EO translations  # error filters
 
 
 def analyze_dirs(code_path):
@@ -21,15 +18,20 @@ def analyze_dirs(code_path):
         # Finding leaf dirs
         if len(dirs) == 0:
 
-            filtered_files = list(filter(
-                lambda f: all(re.fullmatch(f_filter, f) is None for f_filter in FILE_FILTERS),
-                files
-            ))
+            filtered_files = list(
+                filter(
+                    lambda f: all(
+                        re.fullmatch(f_filter, f) is None for f_filter in FILE_FILTERS
+                    ),
+                    files,
+                )
+            )
 
             # Checking if structure is correct
             if "README.md" not in filtered_files:
                 logging.error(
-                    f"Path '{root}' should contain code sample, but there is no README.md (it is case sensitive)")
+                    f"Path '{root}' should contain code sample, but there is no README.md (it is case sensitive)"
+                )
                 return None
 
             if len(filtered_files) == 1:
@@ -70,7 +72,7 @@ def preprocess_lines(input_str):
 
 
 # Structure: { parameter_name : (is_required : bool ,
-#                                checker : (input_str) => bool), 
+#                                checker : (input_str) => bool),
 #                                preprocessor : (input_str) => Object }
 allowed_parameters = {
     "Name": {

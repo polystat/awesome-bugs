@@ -1,5 +1,3 @@
 import setuptools
 
-setuptools.setup(
-    zip_safe=False
-)
+setuptools.setup(zip_safe=False)

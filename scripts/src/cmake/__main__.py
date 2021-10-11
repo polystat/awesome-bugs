@@ -27,11 +27,8 @@ def generate_cmakelists():
         if len(dirs) == 0:
             for file in files:
                 if file.endswith(".cpp"):
-                    paths.append(
-                        os.path.join(root, file)
-                    )
+                    paths.append(os.path.join(root, file))
 
-        # print(CMAKE_TEMPLATE.format(files="\n\t".join(paths)))
     with open("CMakeLists.txt", "w") as f:
         f.write(CMAKE_TEMPLATE.format(files="\n\t".join(sorted(paths))))
 
@@ -41,5 +38,5 @@ def main():
     run_cmake()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

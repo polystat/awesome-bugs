@@ -11,16 +11,16 @@ class CoverityParser(Parser):
     ANALYZER_NAME = "coverity"
 
     COLUMNS_ORDER = (
-        'CID',
-        'Portal Url',
-        'CodingStandards',
-        'Checker',
-        'Type',
-        'Category',
-        'File',
-        'Line Number',
-        'Function',
-        'Occurance Count'
+        "CID",
+        "Portal Url",
+        "CodingStandards",
+        "Checker",
+        "Type",
+        "Category",
+        "File",
+        "Line Number",
+        "Function",
+        "Occurance Count",
     )
 
     REPORT_PATH = "res/coverity.xlsx"
@@ -63,13 +63,15 @@ class CoverityParser(Parser):
                 line_val = x[line_col]
                 error_type_val = "cov:" + ":".join([x[col] for col in error_type_cols])
 
-                results.append((
-                    code_sample_val,
-                    file_val,
-                    int(line_val),
-                    error_type_val,
-                    int(line_index)
-                ))
+                results.append(
+                    (
+                        code_sample_val,
+                        file_val,
+                        int(line_val),
+                        error_type_val,
+                        int(line_index),
+                    )
+                )
 
             line_index += 1
 

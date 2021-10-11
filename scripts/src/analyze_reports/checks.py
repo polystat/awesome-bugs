@@ -6,9 +6,9 @@ from scripts.src.analyze_reports.report import AnalyzerReportRow
 
 
 def filter_error_types(
-        plain_res: Iterable[AnalyzerReportRow],
-        global_filters: list[str],
-        filters_by_sample: dict[str, list[str]]
+    plain_res: Iterable[AnalyzerReportRow],
+    global_filters: list[str],
+    filters_by_sample: dict[str, list[str]],
 ):
     """
     plain_res - list of tuples of analyzer's results
@@ -56,8 +56,7 @@ def check_for_any_hit(params, results, global_filters, filters_by_sample):
         params = safe_samples_parameters[res.file]
 
         # Any hit in any specified line = hit in the sample
-        if res.line_number in params["Lines"] and \
-                res.file in curr_not_found:
+        if res.line_number in params["Lines"] and res.file in curr_not_found:
 
             curr_hits.append(res.line_number)
             curr_not_found.remove(res.file)
@@ -69,5 +68,3 @@ def check_for_any_hit(params, results, global_filters, filters_by_sample):
         "misses": curr_misses,
         "not_found": list(curr_not_found),
     }
-
-
