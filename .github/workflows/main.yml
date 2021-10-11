@@ -37,6 +37,9 @@ jobs:
           python3 -m pip install -r scripts/requirements.txt
           python3 -m pip install -e ./scripts
 
+      # Checking format of code samples
+      - name: Format checker
+        run: python3 -m check_format
 
       - name: Run clang-tidy and save reports to "res" folder
         run: |
@@ -45,10 +48,6 @@ jobs:
           python3 -m cmake
           python3 -m clang_tidy -p ./build > res/clang-out
           cat res/clang-out
-
-      # Checking format of code samples
-      - name: Format checker
-        run: python3 -m check_format
 
       # Comparing results to analyzers reports
       - name: Reports analysis
