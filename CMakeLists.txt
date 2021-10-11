@@ -14,4 +14,6 @@ add_executable(AwesomeBugs
         code/TS2_RecursiveCall/long_chain/c++/LongChain.cpp
         code/TS2_RecursiveCall/two_derived/c++/TwoDerived.cpp
         code/TS2_RecursiveCall/two_derived_explicit_decoration/c++/TwoDerivedExplicitDecoration.cpp
-        code/TS3_NullPointerException/Nullable/c++/InferNullableTests.cpp)
+        code/TS3_NullPointerException/Nullable/c++/InferNullableTests.cpp
+        code/TS4_NumericConversions/FloatToInt/c++/FloatToInt.cpp
+        code/TS4_NumericConversions/NumericToBoolean/c++/NumericToBoolean.cpp)
