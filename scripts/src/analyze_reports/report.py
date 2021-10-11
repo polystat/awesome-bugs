@@ -4,6 +4,7 @@ from typing import Iterable
 from dataclasses import dataclass
 import json
 from pprint import pformat
+from typing import Callable
 
 
 @dataclass(frozen=True)
@@ -27,22 +28,22 @@ class AnalyzerReportRow:
 class AnalyzerReport:
     """Class that stores data from a single run of specific static analyzer"""
 
-    def __init__(self,
-                 results: Iterable[AnalyzerReportRow],
-                 analyzer: str,
-                 report_path: str
-                 ):
-        """Results hold a list of tuples with results. The format is:
-        [(code_sample, file, code_line, error_type, source_ref_line), ...]
-        source_ref_line is a line number inside the report"""
+    results: Iterable[AnalyzerReportRow]
+    analyzer: str
+    report_path: str
 
+    def __init__(
+        self, results: Iterable[AnalyzerReportRow], analyzer: str, report_path: str
+    ):
         self.results = results
-
         self.analyzer = analyzer
-        """Analyzer id"""
-
         self.report_path = report_path
-        """Report location. Can be either path to a URL or an artifact"""
+
+    def filter(
+        self, predicate: Callable[[AnalyzerReportRow], bool]
+    ) -> "AnalyzerReport":
+        self.results = list(filter(predicate, self.results))
+        return self
 
     def save(self, dir_path, file_name=None):
         """Save results to csv file and other fields in json file.
@@ -69,13 +70,11 @@ class AnalyzerReport:
                 writer.writerow(r.dict())
 
     def __str__(self) -> str:
-        return (
-            f"""AnalyzerReport(
+        return f"""AnalyzerReport(
     analyzer={self.analyzer},
     report_path={self.report_path},
     results={pformat(self.results)}
 )"""
-        )
 
     def __repr__(self):
         return str(self)

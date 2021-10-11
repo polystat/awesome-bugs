@@ -1,19 +1,24 @@
 import logging
 import json
-from scripts.src.analyze_reports.report import AnalyzerReport, AnalyzerReportRow
+from scripts.src.analyze_reports.report import AnalyzerReport
 from scripts.src.report_parsers import ClangTidyParser
+from functools import reduce
 INPUT_ARTIFACT_PATH = "./samples_parameters.json"
 
 
 def run():
     logging.basicConfig(level=logging.DEBUG)
 
-    parsers = (
-        # CoverityParser(),
-        ClangTidyParser(),
-    )
+    parsers = {
+        ClangTidyParser(): [lambda row: row.error_type != "note"]
+    }
+    analyzer_reports: list[AnalyzerReport] = []
 
-    analyzer_reports: list[AnalyzerReport] = [p.parse() for p in parsers]
+    for parser, preds in parsers.items():
+        report = parser.parse()
+        for pred in preds:
+            report = report.filter(pred)
+        analyzer_reports.append(report)
 
     # Compare to labels
     try:
@@ -80,5 +85,5 @@ def run():
     print("Done!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()
