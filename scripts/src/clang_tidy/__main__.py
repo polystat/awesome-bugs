@@ -144,7 +144,12 @@ def merge_replacement_files(tmpdir, mergefile):
 def check_clang_apply_replacements_binary(args):
     """Checks if invoking supplied clang-apply-replacements binary works."""
     try:
-        subprocess.check_call([args.clang_apply_replacements_binary, "--version"])
+        subprocess.check_call(
+            [
+                args.clang_apply_replacements_binary,
+                "--version",
+            ]
+        )
     except:
         print(
             "Unable to run clang-apply-replacements. Is clang-apply-replacements "
@@ -184,13 +189,17 @@ def run_tidy(args, tmpdir, build_path, queue, lock, failed_files):
         )
 
         proc = subprocess.Popen(
-            invocation, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            invocation,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
         output, err = proc.communicate()
         if proc.returncode != 0:
             failed_files.append(name)
         with lock:
-            sys.stdout.write(" ".join(invocation) + "\n" + output.decode("utf-8"))
+            sys.stdout.write(
+                " ".join(invocation) + "\n" + output.decode("utf-8")
+            )
             if len(err) > 0:
                 sys.stdout.flush()
                 sys.stderr.write(err.decode("utf-8"))
@@ -255,11 +264,16 @@ def main():
         help="number of tidy instances to be run in parallel.",
     )
     parser.add_argument(
-        "files", nargs="*", default=[".*"], help="files to be processed (regex on path)"
+        "files",
+        nargs="*",
+        default=[".*"],
+        help="files to be processed (regex on path)",
     )
     parser.add_argument("-fix", action="store_true", help="apply fix-its")
     parser.add_argument(
-        "-format", action="store_true", help="Reformat code " "after applying fixes"
+        "-format",
+        action="store_true",
+        help="Reformat code " "after applying fixes",
     )
     parser.add_argument(
         "-style",
@@ -267,7 +281,9 @@ def main():
         help="The style of reformat " "code after applying fixes",
     )
     parser.add_argument(
-        "-p", dest="build_path", help="Path used to read a compile command database."
+        "-p",
+        dest="build_path",
+        help="Path used to read a compile command database.",
     )
     parser.add_argument(
         "-extra-arg",
@@ -284,7 +300,9 @@ def main():
         help="Additional argument to prepend to the compiler " "command line.",
     )
     parser.add_argument(
-        "-quiet", action="store_true", help="Run clang-tidy in quiet mode"
+        "-quiet",
+        action="store_true",
+        help="Run clang-tidy in quiet mode",
     )
     args = parser.parse_args()
 
@@ -297,7 +315,11 @@ def main():
         build_path = find_compilation_database(db_path)
 
     try:
-        invocation = [args.clang_tidy_binary, "-list-checks", "-p=" + build_path]
+        invocation = [
+            args.clang_tidy_binary,
+            "-list-checks",
+            "-p=" + build_path,
+        ]
         if args.checks:
             invocation.append("-checks=" + args.checks)
         invocation.append("-")
@@ -313,7 +335,9 @@ def main():
 
     # Load the database and extract all files.
     database = json.load(open(os.path.join(build_path, db_path)))
-    files = [make_absolute(entry["file"], entry["directory"]) for entry in database]
+    files = [
+        make_absolute(entry["file"], entry["directory"]) for entry in database
+    ]
 
     max_task = args.j
     if max_task == 0:
@@ -337,7 +361,14 @@ def main():
         for _ in range(max_task):
             t = threading.Thread(
                 target=run_tidy,
-                args=(args, tmpdir, build_path, task_queue, lock, failed_files),
+                args=(
+                    args,
+                    tmpdir,
+                    build_path,
+                    task_queue,
+                    lock,
+                    failed_files,
+                ),
             )
             t.daemon = True
             t.start()

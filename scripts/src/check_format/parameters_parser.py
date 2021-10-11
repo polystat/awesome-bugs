@@ -8,7 +8,10 @@ COMMON_FILES = ["README.md"]
 ARTIFACT_NAME = "samples_parameters.json"
 ARTIFACT_PATH = "./samples_parameters.json"
 
-FILE_FILTERS = [r".*\.eo", r"filters\.txt"]  # EO translations  # error filters
+FILE_FILTERS = [
+    r".*\.eo",
+    r"filters\.txt",
+]  # EO translations  # error filters
 
 
 def analyze_dirs(code_path):
@@ -21,7 +24,8 @@ def analyze_dirs(code_path):
             filtered_files = list(
                 filter(
                     lambda f: all(
-                        re.fullmatch(f_filter, f) is None for f_filter in FILE_FILTERS
+                        re.fullmatch(f_filter, f) is None
+                        for f_filter in FILE_FILTERS
                     ),
                     files,
                 )
@@ -39,7 +43,9 @@ def analyze_dirs(code_path):
                 return None
 
             if len(filtered_files) > 2:
-                logging.error(f"Path '{root}' contains more than one source files")
+                logging.error(
+                    f"Path '{root}' contains more than one source files"
+                )
                 return None
 
             # This code sample is OK
@@ -166,7 +172,9 @@ def validate_input(parameters):
             continue
 
         if not allowed_parameters[key]["checker"](value):
-            logging.error(f"Parameter '{key}' has an incorrect value ({value})!")
+            logging.error(
+                f"Parameter '{key}' has an incorrect value ({value})!"
+            )
             return False
 
     # We are OK

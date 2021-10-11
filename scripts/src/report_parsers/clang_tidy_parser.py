@@ -1,6 +1,9 @@
 from parsy import string, regex, seq
 
-from scripts.src.analyze_reports import AnalyzerReport, AnalyzerReportRow
+from scripts.src.analyze_reports import (
+    AnalyzerReport,
+    AnalyzerReportRow,
+)
 from scripts.src.report_parsers.base_parser import Parser
 from itertools import chain
 
@@ -66,10 +69,14 @@ class ClangTidyParser(Parser):
             )
         )
         clang_tidy_error = seq(command >> analyzer_error.at_least(0))
-        clang_tidy_report = seq(checks << newline, clang_tidy_error.at_least(0)).map(
+        clang_tidy_report = seq(
+            checks << newline, clang_tidy_error.at_least(0)
+        ).map(
             lambda lst: {
                 "checks": lst[0],
-                "errors": list(chain.from_iterable(chain.from_iterable(lst[1]))),
+                "errors": list(
+                    chain.from_iterable(chain.from_iterable(lst[1]))
+                ),
             }
         )
         with open(self.REPORT_PATH) as report:

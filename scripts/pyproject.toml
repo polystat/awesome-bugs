@@ -5,3 +5,8 @@ requires = [
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
+
+# black configs
+[tool.black]
+line-length = 80
+target-version = ['py39']

@@ -33,7 +33,10 @@ class AnalyzerReport:
     report_path: str
 
     def __init__(
-        self, results: Iterable[AnalyzerReportRow], analyzer: str, report_path: str
+        self,
+        results: Iterable[AnalyzerReportRow],
+        analyzer: str,
+        report_path: str,
     ):
         self.results = results
         self.analyzer = analyzer

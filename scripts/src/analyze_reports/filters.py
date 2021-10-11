@@ -17,7 +17,12 @@ def read_sample_filters(sample_path):
 def read_global_filters():
     try:
         with open(GLOBAL_FILTER_PATH, "r") as f_file:
-            res = list(filter(lambda fltr: len(fltr) > 0, f_file.read().split("\n")))
+            res = list(
+                filter(
+                    lambda fltr: len(fltr) > 0,
+                    f_file.read().split("\n"),
+                )
+            )
     except OSError:
         logging.info(f"Didn't find global_filters at '{GLOBAL_FILTER_PATH}'")
         return []

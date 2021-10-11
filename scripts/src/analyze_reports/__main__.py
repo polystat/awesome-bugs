@@ -1,17 +1,18 @@
 import logging
 import json
-from scripts.src.analyze_reports.report import AnalyzerReport
+from scripts.src.analyze_reports.report import (
+    AnalyzerReport,
+)
 from scripts.src.report_parsers import ClangTidyParser
 from functools import reduce
+
 INPUT_ARTIFACT_PATH = "./samples_parameters.json"
 
 
 def run():
     logging.basicConfig(level=logging.DEBUG)
 
-    parsers = {
-        ClangTidyParser(): [lambda row: row.error_type != "note"]
-    }
+    parsers = {ClangTidyParser(): [lambda row: row.error_type != "note"]}
     analyzer_reports: list[AnalyzerReport] = []
 
     for parser, preds in parsers.items():

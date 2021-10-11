@@ -3,7 +3,9 @@ import os
 
 from openpyxl import load_workbook
 
-from scripts.src.analyze_reports.report import AnalyzerReport
+from scripts.src.analyze_reports.report import (
+    AnalyzerReport,
+)
 from scripts.src.report_parsers.base_parser import Parser
 
 
@@ -43,7 +45,9 @@ class CoverityParser(Parser):
             if line_index == 0:  # columns names
 
                 if not x == self.COLUMNS_ORDER:
-                    logging.warning("Coverity report columns are in different order!")
+                    logging.warning(
+                        "Coverity report columns are in different order!"
+                    )
 
                 file_col = x.index("File")
                 line_col = x.index("Line Number")
@@ -61,7 +65,9 @@ class CoverityParser(Parser):
 
                 code_sample_val = os.path.dirname(file_val)
                 line_val = x[line_col]
-                error_type_val = "cov:" + ":".join([x[col] for col in error_type_cols])
+                error_type_val = "cov:" + ":".join(
+                    [x[col] for col in error_type_cols]
+                )
 
                 results.append(
                     (
@@ -77,6 +83,8 @@ class CoverityParser(Parser):
 
         print(results[0])
 
-        total_results = AnalyzerReport(results, self.ANALYZER_NAME, self.REPORT_PATH)
+        total_results = AnalyzerReport(
+            results, self.ANALYZER_NAME, self.REPORT_PATH
+        )
 
         return total_results

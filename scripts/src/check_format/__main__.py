@@ -15,7 +15,10 @@ def run():
     for sample_path in paths:
         readme_path = os.path.join(sample_path, "README.md")
         with open(readme_path, "r") as f:
-            print("processing {} ... ".format(sample_path), end="")
+            print(
+                "processing {} ... ".format(sample_path),
+                end="",
+            )
 
             text = f.read()
             parameters = parse_input(text)
