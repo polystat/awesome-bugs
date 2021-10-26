@@ -4,6 +4,7 @@ int main() {
 
     for (int i = 0; i < 5; i++)
     {
+        //Bug_here
         a[i] ++;
     }
 
