@@ -19,16 +19,8 @@ defects/
   null/
   operators/
     division/
-      div-by-zero-when-reading-file.cpp.yml
-      div-by-zero-when-inherited.java.yml
-        ---
-        tags: divison operator numbers
-        author: 
-        severity:
-        ---
-        class Foo {
-        }
-      div-02/
+      div-by-zero-when-reading-file.yml
+      div-by-zero-in-simple-method.yml
     increment/
   loops/
   polymorphism/
@@ -45,3 +37,19 @@ defects/
   pointers/
 ```
 
+Each defect is presented in YAML format, similar to this one
+(in a file `div-by-zero-in-simple-method.yml`):
+
+```
+title: A division without checking for zero may lead to division by zero
+features: operator numbers/float
+language: java
+code: |
+  class Foo {
+    int f(int x) {
+      return 42 / x;
+    }
+  }
+```
+
+To be continued...
