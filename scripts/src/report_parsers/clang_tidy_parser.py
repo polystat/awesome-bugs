@@ -23,7 +23,7 @@ class ClangTidyParser(Parser):
         filename = regex(r"[a-zA-Z0-9_\+\-\.]+")
         rel_path = filename.sep_by(sep=string("/"), min=1)
         abs_path = (string("/") >> rel_path).map(
-            lambda parsed: "/".join(parsed[parsed.index("code") :])
+            lambda parsed: "/".join(parsed[parsed.index("temp"):])
         )
         command = (
             string("clang-tidy")
