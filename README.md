@@ -75,7 +75,7 @@ code:
     }
 ```
 
-If code sample consists of several files they also can be puted in subsection:
+If a code sample consists of several files they also can be put in subsection:
 ```
 ...
 code: 
