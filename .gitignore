@@ -5,3 +5,5 @@ build/
 .idea/
 res/clang-out
 CMakeLists.txt
+temp/
+temp_YML/
