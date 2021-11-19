@@ -42,14 +42,55 @@ Each defect is presented in YAML format, similar to this one
 
 ```
 title: A division without checking for zero may lead to division by zero
+description: An error can occur when divided by the value received as an argument to the method
 features: operator numbers/float
 language: java
+test_type: bad
 code: |
   class Foo {
     int f(int x) {
       return 42 / x;
     }
   }
+```
+
+A code section can contain subsections for bad and good cases:
+```
+...
+test_type: mixed
+code: 
+  bad: |
+    class Foo {
+      int f(int x) {
+        return 42 / x;
+      }
+    }
+  good: |
+    class Foo {
+      int f(int x) {
+        if(x!=0) {
+          return 42 / x;
+        }
+       }
+    }
+```
+
+If code sample consists of several files they also can be puted in subsection:
+```
+...
+code: 
+  file_name_1: |
+    class Foo {
+      int f(int x) {
+        return 42 / x;
+      }
+    }
+  file_name_2: |
+    class Bar {
+      int g(int x) {
+      }
+    }
+...
 ```
 
 To be continued...
