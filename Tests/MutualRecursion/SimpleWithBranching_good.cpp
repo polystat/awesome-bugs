@@ -1,7 +1,6 @@
 class Base {
 protected:
     int x;
-
 public:
     Base() {
         this->x = 0;
@@ -15,12 +14,10 @@ public:
         this->n(v);
     }
 
-    int getX() { return x; }
-    void setX(int v) { x = v; }
+    virtual ~Base() {}
 };
 
 class Derived : public Base {
-
 public:
     virtual void n(int v) override {
         if (false) {
@@ -33,8 +30,9 @@ public:
 };
 
 int main() {
-    Base *derivedInstance = new Derived();
+    Base* derivedInstance = new Derived();
     derivedInstance->m(10);
+    delete derivedInstance;
 
     return 0;
 }

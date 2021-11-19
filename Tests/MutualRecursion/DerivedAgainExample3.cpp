@@ -10,11 +10,11 @@ public:
         this->x = v;
     }
 
+    virtual ~Base() {}
 };
 
 class Derived : public Base {
 public:
-
     void m(int v) {
         this->n(v);
     }
@@ -23,16 +23,15 @@ public:
 
 class DerivedAgain : public Derived {
 public:
-
     virtual void n(int v) override {
         this->m(v);
     }
-
 };
-//
-//int main() {
-//    Base *derivedAgainInstance = new DerivedAgain();
-//    derivedAgainInstance->m(12);
 
-//    return 0;
-//}
+int main() {
+    Base *derivedAgainInstance = new DerivedAgain();
+    derivedAgainInstance->n(12);
+    delete derivedAgainInstance;
+
+    return 0;
+}

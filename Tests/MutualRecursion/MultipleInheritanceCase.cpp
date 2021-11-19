@@ -1,25 +1,19 @@
-
-
-class NClass
-{
+class NClass {
 private:
     int x;
 public:
     virtual ~NClass() {}
-    virtual void n(int v)
-    {
+    virtual void n(int v) {
         this->x = v;
     }
 };
 
-class MClass
-{
+class MClass {
 private:
     int y;
 public:
     virtual ~MClass() {}
-    virtual void m(int v)
-    {
+    virtual void m(int v) {
         this->y = v;
     }
 };
@@ -41,6 +35,7 @@ public:
 int main() {
     Base* derivedInstance = new Derived();
     derivedInstance->n(10);
+    delete derivedInstance;
 
     return 0;
 }

@@ -13,19 +13,21 @@ public:
     void m(int v) {
         this->n(v);
     }
+
+    virtual ~Base() {}
 };
 
 class Derived : public Base {
-
 public:
     void n(int v) override {
         this->m(v);
     }
 };
 
-//int main() {
-//    Base *derivedInstance = new Derived();
-//    derivedInstance->m(10);
+int main() {
+    Base *derivedInstance = new Derived();
+    derivedInstance->m(10);
+    delete derivedInstance;
 
-//    return 0;
-//}
+    return 0;
+}

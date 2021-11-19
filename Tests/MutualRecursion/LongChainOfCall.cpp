@@ -20,7 +20,6 @@ public:
 };
 
 class Derived : public Base {
-
 public:
     virtual void n(int v) override {
         this->m(v);
@@ -34,6 +33,7 @@ public:
 int main() {
     Derived *derivedInstance = new Derived();
     derivedInstance->l(10);
+    delete derivedInstance;
 
     return 0;
 }

@@ -13,18 +13,21 @@ public:
     void g(int v) {
         this->f(v);
     }
+
+    virtual ~Base() {}
 };
 
 class Derived : public Base {
-
 public:
     void f(int v) {
         this->g(v);
     }
 };
 
-//int main() {
-//    Base *derivedInstance = new Derived();
-//    derivedInstance->g(10);
-//    return 0;
-//}
+int main() {
+    Base *derivedInstance = new Derived();
+    derivedInstance->g(10);
+    delete derivedInstance;
+
+    return 0;
+}

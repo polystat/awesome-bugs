@@ -3,12 +3,9 @@
 class Base {
 protected:
     int x;
-    int y;
-
 public:
     Base() {
         this->x = 0;
-        this->y = 0;
     }
 
     virtual void n(int v) {
@@ -18,6 +15,8 @@ public:
     void m(int v) {
         this->n(v);
     }
+
+    virtual ~Base() {}
 };
 
 class Derived : public Base {
@@ -41,8 +40,9 @@ public:
 
 int main() {
     Base* derivedInstance = new Derived();
-    //derivedInstance->n(10);
+    derivedInstance->n(10);
     derivedInstance->m(10);
+    delete derivedInstance;
 
     return 0;
 }

@@ -13,10 +13,10 @@ public:
     void m(int v) {
         this->n(v);
     }
+    virtual ~Base() {}
 };
 
 class Derived : public Base {
-
 public:
     void n(int const &v) {
         this->m(v);
@@ -26,6 +26,7 @@ public:
 int main() {
     Base *derivedInstance = new Derived();
     derivedInstance->m(10);
+    delete derivedInstance;
 
     return 0;
 }

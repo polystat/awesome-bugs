@@ -39,7 +39,6 @@ public:
 };
 
 class Derived : public BaseFactory::GetBase {
-
 public:
     void n(int v) override {
         this->m(v);
@@ -47,9 +46,9 @@ public:
 };
 
 
-//int main() {
-//    Base *derivedInstance = new Derived();
-//    derivedInstance->m(12);
+int main() {
+    auto* derivedInstance = new Derived();
+    derivedInstance->m(12);
 
-//    return 0;
-//}
+    return 0;
+}
