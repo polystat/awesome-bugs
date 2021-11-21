@@ -3,7 +3,8 @@
 *.json
 build/
 .idea/
-res/clang-out
+res/
 CMakeLists.txt
 temp/
 temp_YML/
+temp_polystat/
