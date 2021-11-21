@@ -55,31 +55,50 @@ def get_code_sample(path):
     lang = data['language']
     file_name = os.path.basename(path)
     file_name_without_ext = os.path.splitext(file_name)[0]
+
     check_file_structure(data, file_name)
 
-    # for lang in languages:
-    lang_section = 'code'
-    if lang_section in data.keys():
-        code_files = data[lang_section]
-        lang_code_path = os.path.join(TEMP_PATH, lang)
+    code_files = data['code']
+    lang_code_path = os.path.join(TEMP_PATH, lang)
 
-        Path(lang_code_path).mkdir(parents=True, exist_ok=True)
+    Path(lang_code_path).mkdir(parents=True, exist_ok=True)
 
-        #
-        if isinstance(code_files, dict):
-            for name, code in code_files.items():
-                lang_file_name = file_name_without_ext + '_' + name + '.' + lang
-
-                with open(os.path.join(lang_code_path, lang_file_name), 'w') as f:
-                    f.write(code)
-        else:
-            code = code_files
-            lang_file_name = file_name_without_ext + '.' + lang
+    if isinstance(code_files, dict):
+        for name, code in code_files.items():
+            lang_file_name = file_name_without_ext + '_' + name + '.' + lang
 
             with open(os.path.join(lang_code_path, lang_file_name), 'w') as f:
                 f.write(code)
     else:
-        logging.warning(f'file {file_name} does not contain code a sample for {lang}')
+        code = code_files
+        lang_file_name = file_name_without_ext + '.' + lang
+
+        with open(os.path.join(lang_code_path, lang_file_name), 'w') as f:
+            f.write(code)
+
+    # TODO: combine the handler of bad/good cases with multi file case
+
+    eo_code = data['eoCode']
+    if len(eo_code) > 0:
+        eo_path = os.path.join(TEMP_PATH, 'eo')
+        Path(eo_path).mkdir(parents=True, exist_ok=True)
+        process_multi_file_section(eo_code, file_name_without_ext, 'eo', eo_path)
+
+
+def process_multi_file_section(sec, file_name_without_ext, lang, path):
+    if isinstance(sec, dict):
+        for name, code in sec.items():
+            file_path = os.path.join(path, file_name_without_ext)
+            Path(file_path).mkdir(parents=True, exist_ok=True)
+            full_path = os.path.join(file_path, name + '.' + lang)
+            with open(full_path, 'w') as f:
+                f.write(code)
+    else:
+        code = sec
+        lang_file_name = file_name_without_ext + '.' + lang
+
+        with open(os.path.join(path, lang_file_name), 'w') as f:
+            f.write(code)
 
 
 def run():
