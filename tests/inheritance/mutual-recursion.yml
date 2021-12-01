@@ -1,11 +1,13 @@
 title: The base mutual case example
-description: One of the methods of the base class overrides in the derived class and results in a mutual recursion
+description: >-
+  One of the methods of the base class overrides in the derived class
+  and results in a mutual recursion
 features: [Inheritance, overriding, method, polymorhism]
 problem: MutualRecursion
 language: cpp
 test_type: mixed
-code: 
-    bad: |
+code:
+    bad: |-
         class Base {
         public:
             int x;
@@ -35,7 +37,7 @@ code:
             derivedInstance->m(10);
             delete derivedInstance;
         }
-    good: |
+    good: |-
         class Base {
         public:
             int x;
@@ -73,7 +75,6 @@ eoCode:
       base > @
       [self v] > n
         self.m self v > @
-
   base: |
     [] > base
       memory > x
