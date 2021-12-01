@@ -1,0 +1,83 @@
+title: The base mutual case example
+description: One of the methods of the base class overrides in the derived class and results in a mutual recursion
+features: [Inheritance, overriding, method, polymorhism]
+problem: MutualRecursion
+language: cpp
+test_type: mixed
+code: 
+    bad: |
+        class Base {
+        public:
+            int x;
+
+            Base() {
+                this->x = 0;
+            }
+            virtual ~Base() {}
+
+            virtual void n(int v) {
+                this->x = v;
+            }
+            void m(int v) {
+                this->n(v);
+            }
+        };
+
+        class Derived : public Base {
+        public:
+            void n(int v) override {
+                this->m(v);
+            }
+        };
+
+        int main() {
+            Base *derivedInstance = new Derived();
+            derivedInstance->m(10);
+            delete derivedInstance;
+        }
+    good: |
+        class Base {
+        public:
+            int x;
+        
+            Base() {
+                this->x = 0;
+            }
+            virtual ~Base() {}
+
+            void n(int v) {
+                this->x = v;
+            }
+            void m(int v) {
+                this->n(v);
+            }
+        };
+
+        class Derived : public Base {
+        public:
+            void n(int v) {
+                this->m(v);
+            }
+        };
+
+        int main() {
+            Base *derivedInstance = new Derived();
+            derivedInstance->m(10);
+            delete derivedInstance;
+        }
+eoCode:
+  foo: |
+    +alias base MutualRecursionExample.base
+
+    [] > foo
+      base > @
+      [self v] > n
+        self.m self v > @
+
+  base: |
+    [] > base
+      memory > x
+      [self v] > n
+        x.write v > @
+      [self v] > m
+        self.n self v > @
