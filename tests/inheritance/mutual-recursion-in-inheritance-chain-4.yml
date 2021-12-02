@@ -4,7 +4,7 @@ description: >-
   a new method o in the first derived class (which calls m)
   and overriding method n in the last class of the inheritance
   chain (which calls o)
-features: [Inheritance, overriding, method, polymorhism]
+features: [Inheritance, overriding, method, polymorphism]
 problem: MutualRecursion
 language: cpp
 test_type: bad

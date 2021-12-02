@@ -2,7 +2,7 @@ title: Mutual recursion in a chain of inheritance
 description: >-
   Mutual recursion occurs in the inheritance chain when overriding
   a method m in the last inherited class in the chain
-features: [Inheritance, overriding, method, polymorhism]
+features: [Inheritance, overriding, method, polymorphism]
 problem: MutualRecursion
 language: cpp
 test_type: bad
