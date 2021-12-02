@@ -1,0 +1,60 @@
+title: Mutual recursion in a chain of inheritance
+description: >-
+  Mutual recursion occurs in the inheritance chain when overriding
+  a method m in the last inherited class in the chain
+features: [Inheritance, overriding, method, polymorhism]
+problem: MutualRecursion
+language: cpp
+test_type: bad
+code: |-
+    class Base {
+    public:
+        int x;
+
+        Base() {
+            this->x = 0;
+        }
+        virtual ~Base() {}
+
+        virtual void n(int v) {
+            this->x = v;
+        }
+        void m(int v) {
+            this->n(v);
+        }
+    };
+
+    class Derived : public Base {};
+
+    class DerivedAgain : public Derived {
+    public:
+        virtual void n(int v) override {
+            this->m(v);
+        }
+    };
+
+    int main() {
+        Base *derivedAgainInstance = new DerivedAgain();
+        derivedAgainInstance->m(12);
+        delete derivedAgainInstance;
+    }
+eoCode:
+  base: |
+    [] > base
+      memory > x
+      [self v] > n
+        x.write v > @
+      [self v] > m
+        self.n self v > @
+  derived: |
+    +alias base sandbox.base
+
+    [] > derived
+      base > @
+  foo: |
+    +alias derived sandbox.derived
+
+    [] > foo
+      derived > @
+      [self v] > n
+        self.m self v > @
