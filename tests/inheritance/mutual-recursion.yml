@@ -2,7 +2,7 @@ title: The base mutual case example
 description: >-
   One of the methods of the base class overrides in the derived class
   and results in a mutual recursion
-features: [Inheritance, overriding, method, polymorhism]
+features: [Inheritance, overriding, method, polymorphism]
 problem: MutualRecursion
 language: cpp
 test_type: mixed
