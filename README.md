@@ -79,7 +79,9 @@ good:
 ```
 
 Temporarily (until we have powerful enough Java/C++/Python to EO translators) we
-keep EO code snippets in the YAML files too.
+keep EO code snippets in the YAML files too. They are excluded from the testing
+process when, for example, Java code is being tested with Java-specific static
+analyzers. They only are used when Polystat is being tested.
 
 Both `bad` and `good` sections are mandatory. Intuitively, the `bad` section
 contains a program with a bug, while the `good` one has a similar program
