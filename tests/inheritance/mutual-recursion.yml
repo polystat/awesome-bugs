@@ -1,81 +1,97 @@
 title: The base mutual case example
-description: >-
+description: >
   One of the methods of the base class overrides in the derived class
   and results in a mutual recursion
-features: [Inheritance, overriding, method, polymorphism]
-problem: MutualRecursion
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
 language: cpp
-test_type: mixed
-code:
-    bad: |-
-        class Base {
-        public:
-            int x;
+bad:
+  source.cpp: |
+    class Base {
+    public:
+        int x;
 
-            Base() {
-                this->x = 0;
-            }
-            virtual ~Base() {}
-
-            virtual void n(int v) {
-                this->x = v;
-            }
-            void m(int v) {
-                this->n(v);
-            }
-        };
-
-        class Derived : public Base {
-        public:
-            void n(int v) override {
-                this->m(v);
-            }
-        };
-
-        int main() {
-            Base *derivedInstance = new Derived();
-            derivedInstance->m(10);
-            delete derivedInstance;
+        Base() {
+            this->x = 0;
         }
-    good: |-
-        class Base {
-        public:
-            int x;
-        
-            Base() {
-                this->x = 0;
-            }
-            virtual ~Base() {}
+        virtual ~Base() {}
 
-            void n(int v) {
-                this->x = v;
-            }
-            void m(int v) {
-                this->n(v);
-            }
-        };
-
-        class Derived : public Base {
-        public:
-            void n(int v) {
-                this->m(v);
-            }
-        };
-
-        int main() {
-            Base *derivedInstance = new Derived();
-            derivedInstance->m(10);
-            delete derivedInstance;
+        virtual void n(int v) {
+            this->x = v;
         }
-eoCode:
-  foo: |
+        void m(int v) {
+            this->n(v);
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void n(int v) override {
+            this->m(v);
+        }
+    };
+
+    int main() {
+        Base *derivedInstance = new Derived();
+        derivedInstance->m(10);
+        delete derivedInstance;
+    }
+  foo.eo: |
     +alias base MutualRecursionExample.base
 
     [] > foo
       base > @
       [self v] > n
         self.m self v > @
-  base: |
+  base.eo: |
+    [] > base
+      memory > x
+      [self v] > n
+        x.write v > @
+      [self v] > m
+        self.n self v > @
+good:
+  source.cpp: |
+    class Base {
+    public:
+        int x;
+
+        Base() {
+            this->x = 0;
+        }
+        virtual ~Base() {}
+
+        void n(int v) {
+            this->x = v;
+        }
+        void m(int v) {
+            this->n(v);
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void n(int v) {
+            this->m(v);
+        }
+    };
+
+    int main() {
+        Base *derivedInstance = new Derived();
+        derivedInstance->m(10);
+        delete derivedInstance;
+    }
+  foo.eo: |
+    +alias base MutualRecursionExample.base
+
+    [] > foo
+      base > @
+      [self v] > n1
+        self.m self v > @
+  base.eo: |
     [] > base
       memory > x
       [self v] > n
