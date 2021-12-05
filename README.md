@@ -1,3 +1,5 @@
+<img src="awesome-bugs-logo.svg" height="92px"/>
+
 This is a taxonomy of software defects with examples.
 
 We take into account the following classifications:
