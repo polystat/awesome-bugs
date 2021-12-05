@@ -4,9 +4,12 @@
 [![Hits-of-Code](https://hitsofcode.com/github/polystat/awesome-bugs)](https://hitsofcode.com/view/github/polystat/awesome-bugs)
 ![Lines of code](https://img.shields.io/tokei/lines/github/polystat/awesome-bugs)
 
-This is a taxonomy of software defects with examples.
+**DISCLAIMER**: The work is still in progress!
 
-We take into account the following classifications:
+This is a taxonomy of software defects and a benchmarking scripts which validates
+which of the mentioned defects can be detected by which static analyzers.
+
+While building the taxonomy we took into account the following classifications:
 
   * [MISRA C/C++](..)
   * ...
