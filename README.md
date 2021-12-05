@@ -43,29 +43,24 @@ Each defect is presented in YAML format, similar to this one
 ```
 title: A division without checking for zero may lead to division by zero
 description: An error can occur when divided by the value received as an argument to the method
-features: operator numbers/float
+features: 
+  - operators/division
+  - loops
 language: java
-test_type: bad
-code: |
-  class Foo {
-    int f(int x) {
-      return 42 / x;
-    }
-  }
-```
-
-A code section can contain subsections for bad and good cases:
-```
-...
-test_type: mixed
-code: 
-  bad: |
+bad:
+  foo.java: |
     class Foo {
       int f(int x) {
         return 42 / x;
       }
     }
-  good: |
+  foo.eo: |
+    [] > Foo
+      [] > new
+        [x] > f
+          42.div x > @
+good:
+  foo.java: |
     class Foo {
       int f(int x) {
         if(x!=0) {
@@ -73,24 +68,21 @@ code:
         }
        }
     }
+  foo.eo: |
+    [] > Foo
+      [] > new
+        [x] > f
+          if. > @
+            x.neq 0
+            42.div x
+            TRUE
 ```
 
-If a code sample consists of several files they also can be put in subsection:
-```
-...
-code: 
-  file_name_1: |
-    class Foo {
-      int f(int x) {
-        return 42 / x;
-      }
-    }
-  file_name_2: |
-    class Bar {
-      int g(int x) {
-      }
-    }
-...
-```
+Temporarily (until we have powerful enough Java/C++/Python to EO translators) we
+keep EO code snippets in the YAML files too.
+The names of `.eo` files must match the names of their `.java` counterparts.
 
-To be continued...
+Both `bad` and `good` sections are mandatory. Intuitively, the `bad` section
+contains a program with a bug, while the `good` one has a similar program
+but without a bug.
+
