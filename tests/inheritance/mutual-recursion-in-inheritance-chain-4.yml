@@ -1,14 +1,17 @@
 title: Mutual recursion in a chain of inheritance
-description: >-
+description: >
   Mutual recursion occurs in the inheritance chain when adding
   a new method o in the first derived class (which calls m)
   and overriding method n in the last class of the inheritance
   chain (which calls o)
-features: [Inheritance, overriding, method, polymorphism]
-problem: MutualRecursion
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
 language: cpp
-test_type: bad
-code: |-
+bad:
+  source.cpp: |
     class Base {
     public:
         int x;
@@ -45,25 +48,83 @@ code: |-
         derivedAgainInstance->m(12);
         delete derivedAgainInstance;
     }
-eoCode:
-  base: |
+  base.eo: |
     [] > base
       memory > x
       [self v] > n
         x.write v > @
       [self v] > m
         self.n self v > @
-  derived: |
+  derived.eo: |
     +alias base sandbox.base
 
     [] > derived
       base > @
       [self v] > o
         self.m self v > @
-  foo: |
+  foo.eo: |
     +alias derived sandbox.derived
 
     [] > foo
       derived > @
       [self v] > n
+        self.o self v > @
+good:
+  source.cpp: |
+    class Base {
+    public:
+        int x;
+
+        Base() {
+            this->x = 0;
+        }
+        virtual ~Base() {}
+
+        void n(int v) {
+            this->x = v;
+        }
+        void m(int v) {
+            this->n(v);
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void o(int v) {
+            this->m(v);
+        }
+    };
+
+    class DerivedAgain : public Derived {
+    public:
+        void n(int v) {
+            this->o(v);
+        }
+    };
+
+    int main() {
+        Base *derivedAgainInstance = new DerivedAgain();
+        derivedAgainInstance->m(12);
+        delete derivedAgainInstance;
+    }
+  base.eo: |
+    [] > base
+      memory > x
+      [self v] > n
+        x.write v > @
+      [self v] > m
+        self.n self v > @
+  derived.eo: |
+    +alias base sandbox.base
+
+    [] > derived
+      base > @
+      [self v] > o
+        self.m self v > @
+  foo.eo: |
+    +alias derived sandbox.derived
+
+    [] > foo
+      derived > @
+      [self v] > n1
         self.o self v > @

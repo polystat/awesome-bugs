@@ -1,12 +1,15 @@
 title: Mutual recursion in a chain of inheritance
-description: >-
+description: >
   Mutual recursion occurs in the inheritance chain when overriding
   a method m in the first inherited class in the chain
-features: [Inheritance, overriding, method, polymorphism]
-problem: MutualRecursion
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
 language: cpp
-test_type: bad
-code: |-
+bad:
+  source.cpp: |
     class Base {
     public:
         int x;
@@ -38,22 +41,73 @@ code: |-
         derivedAgainInstance->m(12);
         delete derivedAgainInstance;
     }
-eoCode:
-  base: |
+  base.eo: |
     [] > base
       memory > x
       [self v] > n
         x.write v > @
       [self v] > m
         self.n self v > @
-  derived: |
+  derived.eo: |
     +alias base sandbox.base
 
     [] > derived
       base > @
       [self v] > n
         self.m self v > @
-  foo: |
+  foo.eo: |
+    +alias derived sandbox.derived
+
+    [] > foo
+      derived > @
+good:
+  source.cpp: |
+    class Base {
+    public:
+        int x;
+
+        Base() {
+            this->x = 0;
+        }
+        virtual ~Base() {}
+
+        void n(int v) {
+            this->x = v;
+        }
+        void m(int v) {
+            this->n(v);
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        virtual void n(int v) {
+            this->m(v);
+        }
+    };
+
+    class DerivedAgain : public Derived {};
+
+    int main() {
+        Base* derivedAgainInstance = new DerivedAgain();
+        derivedAgainInstance->m(12);
+        delete derivedAgainInstance;
+    }
+  base.eo: |
+    [] > base
+      memory > x
+      [self v] > n
+        x.write v > @
+      [self v] > m
+        self.n self v > @
+  derived.eo: |
+    +alias base sandbox.base
+
+    [] > derived
+      base > @
+      [self v] > n1
+        self.m self v > @
+  foo.eo: |
     +alias derived sandbox.derived
 
     [] > foo

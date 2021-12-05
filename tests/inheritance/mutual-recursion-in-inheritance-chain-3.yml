@@ -1,13 +1,16 @@
 title: Mutual recursion in a chain of inheritance
-description: >-
+description: >
   Mutual recursion occurs in the inheritance chain when adding
   a new method m in the first derived class and overriding method n
   in the last class of the inheritance chain
-features: [Inheritance, overriding, method, polymorphism]
-problem: MutualRecursion
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
 language: cpp
-test_type: bad
-code: |-
+bad:
+  source.cpp: |
     class Base {
     public:
         int x;
@@ -41,23 +44,76 @@ code: |-
         derivedAgainInstance->n(12);
         delete derivedAgainInstance;
     }
-eoCode:
-  base: |
+  base.eo: |
     [] > base
       memory > x
       [self v] > n
         x.write v > @
-  derived: |
+  derived.eo: |
     +alias base sandbox.base
 
     [] > derived
       base > @
       [self v] > m
         self.n self v > @
-  foo: |
+  foo.eo: |
     +alias derived sandbox.derived
 
     [] > foo
       derived > @
       [self v] > n
+        self.m self v > @
+good:
+  source.cpp: |
+    class Base {
+    public:
+        int x;
+
+        Base() {
+            this->x = 0;
+        }
+        virtual ~Base() {}
+
+        void n(int v) {
+            this->x = v;
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void m(int v) {
+            this->n(v);
+        }
+    };
+
+    class DerivedAgain : public Derived {
+    public:
+        virtual void n(int v) {
+            this->m(v);
+        }
+    };
+
+    int main() {
+        Base *derivedAgainInstance = new DerivedAgain();
+        derivedAgainInstance->n(12);
+        delete derivedAgainInstance;
+    }
+  base.eo: |
+    [] > base
+      memory > x
+      [self v] > n
+        x.write v > @
+  derived.eo: |
+    +alias base sandbox.base
+
+    [] > derived
+      base > @
+      [self v] > m
+        self.n self v > @
+  foo.eo: |
+    +alias derived sandbox.derived
+
+    [] > foo
+      derived > @
+      [self v] > n1
         self.m self v > @
