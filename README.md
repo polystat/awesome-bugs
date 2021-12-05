@@ -80,7 +80,6 @@ good:
 
 Temporarily (until we have powerful enough Java/C++/Python to EO translators) we
 keep EO code snippets in the YAML files too.
-The names of `.eo` files must match the names of their `.java` counterparts.
 
 Both `bad` and `good` sections are mandatory. Intuitively, the `bad` section
 contains a program with a bug, while the `good` one has a similar program
