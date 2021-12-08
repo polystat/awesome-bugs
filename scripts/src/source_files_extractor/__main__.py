@@ -26,18 +26,6 @@ def get_test_files_paths(code_path):
     return code_samples_paths
 
 
-# Iterate paths and process corresponding files
-def process_files(paths, out_path):
-    for path in paths:
-        print(f"Process file: {path}")
-        try:
-            process_file(path, out_path)
-        except yaml.YAMLError as exc:
-            print(exc)
-        except IOError:
-            print("An IOError has occurred!")
-
-
 # Path (file) processing
 def process_file(file_path, out_path):
     # Read file
@@ -115,7 +103,10 @@ def run():
     shutil.rmtree(result_folder_path, ignore_errors=True)
 
     # Process found files
-    process_files(test_files_paths, result_folder_path)
+    for path in test_files_paths:
+        print(f"Process file: {path}")
+        process_file(path, result_folder_path)
+
     print("Source files extracted successfully!")
 
 
