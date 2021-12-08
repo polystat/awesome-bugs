@@ -5,8 +5,9 @@ import sys
 import yaml
 import shutil
 
-# Here we take all YAML files from the input folder, if files have the correct
-# structure - extract source code from them and write them to the resulting folder
+# Here we take all YAML files from the input folder, if files have
+# the correct structure - extract source code from them and write
+# them to the resulting folder
 
 # As input it takes:
 #  - a path to the folder with YAML files
@@ -33,16 +34,20 @@ def process_file(file_path, out_path):
         file_content = yaml.safe_load(stream)
 
     # Checking if all required keys exist
-    # If the file doesn't contain at least one key - the file will not be processed
+    # If the file doesn't contain at least one key - the file
+    # will not be processed
     absent_keys = get_absent_keys(file_content)
     if len(absent_keys) > 0:
         logging.warning(
-            f"file {file_path} does not contain {str(absent_keys)} required section"
+            f"file {file_path} does not contain"
+            f" {str(absent_keys)} required section"
         )
         return False
 
     # extract source files (bad and good cases)
-    source_files = get_sources(file_content, "bad") + get_sources(file_content, "good")
+    source_files = \
+        get_sources(file_content, "bad") +\
+        get_sources(file_content, "good")
 
     # Write given sources to resulting folder
     write_sources(source_files, file_path, out_path)
@@ -61,7 +66,9 @@ def get_absent_keys(file_content):
 def get_sources(file_content, source_type):
     source_files = []
     for file in file_content[source_type]:
-        source_files.append((source_type, file, file_content[source_type][file]))
+        source_files.append(
+            (source_type, file, file_content[source_type][file])
+        )
     return source_files
 
 
@@ -72,7 +79,8 @@ def get_sources(file_content, source_type):
 # - language: cpp
 # - case name - case type: mutual-recursion-bad
 # - source file name: foo.cpp
-# We have such path in the result: temp\sources\cpp\mutual-recursion-bad\foo.cpp
+# We have such path in the result:
+# temp\sources\cpp\mutual-recursion-bad\foo.cpp
 def write_sources(source_files, base_file_path, out_path):
     base_file_name = os.path.basename(base_file_path)
     base_file_name_without_ext = os.path.splitext(base_file_name)[0]

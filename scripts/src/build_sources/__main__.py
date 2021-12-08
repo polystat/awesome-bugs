@@ -1,7 +1,8 @@
 import os
 import sys
 
-# Here we generate a CMakeLists file based on the CPP sources and make a build using it
+# Here we generate a CMakeLists file based on the CPP sources
+# and make a build using it
 
 # As input it takes:
 #  - a path to the folder with source files
@@ -40,7 +41,8 @@ def run_cmake(build_folder_path):
         os.mkdir(build_folder_path)
 
     # Run building process.
-    # DCMAKE_EXPORT_COMPILE_COMMANDS=ON is important because the exported DB will be used by CSA
+    # DCMAKE_EXPORT_COMPILE_COMMANDS=ON is important because
+    # the exported DB will be used by CSA
     os.system("cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -S . -B build")
 
 
