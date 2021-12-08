@@ -34,7 +34,6 @@ jobs:
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip wheel
-          python3 pip install --upgrade pip
       
       - name: Python Code Quality and Lint
         uses: ricardochaves/python-lint@v1.4.0
