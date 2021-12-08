@@ -31,5 +31,9 @@ jobs:
           # Version range or exact version of a Python version to use, using SemVer's version range syntax.
           python-version: 3.9.7
       
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip wheel
+      
       - name: PEP8 Check
         uses: quentinguidee/pep8-action@v2.0.13-dev
