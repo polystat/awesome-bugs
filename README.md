@@ -1,5 +1,6 @@
 <img src="awesome-bugs-logo.svg" height="92px"/>
 
+[![CI](https://github.com/polystat/awesome-bugs/actions/workflows/main.yml/badge.svg)](https://github.com/polystat/awesome-bugs/actions/workflows/main.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/polystat/awesome-bugs/blob/master/LICENSE.txt)
 [![Hits-of-Code](https://hitsofcode.com/github/polystat/awesome-bugs)](https://hitsofcode.com/view/github/polystat/awesome-bugs)
 ![Lines of code](https://img.shields.io/tokei/lines/github/polystat/awesome-bugs)
