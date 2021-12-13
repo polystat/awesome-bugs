@@ -29,17 +29,23 @@ def run_polystat(polystat_file, sources_folder_path,
             temp_path = os.path.join(temp_folder_path, case_name)
             Path(temp_path).mkdir(parents=True, exist_ok=True)
 
-            output = subprocess.run(
-                f'java -jar {polystat_file} {root} {temp_path}',
+            output = subprocess.run([
+                "java",
+                "-jar",
+                polystat_file,
+                root,
+                temp_path,
+            ],
                 capture_output=True
             )
             case_result = temp_path + "\n" + output.stdout.decode("utf-8")
+            print(output.stderr.decode("utf-8"))
             results.append(case_result)
 
     # Write results to file
     result_file_path = os.path.join(result_folder_path, "eo-out.txt")
     with open(result_file_path, "w") as fw:
-        fw.write("".join(results))
+        fw.write("".join(sorted(results)))
 
     print("Polystat analysis completed")
 
