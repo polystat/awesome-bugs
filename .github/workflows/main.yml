@@ -15,8 +15,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  # This workflow contains a single job called "check"
+  check:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -29,12 +29,8 @@ jobs:
         uses: actions/setup-python@v2.2.2
         with:
           # Version range or exact version of a Python version to use, using SemVer's version range syntax.
-          python-version: 3.9.7
-      
-      - name: Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip wheel
-      
+          python-version: 3.10.0
+
       - name: Python Code Quality and Lint
         uses: ricardochaves/python-lint@v1.4.0
         with:
@@ -44,3 +40,35 @@ jobs:
           use-black: false
           use-mypy: false
           use-isort: false
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip wheel
+          python3 -m pip install -r scripts/requirements.txt
+          python3 -m pip install -e ./scripts
+
+      - name: Extracting source files from correct YAML files
+        run: python3 -m source_files_extractor tests temp/sources
+
+      - name: Run clang-tidy and save reports to "res" folder
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang-tidy cmake
+          python3 -m build_sources temp/sources build
+          mkdir results
+          python3 -m clang_tidy -p ./build > results/clang-out.txt
+          cat results/clang-out.txt
+
+
+      - name: Run Polystat and save reports to "result" folder
+        run: |
+          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.1.0/polystat-0.1.0-jar-with-dependencies.jar"
+          python3 -m polystat polystat.jar temp/sources/eo temp/polystat results
+          cat results/eo-out.txt
+
+      # Saving artifacts
+      - name: Upload results
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          path: results/
