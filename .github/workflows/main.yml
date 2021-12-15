@@ -46,11 +46,10 @@ jobs:
           python3 -m pip install --upgrade pip wheel
           python3 -m pip install -r scripts/requirements.txt
           python3 -m pip install -e ./scripts
-
       - name: Extracting source files from correct YAML files
         run: python3 -m source_files_extractor tests temp/sources
 
-      - name: Run clang-tidy and save reports to "res" folder
+      - name: Run clang-tidy and save reports to "results" folder
         run: |
           sudo apt-get update -y
           sudo apt-get install -y clang-tidy cmake
@@ -58,14 +57,12 @@ jobs:
           mkdir results
           python3 -m clang_tidy -p ./build > results/clang-out.txt
           cat results/clang-out.txt
-
-
-      - name: Run Polystat and save reports to "result" folder
+      - name: Run Polystat and save reports to "results" folder
         run: |
-          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.1.0/polystat-0.1.0-jar-with-dependencies.jar"
+          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.2.0/polystat-0.2.0-jar-with-dependencies.jar"
           python3 -m polystat polystat.jar temp/sources/eo temp/polystat results
           cat results/eo-out.txt
-
+          
       # Saving artifacts
       - name: Upload results
         uses: actions/upload-artifact@v2
