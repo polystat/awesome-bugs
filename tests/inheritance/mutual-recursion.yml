@@ -39,10 +39,10 @@ bad:
         derivedInstance->m(10);
         delete derivedInstance;
     }
-  foo.eo: |
+  test.eo: |
     +alias base MutualRecursionExample.base
 
-    [] > foo
+    [] > test
       base > @
       [self v] > n
         self.m self v > @
@@ -84,10 +84,10 @@ good:
         derivedInstance->m(10);
         delete derivedInstance;
     }
-  foo.eo: |
+  test.eo: |
     +alias base MutualRecursionExample.base
 
-    [] > foo
+    [] > test
       base > @
       [self v] > n1
         self.m self v > @

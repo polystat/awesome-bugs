@@ -55,10 +55,10 @@ bad:
       base > @
       [self v] > n
         self.m self v > @
-  foo.eo: |
+  test.eo: |
     +alias derived sandbox.derived
 
-    [] > foo
+    [] > test
       derived > @
 good:
   source.cpp: |
@@ -107,8 +107,8 @@ good:
       base > @
       [self v] > n1
         self.m self v > @
-  foo.eo: |
+  test.eo: |
     +alias derived sandbox.derived
 
-    [] > foo
+    [] > test
       derived > @

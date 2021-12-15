@@ -53,10 +53,10 @@ bad:
 
     [] > derived
       base > @
-  foo.eo: |
+  test.eo: |
     +alias derived sandbox.derived
 
-    [] > foo
+    [] > test
       derived > @
       [self v] > n
         self.m self v > @
@@ -105,10 +105,10 @@ good:
 
     [] > derived
       base > @
-  foo.eo: |
+  test.eo: |
     +alias derived sandbox.derived
 
-    [] > foo
+    [] > test
       derived > @
       [self v] > n1
         self.m self v > @
