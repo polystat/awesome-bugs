@@ -36,10 +36,11 @@ jobs:
         with:
           use-pylint: false
           use-pycodestyle: true
-          use-flake8: false
+          use-flake8: true
           use-black: false
           use-mypy: false
           use-isort: false
+          extra-flake8-options: "--config .config/pycodestyle/setup.cfg"
 
       - name: Install dependencies
         run: |
