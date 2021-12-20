@@ -8,4 +8,4 @@ class Parser:
 
     @abstractmethod
     def parse(self) -> AnalyzerReport:
-        raise NotImplemented()
+        raise NotImplementedError()
