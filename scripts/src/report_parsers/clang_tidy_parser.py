@@ -73,7 +73,6 @@ class ClangTidyParser(Parser):
             checks << newline, clang_tidy_error.at_least(0)
         ).map(
             lambda lst: {
-                "checks": lst[0],
                 "errors": list(
                     chain.from_iterable(chain.from_iterable(lst[1]))
                 ),
@@ -82,7 +81,8 @@ class ClangTidyParser(Parser):
 
         with open(self.REPORT_PATH) as report:
             return AnalyzerReport(
-                clang_tidy_report.parse(report.read() + "\n")["errors"],
+                clang_tidy_report.parse(report.read().strip() +
+                                        "\n")["errors"],
                 self.ANALYZER_NAME,
                 self.REPORT_PATH,
                 0,
