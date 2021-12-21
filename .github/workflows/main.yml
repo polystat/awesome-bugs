@@ -40,12 +40,14 @@ jobs:
           use-black: false
           use-mypy: false
           use-isort: false
+          extra-flake8-options: "--config .config/pycodestyle/setup.cfg"
 
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip wheel
           python3 -m pip install -r scripts/requirements.txt
           python3 -m pip install -e ./scripts
+
       - name: Extracting source files from correct YAML files
         run: python3 -m source_files_extractor tests temp/sources
 
@@ -62,7 +64,10 @@ jobs:
           curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.2.0/polystat-0.2.0-jar-with-dependencies.jar"
           python3 -m polystat polystat.jar temp/sources/eo temp/polystat results
           cat results/eo-out.txt
-          
+
+      - name: Analyze reports
+        run: python3 -m analyze_reports
+
       # Saving artifacts
       - name: Upload results
         uses: actions/upload-artifact@v2
