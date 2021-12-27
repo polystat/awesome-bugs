@@ -1,0 +1,117 @@
+title: Mutual recursion in a chain of calls
+description: >
+  Mutual recursion occurs in the chain of calls. After overriding method n
+  we have such recursive call chain: l -> (m -> o -> n -> m)
+features:
+  - inheritance
+  - overriding
+  - method
+language: cpp
+bad:
+  source.cpp: |
+    class Base {
+    public:
+        int x;
+
+        Base() {
+            this->x = 0;
+        }
+
+        virtual void n(int v) {
+            this->x = v;
+        }
+        void o(int v) {
+            this->n(v);
+        }
+        void m(int v) {
+            this->o(v);
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        virtual void n(int v) override {
+            this->m(v);
+        }
+        void l(int v) {
+            this->m(v);
+        }
+    };
+
+    int main() {
+        Derived *derivedInstance = new Derived();
+        derivedInstance->l(10);
+        delete derivedInstance;
+    }
+  test.eo: |
+    +alias base sandbox.base
+
+    [] > test
+      base > @
+      [self v] > n
+        self.m self v > @
+      [self v] > l
+        self.m self v > @
+  base.eo: |
+    [] > base
+      memory > x
+      [self v] > n
+        x.write v > @
+      [self v] > o
+        self.n self v > @
+      [self v] > m
+        self.o self v > @
+good:
+  source.cpp: |
+    class Base {
+    public:
+        int x;
+
+        Base() {
+            this->x = 0;
+        }
+
+        void n(int v) {
+            this->x = v;
+        }
+        void o(int v) {
+            this->n(v);
+        }
+        void m(int v) {
+            this->o(v);
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void n(int v) {
+            this->m(v);
+        }
+        void l(int v) {
+            this->m(v);
+        }
+    };
+
+    int main() {
+        Derived *derivedInstance = new Derived();
+        derivedInstance->l(10);
+        delete derivedInstance;
+    }
+  test.eo: |
+    +alias base sandbox.base
+
+    [] > test
+      base > @
+      [self v] > n1
+        self.m self v > @
+      [self v] > l
+        self.m self v > @
+  base.eo: |
+    [] > base
+      memory > x
+      [self v] > n
+        x.write v > @
+      [self v] > o
+        self.n self v > @
+      [self v] > m
+        self.o self v > @
