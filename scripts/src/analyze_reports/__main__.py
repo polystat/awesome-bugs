@@ -72,7 +72,7 @@ def generate_report(analyzer_reports):
     with doc.create(Section("Details", numbering=False)):
         for analyzer in analyzer_reports:
             if len(analyzer.results) == 0:
-                break
+                continue
             with doc.create(Subsection(analyzer.analyzer, numbering=False)):
                 with doc.create(Enumerate()) as ls:
                     for result in analyzer.results:
