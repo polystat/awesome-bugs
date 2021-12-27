@@ -8,8 +8,9 @@ from scripts.src.report_parsers.base_parser import Parser
 
 
 class PolystatParser(Parser):
+    SOURCE_PATH = os.path.join("temp", "sources", "eo")
     REPORT_PATH = os.path.join("results", "eo-out.txt")
-    ANALYZER_NAME = "polystat"
+    ANALYZER_NAME = "Polystat"
 
     def parse(self) -> AnalyzerReport:
         newline = string("\n")
@@ -58,20 +59,22 @@ class PolystatParser(Parser):
             # join error info and path
             results = []
             for el in res:
-                path = el[0]
+                path = el[0].replace("temp/polystat", "temp/sources/eo")
                 for in_el in el[1]:
                     results.append(
                         AnalyzerReportRow(
                             file=path,
-                            line_number=0,
-                            column_number=0,
+                            error_position=(0, 0),
                             error_type=in_el[0],
                             error_message=in_el[1],
                         )
                     )
 
             return AnalyzerReport(
-                results, self.ANALYZER_NAME, self.REPORT_PATH, 0, 0
+                results,
+                self.ANALYZER_NAME,
+                self.SOURCE_PATH,
+                self.REPORT_PATH,
             )
 
 

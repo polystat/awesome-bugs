@@ -9,6 +9,7 @@ from itertools import chain
 
 
 class ClangTidyParser(Parser):
+    SOURCE_PATH = os.path.join("temp", "sources", "cpp")
     REPORT_PATH = os.path.join("results", "clang-out.txt")
     ANALYZER_NAME = "clang-tidy"
 
@@ -62,8 +63,7 @@ class ClangTidyParser(Parser):
         ).map(
             lambda lst: AnalyzerReportRow(
                 file=lst[0],
-                line_number=lst[1],
-                column_number=lst[2],
+                error_position=(lst[1], lst[2]),
                 error_type=lst[3],
                 error_message=lst[4],
             )
@@ -84,9 +84,8 @@ class ClangTidyParser(Parser):
                 clang_tidy_report.parse(report.read().strip() +
                                         "\n")["errors"],
                 self.ANALYZER_NAME,
+                self.SOURCE_PATH,
                 self.REPORT_PATH,
-                0,
-                0,
             )
 
 
