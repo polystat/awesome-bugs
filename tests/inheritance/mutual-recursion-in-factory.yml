@@ -38,6 +38,7 @@ bad:
     int main() {
         auto* derivedInstance = new Derived();
         derivedInstance->m(12);
+        delete derivedInstance;
     }
   base_factory.eo: |
     [] > base_factory
@@ -85,6 +86,7 @@ good:
     int main() {
         auto* derivedInstance = new Derived();
         derivedInstance->m(12);
+        delete derivedInstance;
     }
   base_factory.eo: |
     [] > base_factory
