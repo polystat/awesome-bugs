@@ -1,2 +1,6 @@
-from scripts.src.analyze_reports.report import \
-    AnalyzerReport, AnalyzerReportRow, AnalyzerStatistic
+from scripts.src.analyze_reports.report import (
+    AnalyzerReport,
+    AnalyzerReportRow,
+    AnalyzerReportExceptionRow,
+    AnalyzerStatistic,
+)

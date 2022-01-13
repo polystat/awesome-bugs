@@ -6,11 +6,12 @@ from pathlib import Path
 import os
 
 
-@dataclass(frozen=True)
+@dataclass()
 class AnalyzerReportRow:
     file_path: str
     error_type: str
     error_message: str
+    error_position: (int, int) = (0, 0)
 
     def dict(self) -> dict:
         return {
@@ -30,23 +31,29 @@ class AnalyzerReportRow:
             )
 
 
-class AnalyzerStatistic:
-    true_positive: int
-    false_positive: int
-    true_negative: int
-    false_negative: int
-
+class AnalyzerReportExceptionRow(AnalyzerReportRow):
     def __init__(
         self,
-        true_positive=0,
-        false_positive=0,
-        true_negative=0,
-        false_negative=0,
+        file_path,
+        error_type="Exception",
+        error_message="[An exception was thrown]",
     ):
-        self.true_positive = true_positive
-        self.false_positive = false_positive
-        self.true_negative = true_negative
-        self.false_negative = false_negative
+        self.file_path = file_path
+        self.error_type = error_type
+        self.error_message = error_message
+
+
+@dataclass()
+class AnalyzerStatistic:
+    true_positive: int = 0
+    false_positive: int = 0
+    true_negative: int = 0
+    false_negative: int = 0
+    exceptions: int = 0
+    accuracy: float = 0
+    precision: float = 0
+    recall: float = 0
+    true_positives_rate: float = 0
 
     def dict(self) -> dict:
         return {
@@ -54,6 +61,10 @@ class AnalyzerStatistic:
             "false_positive": self.false_positive,
             "true_negative": self.true_negative,
             "false_negative": self.false_negative,
+            "accuracy": self.accuracy,
+            "precision": self.precision,
+            "recall": self.recall,
+            "true_positives_rate": self.true_positives_rate,
         }
 
 
@@ -91,23 +102,47 @@ class AnalyzerReport:
             if len(dirs) == 0:
                 source_paths.append(root.replace("\\", "/"))
 
-        result_paths = [
-            x.file if Path(x.file).is_dir() else os.path.dirname(x.file)
-            for x in self.results
-        ]
+        exceptions, result_paths = [], []
+        for x in self.results:
+            (exceptions, result_paths)[x.error_type != "Exception"].append(
+                x.file_path
+                if Path(x.file_path).is_dir()
+                else os.path.dirname(x.file_path)
+            )
 
         stat = self.statistic
         for test in source_paths:
             if test in result_paths:
                 if test.find("-bad") != -1:
                     stat.true_positive += 1
-                if test.find("-good") != -1:
+                elif test.find("-good") != -1:
                     stat.false_positive += 1
-            else:
+            elif test not in exceptions:
                 if test.find("-bad") != -1:
                     stat.false_negative += 1
-                if test.find("-good") != -1:
+                elif test.find("-good") != -1:
                     stat.true_negative += 1
+        stat.exceptions = len(exceptions)
+
+        total = (
+            stat.true_positive
+            + stat.true_negative
+            + stat.false_positive
+            + stat.false_negative
+            + stat.exceptions
+        )
+        positives_count = stat.true_positive + stat.false_positive
+        if total != 0:
+            stat.accuracy = (stat.true_positive + stat.true_negative) / total
+
+        if positives_count != 0:
+            stat.precision = stat.true_positive / positives_count
+
+        if stat.true_positive + stat.false_negative != 0:
+            stat.recall = stat.true_positive / (
+                stat.true_positive + stat.false_negative
+            )
+        stat.true_positives_rate = stat.true_positive / total
 
     def __str__(self) -> str:
         return f"""AnalyzerReport(
