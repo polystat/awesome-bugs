@@ -8,14 +8,13 @@ import os
 
 @dataclass(frozen=True)
 class AnalyzerReportRow:
-    file: str
-    error_position: (int, int)
+    file_path: str
     error_type: str
     error_message: str
 
     def dict(self) -> dict:
         return {
-            "file": self.file,
+            "file_path": self.file_path,
             "error_position": self.error_position,
             "error_type": self.error_type,
             "error_message": self.error_message,
@@ -24,9 +23,11 @@ class AnalyzerReportRow:
     def __str__(self) -> str:
         row, column = self.error_position
         if row == 0 and column == 0:
-            return f"{self.file}: {self.error_message}"
+            return f"{self.file_path}: {self.error_message}"
         else:
-            return f"{self.file} {self.error_position}: {self.error_message}"
+            return (
+                f"{self.file_path} {self.error_position}: {self.error_message}"
+            )
 
 
 class AnalyzerStatistic:

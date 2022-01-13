@@ -33,13 +33,14 @@ def run_polystat(polystat_file, sources_folder_path,
                 "java",
                 "-jar",
                 polystat_file,
+                "--sarif",
                 root,
                 temp_path,
             ],
                 capture_output=True
             )
             case_result = temp_path + "\n" + output.stdout.decode("utf-8")
-            print(output.stderr.decode("utf-8"))
+            print(output.stderr.decode("cp1250"))
             results.append(case_result)
 
     # Write results to file

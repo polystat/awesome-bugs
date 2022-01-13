@@ -47,7 +47,6 @@ jobs:
           python3 -m pip install --upgrade pip wheel
           python3 -m pip install -r scripts/requirements.txt
           python3 -m pip install -e ./scripts
-
       - name: Extracting source files from correct YAML files
         run: python3 -m source_files_extractor tests temp/sources
 
@@ -61,10 +60,9 @@ jobs:
           cat results/clang-out.txt
       - name: Run Polystat and save reports to "results" folder
         run: |
-          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.2.0/polystat-0.2.0-jar-with-dependencies.jar"
+          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.3.2/polystat-0.3.2-jar-with-dependencies.jar"
           python3 -m polystat polystat.jar temp/sources/eo temp/polystat results
           cat results/eo-out.txt
-
       - name: Analyze reports
         run: python3 -m analyze_reports
 
