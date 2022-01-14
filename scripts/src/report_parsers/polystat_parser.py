@@ -1,10 +1,33 @@
 import os
+from functools import reduce
+
 from parsy import string, regex, seq
 from scripts.src.analyze_reports import (
     AnalyzerReport,
     AnalyzerReportRow,
+    AnalyzerReportExceptionRow,
 )
 from scripts.src.report_parsers.base_parser import Parser
+import json
+
+
+def get_analyze_report_rows(row) -> list[AnalyzerReportRow]:
+    path, results_json = row
+    path = path.replace("temp/polystat", "temp/sources/eo")
+    if results_json is None:
+        return [AnalyzerReportExceptionRow(file_path=path)]
+
+    report_rows = []
+    results = json.loads(results_json)["results"]
+    for result in results:
+        report_rows.append(
+            AnalyzerReportRow(
+                file_path=path,
+                error_type=result["ruleId"],
+                error_message=result["message"],
+            )
+        )
+    return report_rows
 
 
 class PolystatParser(Parser):
@@ -14,64 +37,29 @@ class PolystatParser(Parser):
 
     def parse(self) -> AnalyzerReport:
         newline = string("\n")
-        space = string(" ")
-
-        colon = string(":")
-        colon_space = seq(colon, space)
         error_message = regex(".*")
-        _path = regex(".*")
-        r_chain = regex(".*")
+        left_brace = string("{")
 
-        odin_error = (
-            seq(
-                string("AnOdin"),
-                (colon_space >> error_message << newline)
-                + (r_chain << newline),
-            )
-            << (
-                string("AnOdin")
-                << colon_space
-                << error_message
-                << newline
-                << r_chain
-                << newline
-            ).optional()
+        filename = regex(r"[a-zA-Z0-9_\+\-\.]+")
+        rel_path = filename.sep_by(sep=string("/"), min=1)
+        abs_path = rel_path.map(
+            lambda parsed: "/".join(parsed[parsed.index("temp"):])
         )
-        far_error = seq(
-            string("AnFaR"),
-            colon_space >> error_message << newline,
-        )
-        _error = odin_error | far_error
 
-        polystat_error = seq(_path << newline, _error.at_least(0))
-        polystat_report = seq(polystat_error.at_least(0)).map(
-            lambda lst: {
-                "errors": list(lst[0]),
-            }
-        )
+        json_row = left_brace + error_message << newline.at_least(1)
+        polystat_error = seq(abs_path << newline, json_row.optional()).many()
 
         with open(self.REPORT_PATH) as report:
-            # rewrite this part, it can look better
-            file_content = (report.read() + "\n").replace("No errors\n", "")
-            res = polystat_report.parse(file_content)
-            # filter from stuff
-            res = list(filter(lambda x: (len(x[1]) > 0), res["errors"]))
+            file_content = report.read().strip() + "\n"
+            parsed_output = polystat_error.parse(file_content)
+
             # join error info and path
-            results = []
-            for el in res:
-                path = el[0].replace("temp/polystat", "temp/sources/eo")
-                for in_el in el[1]:
-                    results.append(
-                        AnalyzerReportRow(
-                            file=path,
-                            error_position=(0, 0),
-                            error_type=in_el[0],
-                            error_message=in_el[1],
-                        )
-                    )
+            analyzer_results = reduce(
+                lambda x, y: x + get_analyze_report_rows(y), parsed_output, []
+            )
 
             return AnalyzerReport(
-                results,
+                analyzer_results,
                 self.ANALYZER_NAME,
                 self.SOURCE_PATH,
                 self.REPORT_PATH,

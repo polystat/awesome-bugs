@@ -62,7 +62,7 @@ class ClangTidyParser(Parser):
             ).optional()
         ).map(
             lambda lst: AnalyzerReportRow(
-                file=lst[0],
+                file_path=lst[0],
                 error_position=(lst[1], lst[2]),
                 error_type=lst[3],
                 error_message=lst[4],
@@ -79,10 +79,9 @@ class ClangTidyParser(Parser):
             }
         )
 
-        with open(self.REPORT_PATH) as report:
+        with open(self.REPORT_PATH) as r:
             return AnalyzerReport(
-                clang_tidy_report.parse(report.read().strip() +
-                                        "\n")["errors"],
+                clang_tidy_report.parse(r.read().strip() + "\n")["errors"],
                 self.ANALYZER_NAME,
                 self.SOURCE_PATH,
                 self.REPORT_PATH,
