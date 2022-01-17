@@ -9,9 +9,9 @@ import shutil
 # the correct structure - extract source code from them and write
 # them to the resulting folder
 
-# As input it takes:
-#  - a path to the folder with YAML files
-#  - a path to the resulting temp folder with source files
+# As an input it takes:
+#  - a path to a folder with YAML files
+#  - a path to a resulting temp folder with source files
 
 # According to the README.md we should have such fields in our YAML files
 REQUIRED_KEYS = ["title", "description", "features", "language", "bad", "good"]
@@ -74,7 +74,7 @@ def get_sources(file_content, source_type):
 
 # Write found source files to the result folder
 # If the path doesn't exist - it will be created
-# Result path has such structure:
+# The resulting path has such a structure:
 # - resulting folder: temp\sources
 # - language: cpp
 # - case name - case type: mutual-recursion-bad

@@ -4,9 +4,9 @@ import sys
 # Here we generate a CMakeLists file based on the CPP sources
 # and make a build using it
 
-# As input it takes:
-#  - a path to the folder with source files
-#  - a path to the resulting build folder
+# As an input it takes:
+#  - a path to a folder with source files
+#  - a path to a resulting build folder
 
 
 CMAKE_TEMPLATE = """
