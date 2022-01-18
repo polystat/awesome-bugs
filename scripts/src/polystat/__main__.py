@@ -6,11 +6,11 @@ import shutil
 
 # Here we make Polystat analysis
 
-# As input it takes:
+# As an input it takes:
 #  - a path to polystat.jar file
-#  - a path to the resulting folder with source EO files
-#  - a path to the temp folder for interim Polystat processes
-#  - a path to the folder where result will be generated
+#  - a path to a folder with .eo source files
+#  - a path to a temp folder for interim Polystat processes
+#  - a path to a folder where a report will be generated
 
 
 def run_polystat(polystat_file, sources_folder_path,
@@ -25,7 +25,7 @@ def run_polystat(polystat_file, sources_folder_path,
             print(f"Polystat analyze the file: {root}")
             case_name = os.path.basename(root)
 
-            # prepare the temp folder
+            # Prepare the temp folder
             temp_path = os.path.join(temp_folder_path, case_name)
             Path(temp_path).mkdir(parents=True, exist_ok=True)
 
