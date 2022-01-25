@@ -60,7 +60,7 @@ jobs:
           cat results/clang-out.txt
       - name: Run Polystat and save reports to "results" folder
         run: |
-          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.3.2/polystat-0.3.2-jar-with-dependencies.jar"
+          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.4.0/polystat-0.4.0-jar-with-dependencies.jar"
           python3 -m polystat polystat.jar temp/sources/eo temp/polystat results
           cat results/eo-out.txt
       - name: Analyze reports

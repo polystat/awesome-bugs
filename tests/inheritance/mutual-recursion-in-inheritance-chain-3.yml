@@ -44,25 +44,22 @@ bad:
         derivedAgainInstance->n(12);
         delete derivedAgainInstance;
     }
-  base.eo: |
-    [] > base
-      memory > x
-      [self v] > n
-        x.write v > @
-  derived.eo: |
-    +alias base sandbox.base
-
-    [] > derived
-      base > @
-      [self v] > m
-        self.n self v > @
   test.eo: |
-    +alias derived sandbox.derived
-
     [] > test
-      derived > @
-      [self v] > n
-        self.m self v > @
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+
+      [] > derived
+        test.base > @
+        [self v] > m
+          self.n self v > @
+
+      [] > derived_again
+        test.derived > @
+        [self v] > n
+          self.m self v > @
 good:
   source.cpp: |
     class Base {
@@ -98,22 +95,19 @@ good:
         derivedAgainInstance->n(12);
         delete derivedAgainInstance;
     }
-  base.eo: |
-    [] > base
-      memory > x
-      [self v] > n
-        x.write v > @
-  derived.eo: |
-    +alias base sandbox.base
-
-    [] > derived
-      base > @
-      [self v] > m
-        self.n self v > @
   test.eo: |
-    +alias derived sandbox.derived
-
     [] > test
-      derived > @
-      [self v] > n1
-        self.m self v > @
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+
+      [] > derived
+        test.base > @
+        [self v] > m
+          self.n self v > @
+
+      [] > derived_again
+        test.derived > @
+        [self v] > n1
+          self.m self v > @

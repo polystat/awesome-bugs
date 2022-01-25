@@ -40,21 +40,20 @@ bad:
         derivedInstance->m(12);
         delete derivedInstance;
     }
-  base_factory.eo: |
-    [] > base_factory
-      [] > get_base
-        memory > x
-        [self v] > n
-          x.write v > @
-        [self v] > m
-          self.n self v > @
   test.eo: |
-    +alias derived sandbox.base_factory
-
     [] > test
-      base_factory.get_base > @
-      [self v] > n
-        self.m self v > @
+      [] > base_factory
+        [] > get_base
+          memory > x
+          [self v] > n
+            x.write v > @
+          [self v] > m
+            self.n self v > @
+
+      [] > derived
+        test.base_factory.get_base > @
+        [self v] > n
+          self.m self v > @
 good:
   source.cpp: |
     class BaseFactory {
@@ -88,18 +87,17 @@ good:
         derivedInstance->m(12);
         delete derivedInstance;
     }
-  base_factory.eo: |
-    [] > base_factory
-      [] > get_base
-        memory > x
-        [self v] > n
-          x.write v > @
-        [self v] > m
-          self.n self v > @
   test.eo: |
-    +alias derived sandbox.base_factory
-
     [] > test
-      base_factory.get_base > @
-      [self v] > n1
-        self.m self v > @
+      [] > base_factory
+        [] > get_base
+          memory > x
+          [self v] > n
+            x.write v > @
+          [self v] > m
+            self.n self v > @
+
+      [] > derived
+        test.base_factory.get_base > @
+        [self v] > n1
+          self.m self v > @
