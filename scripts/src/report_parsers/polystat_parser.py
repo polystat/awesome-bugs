@@ -17,17 +17,20 @@ def get_analyze_report_rows(row) -> list[AnalyzerReportRow]:
     if results_json is None:
         return [AnalyzerReportExceptionRow(file_path=path)]
 
-    report_rows = []
     results = json.loads(results_json)["results"]
-    for result in results:
-        report_rows.append(
-            AnalyzerReportRow(
-                file_path=path,
-                error_type=result["ruleId"],
-                error_message=result["message"],
-            )
+    return [
+        AnalyzerReportRow(
+            file_path=path,
+            error_type=r["ruleId"],
+            error_message=r["message"],
         )
-    return report_rows
+        if "message" in r
+        else AnalyzerReportExceptionRow(
+            file_path=path,
+            error_message="An exception thrown: " + r['exception'],
+        )
+        for r in results
+    ]
 
 
 class PolystatParser(Parser):
