@@ -1,0 +1,115 @@
+title: Mutual recursion in if branching
+description: >
+  The occurrence of mutual recursion depends on the argument. This is
+  an example of an error that doesn't show itself at once but is possible.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+language: cpp
+bad:
+  source.cpp: |
+    class Base {
+    protected:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
+
+        virtual void n(int v) {
+            this->x = v;
+        }
+        void m(int v) {
+            this->n(v);
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void n(int v) override {
+            if (this->x < v) {
+                this->m(v);
+            }
+            else {
+                this->x++;
+            }
+        }
+    };
+
+    auto main() -> int {
+        Base* derivedInstance = new Derived();
+        derivedInstance->n(100);
+        delete derivedInstance;
+    }
+  test.eo: |
+    [] > test
+      [] > derived
+        test.base > @
+        test.base.x > x
+        [self v] > n
+          if. > @
+            x.less v
+            self.m self
+            x.write (x.add 1)
+
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+        [self v] > m
+          self.n self v > @
+good:
+  source.cpp: |
+    class Base {
+    protected:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
+
+        virtual void n(int v) {
+            this->x = v;
+        }
+        void m(int v) {
+            this->x++;
+            this->n(v);
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void n(int v) override {
+            if (this->x < v) {
+                this->m(v);
+            }
+            else {
+                this->x++;
+            }
+        }
+    };
+
+    auto main() -> int {
+        Base* derivedInstance = new Derived();
+        derivedInstance->n(1000);
+        delete derivedInstance;
+    }
+  test.eo: |
+    [] > test
+      [] > derived
+        test.base > @
+        test.base.x > x
+        [self v] > n
+          if. > @
+            x.less v
+            self.m self
+            x.write (x.add 1)
+
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+        [self v] > m
+          seq > @
+            x.write (x.add 1)
+            self.n self v

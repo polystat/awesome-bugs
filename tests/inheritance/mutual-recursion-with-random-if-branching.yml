@@ -1,0 +1,143 @@
+title: Mutual recursion in random if branching
+description: >
+  Mutual recursion occurs only if a rand function yields zero. This is
+  an example of an error that doesn't show itself at once but is possible.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+language: cpp
+bad:
+  source.cpp: |
+    #include <random>
+
+    class Base {
+    protected:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
+
+        virtual void n() {
+            this->x = 0;
+        }
+        virtual void m() {
+            this->x++;
+        }
+        void o() {
+            this->m();
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void n() override {
+            std::random_device dev;
+            std::mt19937 rng(dev());
+            std::uniform_int_distribution<std::mt19937::result_type> dist(0, 10);
+
+            uint32_t randomNumber = dist(rng);
+            if (randomNumber == 0) {
+                this->m();
+            }
+        }
+        void m() override {
+            this->o();
+        }
+    };
+
+    auto main() -> int {
+        Base* derivedInstance = new Derived();
+        derivedInstance->n();
+        delete derivedInstance;
+    }
+  test.eo: |
+    [] > test
+      [] > derived
+        test.base > @
+        test.base.x > x
+        [self] > m
+          self.o self > @
+        [self] > n
+          random.as-int > r
+          if. > @
+            r.eq 0
+            self.m self
+            TRUE
+
+      [] > base
+        memory > x
+        [self] > n
+          x.write 0 > @
+        [self] > m
+          x.write (x.add 1) > @
+        [self] > o
+          self.m self > @
+good:
+  source.cpp: |
+    #include <random>
+
+    class Base {
+    protected:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
+
+        virtual void n() {
+            this->x = 0;
+        }
+        virtual void m() {
+            this->x++;
+        }
+        void o() {
+            this->m();
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void n() override {
+            std::random_device dev;
+            std::mt19937 rng(dev());
+            std::uniform_int_distribution<std::mt19937::result_type> dist(0, 10);
+
+            uint32_t randomNumber = dist(rng);
+            if (randomNumber % 3 == 10) {
+                this->m();
+            }
+        }
+        void m() override {
+            this->o();
+        }
+    };
+
+    auto main() -> int {
+        Base* derivedInstance = new Derived();
+        derivedInstance->n();
+        delete derivedInstance;
+    }
+  test.eo: |
+    [] > test
+      [] > derived
+        test.base > @
+        test.base.x > x
+        [self] > m
+          self.o self > @
+        [self] > n
+          random.as-int > r
+          r.mod 3 > remainder
+          if. > @
+            remainder.eq 10
+            self.m self
+            TRUE
+
+      [] > base
+        memory > x
+        [self] > n
+          x.write 0 > @
+        [self] > m
+          x.write (x.add 1) > @
+        [self] > o
+          self.m self > @
