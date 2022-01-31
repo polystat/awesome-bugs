@@ -66,9 +66,20 @@ jobs:
       - name: Analyze reports
         run: python3 -m analyze_reports
 
+      # Generate pdf
+      - uses: yegor256/latexmk-action@0.3.0
+        with:
+          cmd: latexmk
+          path: results/
+          opts: -pdf
+          packages: href-ul lastpage multirow
+
       # Saving artifacts
       - name: Upload results
         uses: actions/upload-artifact@v2
         with:
           name: reports
-          path: results/
+          path: |
+            results/*.txt
+            results/*.tex
+            results/*.pdf
