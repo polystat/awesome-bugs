@@ -41,7 +41,7 @@ def get_test_files_paths(code_path):
 # Generation latex report according to analyzers results
 def generate_report(analyzer_reports):
     def generate_statistic_table():
-        table = Tabular("|l|" + "r|" * 9, row_height=1.25)
+        table = Tabular("|l|" + "r|" * 8, row_height=1.25)
         # Head
         table.add_hline()
         table.add_row(
@@ -54,7 +54,6 @@ def generate_report(analyzer_reports):
             MultiRow(size=2, data="Accuracy"),
             MultiRow(size=2, data="Precision"),
             MultiRow(size=2, data="Recall"),
-            MultiRow(size=2, data="TPR"),
         )
         table.add_hline(2, 5)
         table.add_row(
@@ -63,7 +62,6 @@ def generate_report(analyzer_reports):
             "Neg",
             "Pos",
             "Neg",
-            "",
             "",
             "",
             "",
@@ -84,7 +82,6 @@ def generate_report(analyzer_reports):
                 f"{stat.accuracy:.2f}",
                 f"{stat.precision:.2f}",
                 f"{stat.recall:.2f}",
-                f"{stat.true_positives_rate:.2f}",
             )
             table.add_hline()
         doc.append(table)
@@ -111,7 +108,7 @@ def generate_report(analyzer_reports):
                     os.path.basename(
                         ar.file_path
                         if Path(ar.file_path).is_dir()
-                        else os.path.dirname(ar.file)
+                        else os.path.dirname(ar.file_path)
                     )
                 )
             results[analyzer.analyzer] = [result_paths, expts]
@@ -157,7 +154,6 @@ def generate_report(analyzer_reports):
                 ls.add_item("True Negative - no warnings and shouldn't be")
                 ls.add_item("False Negative - no warnings, but they should be")
                 ls.add_item("False Positive - warnings exist but shouldn't be")
-                ls.add_item("TPR - true positives rate")
 
     doc.append(NewPage())
     with doc.create(Section("Details table", numbering=False)):

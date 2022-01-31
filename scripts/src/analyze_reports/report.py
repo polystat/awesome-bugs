@@ -53,7 +53,6 @@ class AnalyzerStatistic:
     accuracy: float = 0
     precision: float = 0
     recall: float = 0
-    true_positives_rate: float = 0
 
     def dict(self) -> dict:
         return {
@@ -64,7 +63,6 @@ class AnalyzerStatistic:
             "accuracy": self.accuracy,
             "precision": self.precision,
             "recall": self.recall,
-            "true_positives_rate": self.true_positives_rate,
         }
 
 
@@ -142,7 +140,6 @@ class AnalyzerReport:
             stat.recall = stat.true_positive / (
                 stat.true_positive + stat.false_negative
             )
-        stat.true_positives_rate = stat.true_positive / total
 
     def __str__(self) -> str:
         return f"""AnalyzerReport(
