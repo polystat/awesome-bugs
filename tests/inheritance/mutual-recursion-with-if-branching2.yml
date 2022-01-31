@@ -1,0 +1,114 @@
+title: Mutual recursion in if branching
+description: >
+  Mutual recursion occurs only if the n method calls twice. This is
+  an example of an error that doesn't show itself at once but is possible.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+language: cpp
+bad:
+  source.cpp: |
+    class Base {
+    protected:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
+
+        virtual void n() {
+            this->x = 0;
+        }
+        void m() {
+            this->n();
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void n() override {
+            if (this->x == 0) {
+                this->x++;
+            }
+            else {
+                this->m();
+            }
+        }
+    };
+
+    auto main() -> int {
+        Base* derivedInstance = new Derived();
+        derivedInstance->n();
+        derivedInstance->m();
+        delete derivedInstance;
+    }
+  test.eo: |
+    [] > test
+      [] > derived
+        test.base > @
+        test.base.x > x
+        [self] > n
+          if. > @
+            x.eq 0
+            x.write (x.add 1)
+            self.m self
+
+      [] > base
+        memory > x
+        [self] > n
+          x.write 0 > @
+        [self] > m
+          self.n self > @
+good:
+  source.cpp: |
+    class Base {
+    protected:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
+
+        virtual void n() {
+            this->x = 0;
+        }
+        void m() {
+            this->n();
+        }
+    };
+
+    class Derived : public Base {
+    public:
+        void n() override {
+            if (this->x == 1) {
+                this->m();
+            }
+            else {
+                this->x--;
+            }
+        }
+    };
+
+    auto main() -> int {
+        Base* derivedInstance = new Derived();
+        derivedInstance->n();
+        derivedInstance->m();
+        delete derivedInstance;
+    }
+  test.eo: |
+    [] > test
+      [] > derived
+        test.base > @
+        test.base.x > x
+        [self] > n
+          if. > @
+            x.eq 1
+            self.m self
+            x.write (x.sub 1)
+
+      [] > base
+        memory > x
+        [self] > n
+          x.write 0 > @
+        [self] > m
+          self.n self > @
