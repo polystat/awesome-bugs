@@ -1,0 +1,69 @@
+title: STD function call
+description: >
+
+features:
+  - object
+  - method
+language: cpp
+bad:
+  source.cpp: |
+    #include <iostream>
+    #include <vector>
+    using namespace std;
+
+    class A {
+    public:
+        void doSomething(vector<string> const& args) const {
+            cout << 10 / args.size();
+        }
+    };
+
+    auto main() -> int {
+        A a;
+        vector<string> v_s;
+        a.doSomething(v_s);
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [self arr] > doSomething
+        div. > @
+          10
+          arr.length
+good:
+  source.cpp: |
+    #include <iostream>
+    #include <vector>
+
+    using namespace std;
+
+    class A {
+    public:
+        auto doSomething(vector<string> const& args) const -> int {
+            int len = args.size();
+            return len == 0 ? 0 : 10 / len;
+        }
+    };
+
+    auto main() -> int {
+        A a;
+        vector<string> v_s;
+        a.doSomething(v_s);
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [self arr] > doSomething
+        arr.length > len
+        if. > @
+          len.eq 0
+          0
+          div. > @
+            10
+            len

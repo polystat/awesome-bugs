@@ -1,0 +1,67 @@
+title: Recursive call
+description: >
+
+features:
+  - object
+  - method
+language: cpp
+bad:
+  source.cpp: |
+    #include <iostream>
+
+    class A {
+    public:
+        auto doSomething(int number) const -> int {
+            if (number < 0) { return 1; }
+            return number / doSomething(number - 1);
+        }
+    };
+
+    auto main() -> int {
+        A a;
+        int result = a.doSomething(5);
+        std::cout << result;
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [self v] > doSomething
+        if. > @
+          v.less 0
+          1
+          div.
+            v
+            doSomething self (v.sub 1)
+good:
+  source.cpp: |
+    #include <iostream>
+
+    class A {
+    public:
+        auto doSomething(int number) const -> int {
+            if (number < 1) { return 1; }
+            return number / doSomething(number - 1);
+        }
+    };
+
+    auto main() -> int {
+        A a;
+        int result = a.doSomething(5);
+        std::cout << result;
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [self v] > doSomething
+        if. > @
+          v.less 1
+          1
+          div.
+            v
+            doSomething self (v.sub 1)

@@ -1,0 +1,101 @@
+title: Random if branching
+description: >
+
+features:
+  - object
+  - method
+language: cpp
+bad:
+  source.cpp: |
+    #include <iostream>
+    #include <random>
+
+    class A {
+    private:
+        int value;
+    public:
+        void setValue(int v) { value = v; }
+        auto doSomething(int v) const -> int {
+            return v / value;
+        }
+    };
+
+    auto main() -> int {
+        auto* a = new A(); // A a; -- Variables should be initialized before use
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 10);
+        uint32_t randomNumber = dist(rng);
+        a->setValue(randomNumber);
+        std::cout << a->doSomething(10);
+        delete a;
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > base
+      memory > value
+      [self v] > setValue
+        value.write v > @
+      [self v] > doSomething
+        v.div value > @
+
+    [] > test
+      base > b
+      [self v] > n
+        random.as-int > r
+        seq > @
+          b.setValue b r
+          b.doSomething b v
+good:
+  source.cpp: |
+    #include <iostream>
+    #include <random>
+
+    class A {
+    private:
+        int value;
+    public:
+        void setValue(int v) { value = v; }
+        auto doSomething(int v) const -> int {
+            return v / value;
+        }
+    };
+
+    auto main() -> int {
+        auto* a = new A(); // A a; -- Variables should be initialized before use
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 10);
+        uint32_t randomNumber = dist(rng);
+        if (randomNumber % 3 == 10) {
+            a->setValue(randomNumber);
+            std::cout << a->doSomething(10);
+        }
+        delete a;
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > base
+      memory > value
+      [self v] > setValue
+        value.write v > @
+      [self v] > doSomething
+        v.div value > @
+
+    [] > test
+      base > b
+      [self v] > n
+        random.as-int > r
+        r.mod 3 > remainder
+        if. > @
+          remainder.eq 10
+          seq > @
+            b.setValue b r
+            b.doSomething b v
+          r

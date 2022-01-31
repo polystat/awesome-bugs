@@ -1,0 +1,86 @@
+title: ClientCallDefaultValue
+description: >
+
+features:
+  - object
+  - method
+language: cpp
+bad:
+  source.cpp: |
+    #include <iostream>
+
+    class A {
+    private:
+        int value;
+    public:
+        auto getValue() const -> int { return value; }
+        void setValue(int v) { value = v; }
+        auto doSomething(int v) const -> int {
+            return v / value;
+        }
+    };
+
+    auto main() -> int {
+        auto* a = new A(); // A a; -- Variables should be initialized before use
+        std::cout << a->doSomething(10);
+        delete a;
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [] > base
+        memory > x
+        [self v] > setX
+          x.write v > @
+        [self v] > doSomething
+          x.div v > @
+
+      [] > client
+        [self] > n
+          stdout > @
+            sprintf (base.doSomething base 10).as-string
+good:
+  source.cpp: |
+    #include <iostream>
+
+    class A {
+    private:
+        int value;
+    public:
+        A() = default;
+        auto getValue() const -> int { return value; }
+        void setValue(int v) { value = v; }
+        auto doSomething(int v) const -> int {
+            return v / value;
+        }
+    };
+
+    auto main() -> int {
+        auto* a = new A();
+        a->setValue(2);
+        std::cout << a->doSomething(10);
+        delete a;
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [] > base
+        memory > x
+        [self v] > setX
+          x.write v > @
+        [self v] > doSomething
+          x.div v > @
+
+      [] > client
+        base.x > x
+        [self] > n
+          seq > @
+            base.setX base 10
+            stdout
+              sprintf (base.doSomething base 2).as-string

@@ -1,0 +1,74 @@
+title: ClientCallDefaultValueClientCall
+description: >
+features:
+  - object
+language: cpp
+bad:
+  source.cpp: |
+    #include <iostream>
+
+    class A {
+    private:
+        int value;
+    public:
+        auto getValue() const -> int { return value; }
+        void setValue(int v) { value = v; }
+    };
+
+    auto main() -> int {
+        auto* a = new A(); // A a; -- Variables should be initialized before use
+        int result = 10 / a->getValue();
+        std::cout << result;
+        delete a;
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [] > base
+        memory > x
+
+      [] > clientCallDefaultValue
+        base.x > x
+        [self] > n
+          stdout > @
+            sprintf (10.div x).as-string
+good:
+  source.cpp: |
+    #include <iostream>
+
+    class A {
+    private:
+        int value;
+    public:
+        A() = default;
+        auto getValue() const -> int { return value; }
+        void setValue(int v) { value = v; }
+    };
+
+    auto main() -> int {
+        auto* a = new A();
+        a->setValue(2);
+        int result = 10 / a->getValue();
+        std::cout << result;
+        delete a;
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [] > base
+        memory > x
+        [self v] > setX
+          x.write v > @
+
+      [] > client
+        base.x > x
+        [self] > n
+          seq > @
+            base.setX base 2
+            stdout sprintf (10.div x).as-string

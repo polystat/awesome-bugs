@@ -1,0 +1,60 @@
+title: Cast float int
+description: >
+
+features:
+  - object
+  - method
+language: cpp
+bad:
+  source.cpp: |
+    #include <iostream>
+
+    class A {
+    public:
+        auto doSomething(float v) const -> int {
+            return 10 / static_cast<int>(v);
+        }
+    };
+
+    auto main() -> int {
+        A a;
+        std::cout << a.doSomething(0.1F);
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [self v] > doSomething
+        div. > @
+          10
+          v.as-int
+good:
+  source.cpp: |
+    #include <iostream>
+
+    class A {
+    public:
+        auto doSomething(float v) const -> int {
+            auto intV = static_cast<int>(v);
+            return false ? (10 / intV) : (10 * intV);
+        }
+    };
+
+    auto main() -> int {
+        A a;
+        std::cout << a.doSomething(0.1F);
+    }
+  test.eo: |
+    +package sandbox
+    +alias org.eolang.io.stdout
+    +alias org.eolang.txt.sprintf
+
+    [] > test
+      [self v] > doSomething
+        v.as-int > intV
+        if. > @
+          FALSE
+          10.div intV
+          10.mul intV
