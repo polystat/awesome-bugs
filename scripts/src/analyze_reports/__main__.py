@@ -1,6 +1,7 @@
 import logging
 import os.path
 
+from pylatex.utils import bold
 from scripts.src.report_parsers import ClangTidyParser
 from scripts.src.report_parsers import PolystatParser
 from pylatex import (
@@ -41,12 +42,15 @@ def get_test_files_paths(code_path):
 # Generation latex report according to analyzers results
 def generate_report(analyzer_reports):
     def generate_statistic_table():
-        table = Tabular("|l|" + "r|" * 8, row_height=1.25)
+        table = Tabular("|l|l|" + "r|" * 8, row_height=1.25)
         # Head
         table.add_hline()
         table.add_row(
             MultiColumn(
                 size=1, data=MultiRow(size=2, data="Analyzer"), align="|c|"
+            ),
+            MultiColumn(
+                size=1, data=MultiRow(size=2, data="Error"), align="|c|"
             ),
             MultiColumn(size=2, data="True", align="c|"),
             MultiColumn(size=2, data="False", align="c|"),
@@ -55,8 +59,9 @@ def generate_report(analyzer_reports):
             MultiRow(size=2, data="Precision"),
             MultiRow(size=2, data="Recall"),
         )
-        table.add_hline(2, 5)
+        table.add_hline(3, 6)
         table.add_row(
+            "",
             "",
             "Pos",
             "Neg",
@@ -70,20 +75,31 @@ def generate_report(analyzer_reports):
         table.add_hline()
 
         # Body
+        def get_row(analyzer_name, error, s):
+            return [
+                analyzer_name,
+                error,
+                s.true_positive,
+                s.true_negative,
+                s.false_positive,
+                s.false_negative,
+                s.exceptions,
+                f"{s.accuracy:.2f}",
+                f"{s.precision:.2f}",
+                f"{s.recall:.2f}",
+            ]
+
         for analyzer in analyzer_reports:
             stat = analyzer.statistic
-            table.add_row(
-                analyzer.analyzer,
-                stat.true_positive,
-                stat.true_negative,
-                stat.false_positive,
-                stat.false_negative,
-                stat.exceptions,
-                f"{stat.accuracy:.2f}",
-                f"{stat.precision:.2f}",
-                f"{stat.recall:.2f}",
-            )
             table.add_hline()
+            table.add_row(get_row(analyzer.analyzer, "All", stat), mapper=bold)
+            table.add_hline()
+            for error_statistic in analyzer.error_statistics:
+                stat = error_statistic.statistic
+                table.add_row(
+                    get_row(analyzer.analyzer, error_statistic.error, stat)
+                )
+                table.add_hline()
         doc.append(table)
 
     def generate_details_table():
@@ -207,7 +223,7 @@ def run():
         analyzer_reports.append(report)
 
     for analyzer in analyzer_reports:
-        analyzer.calculate_statistic()
+        analyzer.update_statistic()
 
     generate_report(analyzer_reports)
     print("Done!")

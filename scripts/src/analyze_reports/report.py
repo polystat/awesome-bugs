@@ -66,6 +66,12 @@ class AnalyzerStatistic:
         }
 
 
+@dataclass()
+class ErrorStatistic:
+    error: str
+    statistic: AnalyzerStatistic
+
+
 class AnalyzerReport:
     """Class that stores data from a single run of specific static analyzer"""
 
@@ -73,6 +79,7 @@ class AnalyzerReport:
     analyzer: str
     source_path: str
     report_path: str
+    error_statistics: list[ErrorStatistic]
     statistic: AnalyzerStatistic
 
     def __init__(
@@ -86,6 +93,7 @@ class AnalyzerReport:
         self.analyzer = analyzer
         self.source_path = source_path
         self.report_path = report_path
+        self.error_statistics = []
         self.statistic = AnalyzerStatistic()
 
     def filter(
@@ -94,23 +102,46 @@ class AnalyzerReport:
         self.results = list(filter(predicate, self.results))
         return self
 
-    def calculate_statistic(self):
+    def update_statistic(self):
+        # Get paths to sources from tests
         source_paths = []
         for root, dirs, files in os.walk(self.source_path):
             if len(dirs) == 0:
                 source_paths.append(root.replace("\\", "/"))
 
+        # Split exceptions and results (analyzers messages)
         exceptions, result_paths = [], []
         for x in self.results:
             (exceptions, result_paths)[x.error_type != "Exception"].append(
+                # Take only folders name, not files
                 x.file_path
                 if Path(x.file_path).is_dir()
                 else os.path.dirname(x.file_path)
             )
 
-        stat = self.statistic
-        for test in source_paths:
-            if test in result_paths:
+        # Calculation general statistic
+        self.statistic = self.calculate_statistic(
+            source_paths, result_paths, exceptions
+        )
+
+        # Get errors for which test are exist
+        with open("tests/errors.txt") as errors_file:
+            errors = [x.strip() for x in errors_file.readlines()]
+
+        # Calculation statistic per errors
+        for error in errors:
+            e_result_paths = [x for x in result_paths if error in x]
+            e_source_paths = [x for x in source_paths if error in x]
+            stat = self.calculate_statistic(
+                e_source_paths, e_result_paths, exceptions
+            )
+            self.error_statistics.append(ErrorStatistic(error, stat))
+
+    @staticmethod
+    def calculate_statistic(source, results, exceptions):
+        stat = AnalyzerStatistic()
+        for test in source:
+            if test in results:
                 if test.find("-bad") != -1:
                     stat.true_positive += 1
                 elif test.find("-good") != -1:
@@ -140,15 +171,16 @@ class AnalyzerReport:
             stat.recall = stat.true_positive / (
                 stat.true_positive + stat.false_negative
             )
+        return stat
 
     def __str__(self) -> str:
         return f"""AnalyzerReport(
-    analyzer={self.analyzer},
-    source_path={self.report_path},
-    report_path={self.report_path},
-    results={pformat(self.results)},
-    statistic={pformat(self.statistic)},
-)"""
+                        analyzer={self.analyzer},
+                        source_path={self.report_path},
+                        report_path={self.report_path},
+                        results={pformat(self.results)},
+                        statistic={pformat(self.statistic)},
+                    )"""
 
     def __repr__(self):
         return str(self)

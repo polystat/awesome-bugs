@@ -11,7 +11,7 @@ from itertools import chain
 class ClangTidyParser(Parser):
     SOURCE_PATH = os.path.join("temp", "sources", "cpp")
     REPORT_PATH = os.path.join("results", "clang-out.txt")
-    ANALYZER_NAME = "clang-tidy"
+    ANALYZER_NAME = "Clang-Tidy"
 
     def parse(self) -> AnalyzerReport:
         newline = string("\n")
