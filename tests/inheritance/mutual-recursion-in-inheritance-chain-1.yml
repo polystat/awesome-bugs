@@ -10,14 +10,14 @@ features:
 language: cpp
 bad:
   source.cpp: |
-    class Base {
-    public:
-        int x;
+    #include <memory>
 
-        Base() {
-            this->x = 0;
-        }
-        virtual ~Base() {}
+    class Base {
+    private:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
 
         virtual void n(int v) {
             this->x = v;
@@ -29,17 +29,16 @@ bad:
 
     class Derived : public Base {
     public:
-        virtual void n(int v) override {
+        void n(int v) override {
             this->m(v);
         }
     };
 
     class DerivedAgain : public Derived {};
 
-    int main() {
-        Base *derivedAgainInstance = new DerivedAgain();
+    auto main() -> int {
+        std::unique_ptr<Base> derivedAgainInstance = std::make_unique<DerivedAgain>();
         derivedAgainInstance->m(12);
-        delete derivedAgainInstance;
     }
   test.eo: |
     [] > test
@@ -59,14 +58,14 @@ bad:
         test.derived > @
 good:
   source.cpp: |
-    class Base {
-    public:
-        int x;
+    #include <memory>
 
-        Base() {
-            this->x = 0;
-        }
-        virtual ~Base() {}
+    class Base {
+    private:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
 
         void n(int v) {
             this->x = v;
@@ -78,17 +77,16 @@ good:
 
     class Derived : public Base {
     public:
-        virtual void n(int v) {
+        virtual void n1(int v) {
             this->m(v);
         }
     };
 
     class DerivedAgain : public Derived {};
 
-    int main() {
-        Base* derivedAgainInstance = new DerivedAgain();
+    auto main() -> int {
+        std::unique_ptr<Base> derivedAgainInstance = std::make_unique<DerivedAgain>();
         derivedAgainInstance->m(12);
-        delete derivedAgainInstance;
     }
   test.eo: |
     [] > test

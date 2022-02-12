@@ -12,14 +12,14 @@ features:
 language: cpp
 bad:
   source.cpp: |
-    class Base {
-    public:
-        int x;
+    #include <memory>
 
-        Base() {
-            this->x = 0;
-        }
-        virtual ~Base() {}
+    class Base {
+    private:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
 
         virtual void n(int v) {
             this->x = v;
@@ -43,10 +43,9 @@ bad:
         }
     };
 
-    int main() {
-        Base *derivedAgainInstance = new DerivedAgain();
+    auto main() -> int {
+        std::unique_ptr<Base> derivedAgainInstance = std::make_unique<DerivedAgain>();
         derivedAgainInstance->m(12);
-        delete derivedAgainInstance;
     }
   test.eo: |
     [] > test
@@ -68,14 +67,14 @@ bad:
           self.o self v > @
 good:
   source.cpp: |
-    class Base {
-    public:
-        int x;
+    #include <memory>
 
-        Base() {
-            this->x = 0;
-        }
-        virtual ~Base() {}
+    class Base {
+    private:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
 
         void n(int v) {
             this->x = v;
@@ -94,15 +93,14 @@ good:
 
     class DerivedAgain : public Derived {
     public:
-        void n(int v) {
+        void n1(int v) {
             this->o(v);
         }
     };
 
-    int main() {
-        Base *derivedAgainInstance = new DerivedAgain();
+    auto main() -> int {
+        std::unique_ptr<Base> derivedAgainInstance = std::make_unique<DerivedAgain>();
         derivedAgainInstance->m(12);
-        delete derivedAgainInstance;
     }
   test.eo: |
     [] > test

@@ -10,12 +10,11 @@ language: cpp
 bad:
   source.cpp: |
     class Base {
+    private:
+        int x = 0;
     public:
-        int x;
-
-        Base() {
-            this->x = 0;
-        }
+        Base() = default;
+        virtual ~Base() = default;
 
         virtual void n(int v) {
             this->x = v;
@@ -30,7 +29,7 @@ bad:
 
     class Derived : public Base {
     public:
-        virtual void n(int v) override {
+        void n(int v) override {
             this->m(v);
         }
         void l(int v) {
@@ -38,10 +37,9 @@ bad:
         }
     };
 
-    int main() {
-        Derived *derivedInstance = new Derived();
-        derivedInstance->l(10);
-        delete derivedInstance;
+    auto main() -> int {
+        Derived derivedInstance;
+        derivedInstance.l(10);
     }
   test.eo: |
     +alias base sandbox.base
@@ -64,12 +62,11 @@ bad:
 good:
   source.cpp: |
     class Base {
+    private:
+        int x = 0;
     public:
-        int x;
-
-        Base() {
-            this->x = 0;
-        }
+        Base() = default;
+        virtual ~Base() = default;
 
         void n(int v) {
             this->x = v;
@@ -92,10 +89,9 @@ good:
         }
     };
 
-    int main() {
-        Derived *derivedInstance = new Derived();
-        derivedInstance->l(10);
-        delete derivedInstance;
+    auto main() -> int {
+        Derived derivedInstance;
+        derivedInstance.l(10);
     }
   test.eo: |
     +alias base sandbox.base

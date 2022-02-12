@@ -10,8 +10,10 @@ features:
 language: cpp
 bad:
   source.cpp: |
+    #include <memory>
+
     class Base {
-    protected:
+    private:
         int x = 0;
     public:
         Base() = default;
@@ -23,24 +25,29 @@ bad:
         void m(int v) {
             this->n(v);
         }
+        void incrX() {
+            x++;
+        }
+        auto getX() const -> int {
+            return x;
+        }
     };
 
     class Derived : public Base {
     public:
         void n(int v) override {
-            if (this->x < v) {
+            if (this->getX() < v) {
                 this->m(v);
             }
             else {
-                this->x++;
+                this->incrX();
             }
         }
     };
 
     auto main() -> int {
-        Base* derivedInstance = new Derived();
+        std::unique_ptr<Base> derivedInstance = std::make_unique<Derived>();
         derivedInstance->n(100);
-        delete derivedInstance;
     }
   test.eo: |
     [] > test
@@ -61,8 +68,10 @@ bad:
           self.n self v > @
 good:
   source.cpp: |
+    #include <memory>
+
     class Base {
-    protected:
+    private:
         int x = 0;
     public:
         Base() = default;
@@ -75,24 +84,29 @@ good:
             this->x++;
             this->n(v);
         }
+        void incrX() {
+            x++;
+        }
+        auto getX() const -> int {
+            return x;
+        }
     };
 
     class Derived : public Base {
     public:
         void n(int v) override {
-            if (this->x < v) {
+            if (this->getX() < v) {
                 this->m(v);
             }
             else {
-                this->x++;
+                this->incrX();
             }
         }
     };
 
     auto main() -> int {
-        Base* derivedInstance = new Derived();
-        derivedInstance->n(1000);
-        delete derivedInstance;
+        std::unique_ptr<Base> derivedInstance = std::make_unique<Derived>();
+        derivedInstance->n(100);
     }
   test.eo: |
     [] > test

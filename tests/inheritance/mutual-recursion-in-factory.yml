@@ -12,12 +12,11 @@ bad:
     class BaseFactory {
     public:
         class GetBase {
+        private:
+            int x = 0;
         public:
-            int x;
-
-            GetBase() {
-                this->x = 0;
-            }
+            GetBase() = default;
+            virtual ~GetBase() = default;
 
             virtual void n(int v) {
                 this->x = v;
@@ -35,10 +34,9 @@ bad:
         }
     };
 
-    int main() {
-        auto* derivedInstance = new Derived();
-        derivedInstance->m(12);
-        delete derivedInstance;
+    auto main() -> int {
+        Derived derivedInstance;
+        derivedInstance.m(12);
     }
   test.eo: |
     [] > test
@@ -59,12 +57,11 @@ good:
     class BaseFactory {
     public:
         class GetBase {
+        private:
+            int x = 0;
         public:
-            int x;
-
-            GetBase() {
-                this->x = 0;
-            }
+            GetBase() = default;
+            virtual ~GetBase() = default;
 
             void n(int v) {
                 this->x = v;
@@ -82,10 +79,9 @@ good:
         }
     };
 
-    int main() {
-        auto* derivedInstance = new Derived();
-        derivedInstance->m(12);
-        delete derivedInstance;
+    auto main() -> int {
+        Derived derivedInstance;
+        derivedInstance.m(12);
     }
   test.eo: |
     [] > test
