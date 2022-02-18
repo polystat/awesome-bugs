@@ -33,7 +33,7 @@ bad:
             this->m(v);
         }
         void l(int v) {
-            this->m(v);
+            this->n(v);
         }
     };
 
@@ -49,7 +49,7 @@ bad:
       [self v] > n
         self.m self v > @
       [self v] > l
-        self.m self v > @
+        self.n self v > @
   base.eo: |
     [] > base
       memory > x
@@ -85,7 +85,7 @@ good:
             this->m(v);
         }
         void l(int v) {
-            this->m(v);
+            this->n(v);
         }
     };
 
@@ -101,7 +101,7 @@ good:
       [self v] > n1
         self.m self v > @
       [self v] > l
-        self.m self v > @
+        self.n self v > @
   base.eo: |
     [] > base
       memory > x
