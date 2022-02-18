@@ -16,7 +16,7 @@ bad:
     };
 
     auto main() -> int {
-        auto* a = new A(); // A a; -- Variables should be initialized before use
+        auto a = std::make_unique<A>();
         int result = 10 / a->getValue();
         std::cout << result;
         delete a;
@@ -49,7 +49,7 @@ good:
     };
 
     auto main() -> int {
-        auto* a = new A();
+        auto a = std::make_unique<A>();
         a->setValue(2);
         int result = 10 / a->getValue();
         std::cout << result;

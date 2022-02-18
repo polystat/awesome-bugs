@@ -21,7 +21,7 @@ bad:
     };
 
     auto main() -> int {
-        auto* a = new A(); // A a; -- Variables should be initialized before use
+        auto a = std::make_unique<A>();
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<std::mt19937::result_type> dist(0, 10);
@@ -65,7 +65,7 @@ good:
     };
 
     auto main() -> int {
-        auto* a = new A(); // A a; -- Variables should be initialized before use
+        auto a = std::make_unique<A>();
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<std::mt19937::result_type> dist(0, 10);

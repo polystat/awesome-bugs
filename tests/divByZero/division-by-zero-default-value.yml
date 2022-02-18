@@ -21,7 +21,7 @@ bad:
     };
 
     auto main() -> int {
-        auto* a = new A(); // A a; -- Variables should be initialized before use
+        auto a = std::make_unique<A>();
         std::cout << a->doSomething(10);
         delete a;
     }
@@ -59,7 +59,7 @@ good:
     };
 
     auto main() -> int {
-        auto* a = new A();
+        auto a = std::make_unique<A>();
         a->setValue(2);
         std::cout << a->doSomething(10);
         delete a;
