@@ -19,7 +19,20 @@ bad:
         auto a = std::make_unique<A>();
         int result = 10 / a->getValue();
         std::cout << result;
-        delete a;
+    }
+  Test.java: |
+    class A {
+        private int value;
+        public int getValue() { return value; }
+        public void setValue(int v) { value = v; }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            int result = 10 / a.getValue();
+            System.out.println(result);
+        }
     }
   test.eo: |
     +package sandbox
@@ -53,7 +66,21 @@ good:
         a->setValue(2);
         int result = 10 / a->getValue();
         std::cout << result;
-        delete a;
+    }
+  Test.java: |
+    class A {
+        private int value;
+        public int getValue() { return value; }
+        public void setValue(int v) { value = v; }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            a.setValue(2);
+            int result = 10 / a.getValue();
+            System.out.println(result);
+        }
     }
   test.eo: |
     +package sandbox

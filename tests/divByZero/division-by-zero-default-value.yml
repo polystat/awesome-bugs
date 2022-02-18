@@ -23,7 +23,22 @@ bad:
     auto main() -> int {
         auto a = std::make_unique<A>();
         std::cout << a->doSomething(10);
-        delete a;
+    }
+  Test.java: |
+    class A {
+        private int value;
+        public int getValue() { return value; }
+        public void setValue(int v) { value = v; }
+        public int doSomething(int v) {
+            return  v/value;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            System.out.println(a.doSomething(10));
+        }
     }
   test.eo: |
     +package sandbox
@@ -62,7 +77,23 @@ good:
         auto a = std::make_unique<A>();
         a->setValue(2);
         std::cout << a->doSomething(10);
-        delete a;
+    }
+  Test.java: |
+    class A {
+        private int value;
+        public int getValue() { return value; }
+        public void setValue(int v) { value = v; }
+        public int doSomething(int v) {
+            return  v/value;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            a.setValue(2);
+            System.out.println(a.doSomething(10));
+        }
     }
   test.eo: |
     +package sandbox

@@ -20,6 +20,19 @@ bad:
         A a;
         std::cout << a.doSomething(0.1F);
     }
+  Test.java: |
+    class A {
+        public int doSomething(float v) {
+            return 10 / (int)v;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            System.out.println(a.doSomething(0.1F));
+        }
+    }
   test.eo: |
     +package sandbox
     +alias org.eolang.io.stdout
@@ -45,6 +58,20 @@ good:
     auto main() -> int {
         A a;
         std::cout << a.doSomething(0.1F);
+    }
+  Test.java: |
+    class A {
+        public int doSomething(float v) {
+            int intV = (int)v;
+            return false ? (10 / intV) : (10 * intV);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            System.out.println(a.doSomething(0.1F));
+        }
     }
   test.eo: |
     +package sandbox
