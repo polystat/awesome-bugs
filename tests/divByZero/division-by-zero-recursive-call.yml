@@ -22,6 +22,21 @@ bad:
         int result = a.doSomething(5);
         std::cout << result;
     }
+  Test.java: |
+    class A {
+        public int doSomething(int number) {
+            if (number < 0) { return 1; }
+            return number / doSomething(number - 1);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            int result = a.doSomething(5);
+            System.out.println(result);
+        }
+    }
   test.eo: |
     +package sandbox
     +alias org.eolang.io.stdout
@@ -51,6 +66,21 @@ good:
         A a;
         int result = a.doSomething(5);
         std::cout << result;
+    }
+  Test.java: |
+    class A {
+        public int doSomething(int number) {
+            if (number < 1) { return 1; }
+            return number / doSomething(number - 1);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            int result = a.doSomething(5);
+            System.out.println(result);
+        }
     }
   test.eo: |
     +package sandbox

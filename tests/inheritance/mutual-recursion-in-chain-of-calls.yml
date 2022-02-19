@@ -41,6 +41,34 @@ bad:
         Derived derivedInstance;
         derivedInstance.l(10);
     }
+  Test.java: |
+    class Base {
+        private int x = 0;
+        public int getX() { return x; }
+        public void n(int v) {
+            x = v;
+        }
+        public void o(int v) {
+            n(v);
+        }
+        public void m(int v) { o(v); }
+    }
+
+    class Derived extends Base {
+        public void n(int v) {
+            m(v);
+        }
+        public void l(int v) {
+            n(v);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Derived derivedInstance = new Derived();
+            derivedInstance.l(10);
+        }
+    }
   test.eo: |
     +alias base sandbox.base
 
@@ -92,6 +120,34 @@ good:
     auto main() -> int {
         Derived derivedInstance;
         derivedInstance.l(10);
+    }
+  Test.java: |
+    class Base {
+        private int x = 0;
+        public int getX() { return x; }
+        public void n(int v) {
+            x = v;
+        }
+        public void o(int v) {
+            n(v);
+        }
+        public void m(int v) { o(v); }
+    }
+
+    class Derived extends Base {
+        public void n1(int v) {
+            m(v);
+        }
+        public void l(int v) {
+            n(v);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Derived derivedInstance = new Derived();
+            derivedInstance.l(10);
+        }
     }
   test.eo: |
     +alias base sandbox.base

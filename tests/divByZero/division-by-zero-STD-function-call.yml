@@ -23,6 +23,22 @@ bad:
         vector<string> v_s;
         a.doSomething(v_s);
     }
+  Test.java: |
+    import java.util.Vector;
+
+    class A {
+        public void doSomething(Vector<String> args) {
+            System.out.println(10 / args.size());
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            Vector<String> v_s = new Vector<>();
+            cout << a.doSomething(v_s);
+        }
+    }
   test.eo: |
     +package sandbox
     +alias org.eolang.io.stdout
@@ -52,6 +68,23 @@ good:
         A a;
         vector<string> v_s;
         a.doSomething(v_s);
+    }
+  Test.java: |
+    import java.util.Vector;
+
+    class A {
+        public int doSomething(Vector<String> args) {
+            int len = args.size();
+            return len == 0 ? 0 : 10 / len;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            A a = new A();
+            Vector<String> v_s = new Vector<>();
+            System.out.println(a.doSomething(v_s));
+        }
     }
   test.eo: |
     +package sandbox

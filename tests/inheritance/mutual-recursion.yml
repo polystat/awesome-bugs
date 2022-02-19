@@ -38,6 +38,30 @@ bad:
         std::unique_ptr<Base> derivedInstance = std::make_unique<Derived>();
         derivedInstance->m(10);
     }
+  Test.java: |
+    class Base {
+        private int x = 0;
+        public int getX() { return x; }
+        public void n(int v) {
+            x = v;
+        }
+        public void m(int v) {
+            n(v);
+        }
+    }
+
+    class Derived extends Base {
+        public void n(int v) {
+            m(v);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Base derivedInstance = new Derived();
+            derivedInstance.m(10);
+        }
+    }
   test.eo: |
     +alias base MutualRecursionExample.base
 
@@ -81,6 +105,30 @@ good:
     auto main() -> int {
         std::unique_ptr<Base> derivedInstance = std::make_unique<Derived>();
         derivedInstance->m(10);
+    }
+  Test.java: |
+    class Base {
+        private int x = 0;
+        public int getX() { return x; }
+        public void n(int v) {
+            x = v;
+        }
+        public void m(int v) {
+            n(v);
+        }
+    }
+
+    class Derived extends Base {
+        public void n1(int v) {
+            m(v);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Base derivedInstance = new Derived();
+            derivedInstance.m(10);
+        }
     }
   test.eo: |
     +alias base MutualRecursionExample.base

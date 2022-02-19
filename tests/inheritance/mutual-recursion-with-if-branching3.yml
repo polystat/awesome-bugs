@@ -49,6 +49,38 @@ bad:
         std::unique_ptr<Base> derivedInstance = std::make_unique<Derived>();
         derivedInstance->n(100);
     }
+  Test.java: |
+    class Base {
+        private int x = 0;
+        public int getX() { return x; }
+        public void n(int v) {
+            x = v;
+        }
+        public void m(int v) {
+            n(v);
+        }
+        public void incrX() {
+            x++;
+        }
+    }
+
+    class Derived extends Base {
+        public void n(int v) {
+            if (getX() < v) {
+                m(v);
+            }
+            else {
+                incrX();
+            }
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Base derivedInstance = new Derived();
+            derivedInstance.n(10);
+        }
+    }
   test.eo: |
     [] > test
       [] > derived
@@ -107,6 +139,39 @@ good:
     auto main() -> int {
         std::unique_ptr<Base> derivedInstance = std::make_unique<Derived>();
         derivedInstance->n(100);
+    }
+  Test.java: |
+    class Base {
+        private int x = 0;
+        public int getX() { return x; }
+        public void n(int v) {
+            x = v;
+        }
+        public void m(int v) {
+            x++;
+            n(v);
+        }
+        public void incrX() {
+            x++;
+        }
+    }
+
+    class Derived extends Base {
+        public void n(int v) {
+            if (getX() < v) {
+                m(v);
+            }
+            else {
+                incrX();
+            }
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Base derivedInstance = new Derived();
+            derivedInstance.n(10);
+        }
     }
   test.eo: |
     [] > test
