@@ -6,6 +6,7 @@ language: cpp
 bad:
   source.cpp: |
     #include <iostream>
+    #include <memory>
 
     class A {
     private:
@@ -51,6 +52,7 @@ bad:
 good:
   source.cpp: |
     #include <iostream>
+    #include <memory>
 
     class A {
     private:

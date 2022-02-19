@@ -9,6 +9,7 @@ bad:
   source.cpp: |
     #include <iostream>
     #include <random>
+    #include <memory>
 
     class A {
     private:
@@ -73,6 +74,7 @@ good:
   source.cpp: |
     #include <iostream>
     #include <random>
+    #include <memory>
 
     class A {
     private:
