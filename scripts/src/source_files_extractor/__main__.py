@@ -14,7 +14,7 @@ import shutil
 #  - a path to a resulting temp folder with source files
 
 # According to the README.md we should have such fields in our YAML files
-REQUIRED_KEYS = ["title", "description", "features", "language", "bad", "good"]
+REQUIRED_KEYS = ["title", "description", "features", "bad", "good"]
 
 
 # Searching for YAML files in the given path
