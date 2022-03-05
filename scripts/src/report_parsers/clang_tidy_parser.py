@@ -39,7 +39,7 @@ class ClangTidyParser(Parser):
         colon_space = seq(colon, space)
         line_number = regex(r"[0-9]+").map(int)
         column_number = regex(r"[0-9]+").map(int)
-        error_type = string("warning") | string("note")
+        error_type = string("warning") | string("note") | string("error")
         error_message = regex(".*")
         code_snippet = regex(".*")
         highlighting = regex(".*")
@@ -52,8 +52,15 @@ class ClangTidyParser(Parser):
                 colon_space >> error_message,
             )
             << newline
+            << seq(
+                abs_path,
+                colon >> line_number,
+                colon >> column_number,
+                colon_space >> error_type,
+                colon_space >> error_message,
+            ).optional()
             << (
-                regex(r"\s+")
+                regex(r"\s+").optional()
                 << code_snippet
                 << newline
                 << string(" " * 2)
