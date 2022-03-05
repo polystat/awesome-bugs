@@ -10,7 +10,6 @@ from pylatex import (
     Tabular,
     Itemize,
     NewPage,
-    MultiRow,
     MultiColumn,
     Section,
     Subsection,
@@ -42,35 +41,21 @@ def get_test_files_paths(code_path):
 # Generation latex report according to analyzers results
 def generate_report(analyzer_reports):
     def generate_statistic_table():
-        table = Tabular("|l|l|" + "r|" * 8, row_height=1.25)
+        table = Tabular("|l|l|" + "r|" * 9, row_height=1.25)
         # Head
         table.add_hline()
         table.add_row(
-            MultiColumn(
-                size=1, data=MultiRow(size=2, data="Analyzer"), align="|c|"
-            ),
-            MultiColumn(
-                size=1, data=MultiRow(size=2, data="Error"), align="|c|"
-            ),
-            MultiColumn(size=2, data="True", align="c|"),
-            MultiColumn(size=2, data="False", align="c|"),
-            MultiRow(size=2, data="Errors"),
-            MultiRow(size=2, data="Accuracy"),
-            MultiRow(size=2, data="Precision"),
-            MultiRow(size=2, data="Recall"),
-        )
-        table.add_hline(3, 6)
-        table.add_row(
-            "",
-            "",
-            "Pos",
-            "Neg",
-            "Pos",
-            "Neg",
-            "",
-            "",
-            "",
-            "",
+            "Analyzer",
+            "Defect title",
+            "TP",
+            "TN",
+            "FP",
+            "FN",
+            "ERR",
+            "Accuracy",
+            "Precision",
+            "Recall",
+            "F1 score",
         )
         table.add_hline()
 
@@ -84,15 +69,13 @@ def generate_report(analyzer_reports):
                 s.false_positive,
                 s.false_negative,
                 s.exceptions,
-                f"{s.accuracy:.2f}",
-                f"{s.precision:.2f}",
-                f"{s.recall:.2f}",
+                f"{100*s.accuracy:.1f}%",
+                f"{100*s.precision:.1f}%",
+                f"{100*s.recall:.1f}%",
+                f"{100*s.F1:.1f}%",
             ]
 
         for analyzer in analyzer_reports:
-            stat = analyzer.statistic
-            table.add_hline()
-            table.add_row(get_row(analyzer.analyzer, "All", stat), mapper=bold)
             table.add_hline()
             for error_statistic in analyzer.error_statistics:
                 stat = error_statistic.statistic
@@ -100,6 +83,10 @@ def generate_report(analyzer_reports):
                     get_row(analyzer.analyzer, error_statistic.error, stat)
                 )
                 table.add_hline()
+            # total results for analyzer
+            stat = analyzer.statistic
+            table.add_row(get_row(analyzer.analyzer, "All", stat), mapper=bold)
+            table.add_hline()
         doc.append(table)
 
     def generate_details_table():
@@ -165,11 +152,13 @@ def generate_report(analyzer_reports):
     with doc.create(Section("Statistic table", numbering=False)):
         generate_statistic_table()
         with doc.create(Subsection("Description", numbering=False)):
-            with doc.create(Itemize()) as ls:
-                ls.add_item("True Positive - warnings exist and should be")
-                ls.add_item("True Negative - no warnings and shouldn't be")
-                ls.add_item("False Negative - no warnings, but they should be")
-                ls.add_item("False Positive - warnings exist but shouldn't be")
+            ls = Itemize()
+            ls.add_item("True Positive(TP) - warnings exist and should be")
+            ls.add_item("True Negative(TN) - no warnings and shouldn't be")
+            ls.add_item("False Negative(FN) - no warnings, but they should be")
+            ls.add_item("False Positive(FP) - warnings exist but shouldn't be")
+            ls.add_item("Errors(ERR) - errors/exceptions during analysis")
+            doc.append(ls)
 
     doc.append(NewPage())
     with doc.create(Section("Details table", numbering=False)):
@@ -179,10 +168,11 @@ def generate_report(analyzer_reports):
                 ls.add_item("OK = TP and PN")
                 ls.add_item("FN = FN and TP")
                 ls.add_item("FP = FP and TN")
-                ls.add_item("E - an exception was thrown during analysis")
+                ls.add_item("FF = FP and FN")
+                ls.add_item("E - errors/exceptions during analysis")
 
     doc.append(NewPage())
-    with doc.create(Section("Error messages", numbering=False)):
+    with doc.create(Section("Detected defect details", numbering=False)):
         extract_error_messages()
 
     doc.generate_tex(os.path.join("results", "report"))

@@ -53,6 +53,7 @@ class AnalyzerStatistic:
     accuracy: float = 0
     precision: float = 0
     recall: float = 0
+    F1: float = 0
 
     def dict(self) -> dict:
         return {
@@ -63,6 +64,7 @@ class AnalyzerStatistic:
             "accuracy": self.accuracy,
             "precision": self.precision,
             "recall": self.recall,
+            "F1": self.recall,
         }
 
 
@@ -171,6 +173,14 @@ class AnalyzerReport:
             stat.recall = stat.true_positive / (
                 stat.true_positive + stat.false_negative
             )
+
+        if stat.precision + stat.recall != 0:
+            stat.F1 = (
+                2
+                * (stat.precision * stat.recall)
+                / (stat.precision + stat.recall)
+            )
+
         return stat
 
     def __str__(self) -> str:
