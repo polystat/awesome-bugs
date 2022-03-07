@@ -39,7 +39,7 @@ def run_polystat(polystat_file, sources_folder_path,
             ],
                 capture_output=True
             )
-            case_result = temp_path + "\n" + output.stdout.decode("utf-8")
+            case_result = temp_path + "\n" + output.stdout.decode("latin1")
             print(output.stderr.decode("cp1250"))
             results.append(case_result)
 
