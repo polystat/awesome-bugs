@@ -1,0 +1,54 @@
+title: Division by zero in branching
+description: >
+  Division by zero occurs in a simple branching.
+  One branch contains the defect, another - not.
+features:
+  - branching
+bad:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(bool x, int y, int z) -> int {
+        int result = 0;
+        if (x) {
+            result = y;
+        }
+        else {
+            result = z / y;
+        }
+        return result;
+    }
+
+    auto main() -> int {
+        cout << test(false, 0, 0);
+    }
+  test.eo: |
+    [x y z] > test
+      x.if > @
+        y
+        z.div y
+good:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(int y, int z) -> int {
+        int result = 0;
+        if (true) {
+            result = y;
+        }
+        else {
+            result = z / y;
+        }
+        return result;
+    }
+
+    auto main() -> int {
+        cout << test(0, 0);
+    }
+  test.eo: |
+    [y z] > test
+      (1.eq 1).if > @
+        y
+        z.div y

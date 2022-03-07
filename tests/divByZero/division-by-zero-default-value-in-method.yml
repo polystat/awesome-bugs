@@ -1,6 +1,7 @@
-title: ClientCallDefaultValue
+title: Division by zero with default value
 description: >
-
+  Division by zero occurs when the class attribute is not initialized.
+  The defect is in the class method and shows in the client call.
 features:
   - object
   - method

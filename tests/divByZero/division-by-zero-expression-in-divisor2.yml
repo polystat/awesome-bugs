@@ -1,0 +1,41 @@
+title: Division by zero with an expression in divisor
+description: >
+  Division by zero results from the zero result of the
+  expression in the divisor. The expression contains
+  the parameter of the function. In good case an
+  expression does not result in zero.
+features:
+bad:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(int x) -> int {
+        return 100 / (100 * x);
+    }
+
+    auto main() -> int {
+        cout << test(0);
+    }
+  test.eo: |
+    [x] > test
+      div. > @
+        100
+        100.mul (x.as-int)
+good:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(int x) -> int {
+        return 100 / ((100 * x) + 1);
+    }
+
+    auto main() -> int {
+        cout << test(100);
+    }
+  test.eo: |
+    [x] > test
+      div. > @
+        100
+        (100.mul (x.as-int)).add 1

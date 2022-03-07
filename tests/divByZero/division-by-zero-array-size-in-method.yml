@@ -1,9 +1,12 @@
-title: STD function call
+title: Division by zero in STD function call
 description: >
-
+  Division by zero when an array(vector) size is in the divisor.
+  The defect is in the class method and shows in the client call.
 features:
   - object
   - method
+  - array
+  - vector
 language: cpp
 bad:
   source.cpp: |

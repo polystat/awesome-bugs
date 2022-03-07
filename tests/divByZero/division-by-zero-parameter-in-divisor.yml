@@ -1,0 +1,35 @@
+title: Division by zero with a function parameter in divisor
+description: >
+  A simple case where division by zero can occur
+  due to the zero function parameter.
+features:
+bad:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(int x, int y) -> int {
+        return x / y;
+    }
+
+    auto main() -> int {
+        cout << test(10, 0);
+    }
+  test.eo: |
+    [x y] > test
+      x.div y > @
+good:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(int x, int y) -> int {
+        return x / 10;
+    }
+
+    auto main() -> int {
+        cout << test(10, 0);
+    }
+  test.eo: |
+    [x] > test
+      x.div 10 > @

@@ -1,0 +1,41 @@
+title: Division by zero in a cast from bool to int
+description: >
+  Division by zero occurs when casting false to zero.
+features:
+  - cast
+bad:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(bool x) -> int {
+        auto intX = static_cast<int>(x);
+        return 100 / intX;
+    }
+
+    auto main() -> int {
+        cout << test(false);
+    }
+  test.eo: |
+    [x] > test
+      div. > @
+        100
+        x.as-int
+good:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test() -> int {
+        auto intX = static_cast<int>(1 == 1);
+        return 100 / intX;
+    }
+
+    auto main() -> int {
+        cout << test();
+    }
+  test.eo: |
+    [] > test
+      div. > @
+        100
+        (1.eq 1).as-int
