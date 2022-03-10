@@ -1,0 +1,141 @@
+title: The unjustified assumption in factory pattern
+description: >
+  Here, the defect manifests itself in the context
+  of the factory pattern (the base class is the product
+  of the factory)
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    #include <iostream>
+    #include <cassert>
+
+    class parentFactory {
+    public:
+        class getParent {
+        public:
+            virtual int f(int x) {
+                int y1 = x - 5;
+                assert(y1 > 0);
+                return x;
+            }
+            virtual int g(int y) {
+                return f(y);
+            }
+            virtual int h(int z) {
+                return z;
+            }
+            virtual ~getParent() = default;
+        };
+    };
+
+    class child : public parentFactory::getParent {
+    public:
+        virtual int f(int y) override {
+            return y;
+        }
+        virtual int h(int z) override {
+            return g(z);
+        }
+    };
+
+     auto main() -> int {
+            int x = 10;
+
+            auto* p = new parentFactory::getParent();
+            p->g(x);
+            x -= 5;
+            p->h(x);
+            delete p;
+
+            p = new child();
+            p->g(x);
+            p->h(x);
+            delete p;
+      }
+  test.eo: |
+    [] > test
+      [] > base_factory
+        [] > get_base
+          [self x] > f
+            x.sub 5 > y1
+            seq > @
+              assert (0.less y1)
+              x
+          [self y] > g
+            self.f self y > @
+          [self z] > h
+            z > @
+
+      [] > derived
+        test.base_factory.get_base > @
+        [self y] > f
+          y > @
+        [self z] > h
+          self.g self z > @
+good:
+  source.cpp: |
+    #include <iostream>
+    #include <cassert>
+
+    class parentFactory {
+    public:
+        class getParent {
+        public:
+            virtual int f(int x) {
+                int y1 = x - 5;
+                assert(y1 > 0);
+                return x;
+            }
+            virtual int g(int y) {
+                return f(y);
+            }
+            virtual int h(int z) {
+                return z;
+            }
+            virtual ~getParent() = default;
+        };
+    };
+
+    class child : public parentFactory::getParent {
+    public:
+        virtual int h(int z) override {
+            return g(z);
+        }
+    };
+
+     auto main() -> int {
+            int x = 10;
+
+            auto* p = new parentFactory::getParent();
+            p->g(x);
+            x -= 5;
+            p->h(x);
+            delete p;
+
+            p = new child();
+            p->g(x);
+            p->h(x);
+            delete p;
+    }
+  test.eo: |
+    [] > test
+      [] > base_factory
+        [] > get_base
+          [self x] > f
+            x.sub 5 > y1
+            seq > @
+              assert (0.less y1)
+              x
+          [self y] > g
+            self.f self y > @
+          [self z] > h
+            z > @
+
+      [] > derived
+        test.base_factory.get_base > @
+        [self z] > h
+          self.g self z > @
