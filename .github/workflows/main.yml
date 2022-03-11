@@ -58,11 +58,20 @@ jobs:
           mkdir results
           python3 -m clang_tidy -p ./build > results/clang-out.txt
           cat results/clang-out.txt
+
       - name: Run Polystat and save reports to "results" folder
         run: |
           curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.4.2/polystat-0.4.2-jar-with-dependencies.jar"
           python3 -m polystat polystat.jar temp/sources/eo temp/polystat results
           cat results/eo-out.txt
+
+      - name: SVF analysis
+        run: |
+          git clone https://github.com/SVF-tools/SVF.git
+          cd SVF
+          source ./build.sh
+          python3 -m SVF temp/sources/cpp temp/bc results SVF/Release-build/bin
+
       - name: Analyze reports
         run: python3 -m analyze_reports
 
