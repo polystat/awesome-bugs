@@ -4,6 +4,7 @@ import os.path
 from pylatex.utils import bold
 from scripts.src.report_parsers import ClangTidyParser
 from scripts.src.report_parsers import PolystatParser
+from scripts.src.report_parsers import CppcheckParser
 from pylatex import (
     Document,
     Command,
@@ -92,7 +93,7 @@ def generate_report(analyzer_reports):
     def generate_details_table():
         repo_url = "https://github.com/Polystat/awesome-bugs/blob/master/"
         test_paths = sorted(get_test_files_paths("tests"))
-        table = Tabular("|l|c|c|", row_height=1.25)
+        table = Tabular("|l|" + "c|" * len(analyzer_reports), row_height=1.25)
         # table head
         table.add_hline()
         table.add_row(
@@ -140,11 +141,7 @@ def generate_report(analyzer_reports):
                             en.add_item(str(result))
 
     # Create latex document
-    geometry_options = {
-        "margin": "0.5in",
-        "top": "1in",
-        "bottom": "1in",
-    }
+    geometry_options = {"margin": "0.5in", "top": "1in", "bottom": "1in"}
     doc = Document(geometry_options=geometry_options)
     doc.packages.append(Package(NoEscape("href-ul")))
     doc.append(Command("large"))
@@ -203,6 +200,7 @@ def run():
     parsers = {
         ClangTidyParser(): [lambda row: row.error_type != "note"],
         PolystatParser(): [],
+        CppcheckParser(): [lambda row: row.error_type != "note"],
     }
     analyzer_reports: list[AnalyzerReport] = []
 
