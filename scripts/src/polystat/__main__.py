@@ -37,10 +37,13 @@ def run_polystat(polystat_file, sources_folder_path,
                 root,
                 temp_path,
             ],
-                capture_output=True
+                capture_output=True,
+                encoding='latin1',
             )
-            case_result = temp_path + "\n" + output.stdout.decode("latin1")
-            print(output.stderr.decode("cp1250"))
+            
+            case_result = temp_path + "\n" + output.stdout
+            print(output.stderr)
+
             results.append(case_result)
 
     # Write results to file
