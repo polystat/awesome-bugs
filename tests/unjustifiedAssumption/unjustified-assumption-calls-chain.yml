@@ -1,0 +1,142 @@
+title: The unjustified assumption in calls chain
+description: >
+  Here, the defect manifests itself when not direct
+  inlining occurs, but through a chain of calls.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    #include <iostream>
+    #include <cassert>
+
+    class parent {
+    public:
+        virtual int f(int x) {
+            int t = x - 5;
+            assert(t > 0);
+            return t;
+        }
+        virtual int g(int y1) {
+            return f(y1);
+        }
+        virtual int gg(int y2) {
+            return g(y2);
+        }
+        virtual int h(int z) {
+            return z;
+        }
+
+        virtual ~parent() = default;
+    };
+
+    class child : public parent {
+    public:
+        virtual int f(int y) override {
+            return y;
+        }
+        virtual int h(int z) override {
+            return gg(z);
+        }
+    };
+
+    auto main() -> int {
+        int x = 10;
+
+        auto* p = new parent();
+        p->g(x);
+        x -= 5;
+        p->h(x);
+        delete p;
+
+        p = new child();
+        p->g(x);
+        p->h(x);
+        delete p;
+    }
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x.sub 5 > t
+          seq > @
+            assert (0.less t)
+            x
+        [self y1] > g
+          self.f self y1 > @
+        [self y2] > gg
+          self.g self y2 > @
+        [self z] > h
+          z > @
+      [] > child
+        test.parent > @
+        [self y] > f
+          y > @
+        [self z] > h
+          self.gg self z > @
+good:
+  source.cpp: |
+    #include <iostream>
+    #include <cassert>
+
+    class parent {
+    public:
+        virtual int f(int x) {
+            int t = x - 5;
+            assert(t > 0);
+            return t;
+        }
+        virtual int g(int y1) {
+            return f(y1);
+        }
+        virtual int gg(int y2) {
+            return g(y2);
+        }
+        virtual int h(int z) {
+            return z;
+        }
+
+        virtual ~parent() = default;
+    };
+
+    class child : public parent {
+    public:
+        virtual int h(int z) override {
+            return gg(z);
+        }
+    };
+
+    auto main() -> int {
+        int x = 10;
+
+        auto* p = new parent();
+        p->g(x);
+        x -= 5;
+        p->h(x);
+        delete p;
+
+        p = new child();
+        p->g(x);
+        p->h(x);
+        delete p;
+    }
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x.sub 5 > t
+          seq > @
+            assert (0.less t)
+            x
+        [self y1] > g
+          self.f self y1 > @
+        [self y2] > gg
+          self.g self y2 > @
+        [self z] > h
+          z > @
+      [] > child
+        test.parent > @
+        [self z] > h
+          self.gg self z > @

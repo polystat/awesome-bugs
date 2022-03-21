@@ -73,6 +73,11 @@ jobs:
           cd ../
           python3 -m SVF temp/sources/cpp temp/bc results SVF/Release-build/bin
 
+      - name: cppcheck
+        run: |
+          sudo apt-get install -y cppcheck
+          python3 -m cppcheck temp/sources/cpp results
+
       - name: Analyze reports
         run: python3 -m analyze_reports
 
