@@ -40,10 +40,8 @@ def run_polystat(polystat_file, sources_folder_path,
                 capture_output=True,
                 encoding='latin1',
             )
-            
             case_result = temp_path + "\n" + output.stdout
             print(output.stderr)
-
             results.append(case_result)
 
     # Write results to file
