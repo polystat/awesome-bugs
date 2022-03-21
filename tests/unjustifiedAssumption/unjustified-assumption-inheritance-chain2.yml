@@ -1,0 +1,161 @@
+title: The unjustified assumption in an inheritance chain
+description: >
+  Here the defect manifests itself not in direct inheritance, but
+  along the chain of inheritance. The intermediate class overrides
+  the behavior of the base class. If in the base method g there is
+  no call to a method that may be inlined, such a call is added in
+  the intermediate class when overriding the g method.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    #include <iostream>
+    #include <cassert>
+
+    class parent {
+    public:
+        virtual int f(int x) {
+            int t = x - 5;
+            assert(t > 0);
+            return t;
+        }
+        virtual int g(int y) {
+            return y;
+        }
+        virtual int h(int z) {
+            return z;
+        }
+
+        virtual ~parent() = default;
+    };
+
+    class child : public parent {
+    public:
+        int g(int y) override {
+            return f(y);
+        }
+    };
+
+    class grandchild : public child {
+    public:
+        int f(int y) override {
+            return y;
+        }
+        int h(int z) override {
+            return g(z);
+        }
+    };
+
+    auto main() -> int {
+        int x = 15;
+
+        auto* p = new parent();
+        p->g(x);
+        x -= 5;
+        p->h(x);
+        delete p;
+
+        p = new child();
+        p->g(x);
+        p->h(x);
+        delete p;
+    }
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x.sub 5 > t
+          seq > @
+            assert (0.less t)
+            x
+        [self y] > g
+          y > @
+        [self z] > h
+          z > @
+
+      [] > child
+        test.parent > @
+        [self y] > g
+          self.f self y > @
+
+      [] > grandchild
+        test.child > @
+        [self y] > f
+          y > @
+        [self z] > h
+          self.g self z > @
+good:
+  source.cpp: |
+    #include <iostream>
+    #include <cassert>
+
+    class parent {
+    public:
+        virtual int f(int x) {
+            int t = x - 5;
+            assert(t > 0);
+            return t;
+        }
+        virtual int g(int y) {
+            return y;
+        }
+        virtual int h(int z) {
+            return z;
+        }
+
+        virtual ~parent() = default;
+    };
+
+    class child : public parent {
+    public:
+        int g(int y) override {
+            return f(y);
+        }
+    };
+
+    class grandchild : public child {
+    public:
+        int h(int z) override {
+            return g(z);
+        }
+    };
+
+    auto main() -> int {
+        int x = 15;
+
+        auto* p = new parent();
+        p->g(x);
+        x -= 5;
+        p->h(x);
+        delete p;
+
+        p = new child();
+        p->g(x);
+        p->h(x);
+        delete p;
+    }
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x.sub 5 > t
+          seq > @
+            assert (0.less t)
+            x
+        [self y] > g
+          y > @
+        [self z] > h
+          z > @
+
+      [] > child
+        test.parent > @
+        [self y] > g
+          self.f self y > @
+
+      [] > grandchild
+        test.child > @
+        [self z] > h
+          self.g self z > @
