@@ -65,6 +65,14 @@ jobs:
           python3 -m polystat polystat.jar temp/sources/eo temp/polystat results
           cat results/eo-out.txt
 
+      - name: SVF analysis
+        run: |
+          git clone https://github.com/SVF-tools/SVF.git
+          cd SVF
+          source ./build.sh
+          cd ../
+          python3 -m SVF temp/sources/cpp temp/bc results SVF/Release-build/bin
+
       - name: cppcheck
         run: |
           sudo apt-get install -y cppcheck

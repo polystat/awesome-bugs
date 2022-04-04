@@ -4,6 +4,7 @@ import os.path
 from pylatex.utils import bold
 from scripts.src.report_parsers import ClangTidyParser
 from scripts.src.report_parsers import PolystatParser
+from scripts.src.report_parsers import SVFParser
 from scripts.src.report_parsers import CppcheckParser
 from pylatex import (
     Document,
@@ -198,8 +199,9 @@ def run():
     logging.basicConfig(level=logging.DEBUG)
 
     parsers = {
-        ClangTidyParser(): [lambda row: row.error_type != "note"],
         PolystatParser(): [],
+        ClangTidyParser(): [lambda row: row.error_type != "note"],
+        SVFParser(): [],
         CppcheckParser(): [lambda row: row.error_type != "note"],
     }
     analyzer_reports: list[AnalyzerReport] = []
