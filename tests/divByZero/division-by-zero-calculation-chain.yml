@@ -1,0 +1,50 @@
+title: Division by zero in a calculation chain
+description: >
+  Division by zero occurs in a chain of mathematical operations.
+  The divisor is an expression containing addition, subtraction,
+  and multiplication.
+features:
+bad:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(int x) -> int {
+        return 100 / (100 * (100 + (100 - x)));
+    }
+
+    auto main() -> int {
+        cout << test(200);
+    }
+  test.eo: |
+    [x] > test
+      div. > @
+        100
+        mul.
+          add.
+            100
+            sub.
+              100
+              x
+good:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(int x) -> int {
+        return (100 * (100 + (100 - x))) / 100;
+    }
+
+    auto main() -> int {
+        cout << test(200);
+    }
+  test.eo: |
+    [x] > test
+      div. > @
+        mul.
+          add.
+            100
+            sub.
+              100
+              x
+        100

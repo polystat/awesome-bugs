@@ -1,9 +1,11 @@
-title: Cast float int
+title: Division by zero in a cast from float to int
 description: >
-
+  Division by zero occurs when casting a non-zero
+  float number in range (0:0.5) to zero.
 features:
   - object
   - method
+  - cast
 language: cpp
 bad:
   source.cpp: |

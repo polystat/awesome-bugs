@@ -1,0 +1,67 @@
+title: Division by zero in nested branching
+description: >
+  Division by zero occurs in nested branching. The if statement
+  nests another if. Only one branch of nested if contains the defect.
+features:
+bad:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(bool x, bool y, int z, int w) -> int {
+        int result = 0;
+        if (x) {
+            result = z;
+        }
+        else {
+            if (y) {
+                result = w / z;
+            }
+            else {
+                result = w;
+            }
+        }
+        return result;
+    }
+
+    auto main() -> int {
+        cout << test(false, true, 0, 0);
+    }
+  test.eo: |
+    [x y z w] > test
+      x.if > @
+        z
+        y.if
+          w.div z
+          w
+good:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(bool x,  int z, int w) -> int {
+        int result = 0;
+        if (x) {
+            result = z;
+        }
+        else {
+            if (false) {
+                result = w / z;
+            }
+            else {
+                result = w;
+            }
+        }
+        return result;
+    }
+
+    auto main() -> int {
+        cout << test(true, 0, 0);
+    }
+  test.eo: |
+    [x z w] > test
+      x.if > @
+        z
+        (1.eq 0).if
+          w.div z
+          w

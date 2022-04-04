@@ -1,5 +1,7 @@
-title: ClientCallDefaultValueClientCall
+title: Division by zero with default value in client
 description: >
+  Division by zero occurs when the class attribute is not initialized.
+  The defect is in the client code, where a class attribute is a divider.
 features:
   - object
 language: cpp

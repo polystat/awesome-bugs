@@ -1,0 +1,45 @@
+title: Division by zero with function in divisor
+description: >
+  Division by zero occurs when the result of
+  executing the function in the divisor is zero.
+features:
+bad:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(int x, int y) -> int {
+        auto f = [y]() {
+            return y;
+        };
+        return x / f();
+    }
+
+    auto main() -> int {
+        cout << test(1, 0);
+    }
+  test.eo: |
+    [x y] > test
+      [] > f
+        y > @
+      x.div f > @
+good:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test(int x) -> int {
+        auto f = []() {
+            return 10;
+        };
+        return x / f();
+    }
+
+    auto main() -> int {
+        cout << test(1);
+    }
+  test.eo: |
+    [x] > test
+      [] > f
+        10 > @
+      x.div f > @

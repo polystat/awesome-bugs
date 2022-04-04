@@ -1,0 +1,44 @@
+title: Division by zero with an array size
+description: >
+  Division by zero when an array(vector) size is in the divisor.
+features:
+  - array
+  - vector
+bad:
+  source.cpp: |
+    #include <iostream>
+    #include <vector>
+    using namespace std;
+
+    auto test(int x) -> unsigned int {
+        vector <int> a = { };
+        return x / a.size();
+    }
+
+    auto main() -> int {
+        cout << test(100);
+    }
+  test.eo: |
+    [x] > test
+      div. > @
+        100
+        (arr).elements.length
+good:
+  source.cpp: |
+    #include <iostream>
+    #include <vector>
+    using namespace std;
+
+    auto test(int x) -> unsigned int {
+        vector <int> a = { 1, 2, 3 };
+        return x / a.size();
+    }
+
+    auto main() -> int {
+        cout << test(100);
+    }
+  test.eo: |
+    [x] > test
+      div. > @
+        100
+        (arr 1 2 3).elements.length

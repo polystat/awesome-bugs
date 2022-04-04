@@ -1,6 +1,7 @@
-title: Random if branching
+title: Division by zero in random branching
 description: >
-
+  Division by zero occurs only if a rand function yields zero. This is
+  an example of an error that doesn't show itself at once but is possible.
 features:
   - object
   - method

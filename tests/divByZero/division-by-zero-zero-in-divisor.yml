@@ -1,0 +1,35 @@
+title: Division by zero with zero in divisor
+description: >
+  The simplest example of division by zero, which occurs
+  in the expression where the divisor is zero.
+features:
+bad:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test() -> int {
+        return 1 / 0;
+    }
+
+    auto main() -> int {
+        cout << test();
+    }
+  test.eo: |
+    [] > test
+      1.div 0 > @
+good:
+  source.cpp: |
+    #include <iostream>
+    using namespace std;
+
+    auto test() -> int {
+        return 1 / 10;
+    }
+
+    auto main() -> int {
+        cout << test();
+    }
+  test.eo: |
+    [] > test
+      1.div 10 > @
