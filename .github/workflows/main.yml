@@ -61,8 +61,8 @@ jobs:
 
       - name: Run Polystat and save reports to "results" folder
         run: |
-          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.4.2/polystat-0.4.2-jar-with-dependencies.jar"
-          python3 -m polystat polystat.jar temp/sources/eo temp/polystat results
+          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.6.0/polystat-0.6.0-jar-with-dependencies.jar"
+          python3 -m polystat polystat.jar temp/sources/eo results
           cat results/eo-out.txt
 
       - name: SVF analysis

@@ -13,24 +13,33 @@ import json
 
 def get_analyze_report_rows(row) -> list[AnalyzerReportRow]:
     path, results_json = row
-    path = path.replace("temp/polystat", "temp/sources/eo")
-    if results_json is None:
-        return [AnalyzerReportExceptionRow(file_path=path)]
+    results = json.loads(results_json)["runs"][0]
 
-    results = json.loads(results_json)["results"]
-    return [
-        AnalyzerReportRow(
-            file_path=path,
-            error_type=r["ruleId"],
-            error_message=r["message"],
-        )
-        if "message" in r
-        else AnalyzerReportExceptionRow(
-            file_path=path,
-            error_message="An exception thrown: " + r['exception'],
-        )
-        for r in results
-    ]
+    for result in results["results"]:
+        if result["kind"] != "pass":
+            return [
+                AnalyzerReportRow(
+                    file_path=path,
+                    error_type=result["ruleId"],
+                    error_message=result["message"]["text"],
+                )
+            ]
+
+    exceptions = []
+    for invocation in results["invocations"]:
+        if not invocation["executionSuccessful"]:
+            notification = invocation["toolExecutionNotifications"][0]
+            message = notification["message"]["text"]
+            rule = notification["associatedRule"]["id"]
+            defect = rule.split("/")[1].lower().replace(" ", "-")
+            if defect in path:
+                exceptions.append(
+                    AnalyzerReportExceptionRow(
+                        file_path=path,
+                        error_message=f"An exception by {rule}: [{message}]",
+                    )
+                )
+    return exceptions
 
 
 class PolystatParser(Parser):

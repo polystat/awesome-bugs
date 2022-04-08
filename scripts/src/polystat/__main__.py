@@ -1,8 +1,6 @@
 import subprocess
-from pathlib import Path
 import os
 import sys
-import shutil
 
 # Here we make Polystat analysis
 
@@ -13,34 +11,20 @@ import shutil
 #  - a path to a folder where a report will be generated
 
 
-def run_polystat(polystat_file, sources_folder_path,
-                 temp_folder_path, result_folder_path):
+def run_polystat(polystat_file, sources_folder_path, result_folder_path):
     results = []
-    shutil.rmtree(temp_folder_path, ignore_errors=True)
-    Path(result_folder_path).mkdir(parents=True, exist_ok=True)
-
     # Run Polystat analysis for each test case
     for root, dirs, files in os.walk(sources_folder_path):
         if len(dirs) == 0:
             print(f"Polystat analyze the file: {root}")
             case_name = os.path.basename(root)
-
-            # Prepare the temp folder
-            temp_path = os.path.join(temp_folder_path, case_name)
-            Path(temp_path).mkdir(parents=True, exist_ok=True)
-
-            output = subprocess.run([
-                "java",
-                "-jar",
-                polystat_file,
-                "--sarif",
-                root,
-                temp_path,
-            ],
+            output = subprocess.run(
+                ["java", "-jar", polystat_file, root, "--sarif"],
                 capture_output=True,
-                encoding='latin1',
+                encoding="latin1",
             )
-            case_result = temp_path + "\n" + output.stdout
+            path = os.path.join(sources_folder_path, case_name)
+            case_result = path + "\n" + output.stdout
             print(output.stderr)
             results.append(case_result)
 
@@ -48,23 +32,20 @@ def run_polystat(polystat_file, sources_folder_path,
     result_file_path = os.path.join(result_folder_path, "eo-out.txt")
     with open(result_file_path, "w") as fw:
         fw.write("".join(sorted(results)))
-
     print("Polystat analysis completed")
 
 
 def main():
     # Read arguments
-    if len(sys.argv) == 5:
+    if len(sys.argv) == 4:
         polystat_file = sys.argv[1]
         sources_folder_path = sys.argv[2]
-        temp_folder_path = sys.argv[3]
-        result_folder_path = sys.argv[4]
+        result_folder_path = sys.argv[3]
     else:
         print("Wrong number of arguments")
         return
 
-    run_polystat(polystat_file, sources_folder_path,
-                 temp_folder_path, result_folder_path)
+    run_polystat(polystat_file, sources_folder_path, result_folder_path)
 
 
 if __name__ == "__main__":
