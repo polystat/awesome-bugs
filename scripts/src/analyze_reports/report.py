@@ -134,8 +134,9 @@ class AnalyzerReport:
         for error in errors:
             e_result_paths = [x for x in result_paths if error in x]
             e_source_paths = [x for x in source_paths if error in x]
+            e_exceptions = [x for x in exceptions if error in x]
             stat = self.calculate_statistic(
-                e_source_paths, e_result_paths, exceptions
+                e_source_paths, e_result_paths, e_exceptions
             )
             self.error_statistics.append(ErrorStatistic(error, stat))
 
