@@ -53,24 +53,21 @@ bad:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
-    [] > base
-      memory > value
-      [self v] > setValue
-        value.write v > @
-      [self v] > doSomething
-        v.div value > @
-
     [] > test
-      base > b
-      [self v] > n
-        random.as-int > r
-        seq > @
-          b.setValue b r
-          b.doSomething b v
+      [] > base
+        memory > value
+        [self v] > setValue
+          value.write v > @
+        [self v] > doSomething
+          v.div value > @
+    
+      [] > derived
+        base > b
+        [self v] > n
+          random.as-int > r
+          seq > @
+            b.setValue b r
+            b.doSomething b v
 good:
   source.cpp: |
     #include <iostream>
@@ -122,25 +119,22 @@ good:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
-    [] > base
-      memory > value
-      [self v] > setValue
-        value.write v > @
-      [self v] > doSomething
-        v.div value > @
-
     [] > test
-      base > b
-      [self v] > n
-        random.as-int > r
-        r.mod 3 > remainder
-        if. > @
-          remainder.eq 10
-          seq > @
-            b.setValue b r
-            b.doSomething b v
-          r
+      [] > base
+        memory > value
+        [self v] > setValue
+          value.write v > @
+        [self v] > doSomething
+          v.div value > @
+    
+      [] > derived
+        base > b
+        [self v] > n
+          random.as-int > r
+          r.mod 3 > remainder
+          if. > @
+            remainder.eq 10
+            seq > @
+              b.setValue b r
+              b.doSomething b v
+            r

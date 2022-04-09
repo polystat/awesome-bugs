@@ -67,7 +67,7 @@ bad:
         [self z] > h
           z > @
       [] > child
-        test.parent > @
+        parent > @
         [self y] > f
           y > @
         [self z] > h
@@ -128,6 +128,6 @@ good:
         [self z] > h
           z > @
       [] > child
-        test.parent > @
+        parent > @
         [self z] > h
           self.g self z > @

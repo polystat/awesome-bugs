@@ -69,9 +69,8 @@ bad:
             self.f self y > @
           [self z] > h
             z > @
-
       [] > derived
-        test.base_factory.get_base > @
+        base_factory.get_base > @
         [self y] > f
           y > @
         [self z] > h
@@ -134,8 +133,7 @@ good:
             self.f self y > @
           [self z] > h
             z > @
-
       [] > derived
-        test.base_factory.get_base > @
+        base_factory.get_base > @
         [self z] > h
           self.g self z > @

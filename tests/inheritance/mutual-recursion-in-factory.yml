@@ -75,9 +75,8 @@ bad:
             x.write v > @
           [self v] > m
             self.n self v > @
-
       [] > derived
-        test.base_factory.get_base > @
+        base_factory.get_base > @
         [self v] > n
           self.m self v > @
 good:
@@ -148,8 +147,7 @@ good:
             x.write v > @
           [self v] > m
             self.n self v > @
-
       [] > derived
-        test.base_factory.get_base > @
+        base_factory.get_base > @
         [self v] > n1
           self.m self v > @

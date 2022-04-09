@@ -68,6 +68,8 @@ bad:
           self.f self y1 > @
         [self y2] > gg
           self.g self y2 > @
+        [self y3] > ggg
+          self.gg self y3 > @
         [self z] > h
           z > @
       [] > child
@@ -75,7 +77,7 @@ bad:
         [self y] > f
           y > @
         [self z] > h
-          self.gg self z > @
+          self.ggg self z > @
 good:
   source.cpp: |
     #include <iostream>
@@ -134,9 +136,11 @@ good:
           self.f self y1 > @
         [self y2] > gg
           self.g self y2 > @
+        [self y3] > ggg
+          self.gg self y3 > @
         [self z] > h
           z > @
       [] > child
         test.parent > @
         [self z] > h
-          self.gg self z > @
+          self.ggg self z > @

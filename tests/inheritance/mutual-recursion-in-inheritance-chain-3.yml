@@ -76,14 +76,12 @@ bad:
         memory > x
         [self v] > n
           x.write v > @
-
       [] > derived
-        test.base > @
+        base > @
         [self v] > m
           self.n self v > @
-
       [] > derived_again
-        test.derived > @
+        derived > @
         [self v] > n
           self.m self v > @
 good:
@@ -153,13 +151,11 @@ good:
         memory > x
         [self v] > n
           x.write v > @
-
       [] > derived
-        test.base > @
+        base > @
         [self v] > m
           self.n self v > @
-
       [] > derived_again
-        test.derived > @
+        derived > @
         [self v] > n1
           self.m self v > @

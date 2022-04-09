@@ -76,12 +76,12 @@ bad:
           self.n self v > @
 
       [] > derived
-        test.base > @
+        base > @
         [self v] > n
           self.m self v > @
 
       [] > derived_again
-        test.derived > @
+        derived > @
 good:
   source.cpp: |
     #include <memory>
@@ -148,11 +148,9 @@ good:
           x.write v > @
         [self v] > m
           self.n self v > @
-
       [] > derived
-        test.base > @
+        base > @
         [self v] > n1
           self.m self v > @
-
       [] > derived_again
-        test.derived > @
+        derived > @

@@ -39,10 +39,6 @@ bad:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
     [] > test
       [self v] > doSomething
         if. > @
@@ -84,10 +80,6 @@ good:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
     [] > test
       [self v] > doSomething
         if. > @

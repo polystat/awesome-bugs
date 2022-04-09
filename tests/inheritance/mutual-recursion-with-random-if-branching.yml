@@ -90,18 +90,6 @@ bad:
     }
   test.eo: |
     [] > test
-      [] > derived
-        test.base > @
-        test.base.x > x
-        [self] > m
-          self.o self > @
-        [self] > n
-          random.as-int > r
-          if. > @
-            r.eq 0
-            self.m self
-            TRUE
-
       [] > base
         memory > x
         [self] > n
@@ -110,6 +98,17 @@ bad:
           x.write (x.add 1) > @
         [self] > o
           self.m self > @
+      [] > derived
+        base > @
+        base.x > x
+        [self] > m
+          self.o self > @
+        [self] > n
+          random.as-int > r
+          if. > @
+            r.eq 0
+            self.m self
+            TRUE
 good:
   source.cpp: |
     #include <random>
@@ -192,9 +191,17 @@ good:
     }
   test.eo: |
     [] > test
+      [] > base
+        memory > x
+        [self] > n
+          x.write 0 > @
+        [self] > m
+          x.write (x.add 1) > @
+        [self] > o
+          self.m self > @
       [] > derived
-        test.base > @
-        test.base.x > x
+        base > @
+        base.x > x
         [self] > m
           self.o self > @
         [self] > n
@@ -204,12 +211,3 @@ good:
             remainder.eq 10
             self.m self
             TRUE
-
-      [] > base
-        memory > x
-        [self] > n
-          x.write 0 > @
-        [self] > m
-          x.write (x.add 1) > @
-        [self] > o
-          self.m self > @

@@ -85,14 +85,12 @@ bad:
           x.write v > @
         [self v] > m
           self.n self v > @
-
       [] > derived
-        test.base > @
+        base > @
         [self v] > o
           self.m self v > @
-
       [] > derived_again
-        test.derived > @
+        derived > @
         [self v] > n
           self.o self v > @
 good:
@@ -170,13 +168,11 @@ good:
           x.write v > @
         [self v] > m
           self.n self v > @
-
       [] > derived
-        test.base > @
+        base > @
         [self v] > o
           self.m self v > @
-
       [] > derived_again
-        test.derived > @
+        derived > @
         [self v] > n1
           self.o self v > @

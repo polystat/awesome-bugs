@@ -43,10 +43,6 @@ bad:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
     [] > test
       [] > base
         memory > x
@@ -99,10 +95,6 @@ good:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
     [] > test
       [] > base
         memory > x

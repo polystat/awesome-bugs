@@ -70,23 +70,21 @@ bad:
         }
     }
   test.eo: |
-    +alias base sandbox.base
-
     [] > test
-      base > @
-      [self v] > n
-        self.m self v > @
-      [self v] > l
-        self.n self v > @
-  base.eo: |
-    [] > base
-      memory > x
-      [self v] > n
-        x.write v > @
-      [self v] > o
-        self.n self v > @
-      [self v] > m
-        self.o self v > @
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+        [self v] > o
+          self.n self v > @
+        [self v] > m
+          self.o self v > @
+      [] > derived
+        base > @
+        [self v] > n
+          self.m self v > @
+        [self v] > l
+          self.n self v > @
 good:
   source.cpp: |
     class Base {
@@ -150,20 +148,18 @@ good:
         }
     }
   test.eo: |
-    +alias base sandbox.base
-
     [] > test
-      base > @
-      [self v] > n1
-        self.m self v > @
-      [self v] > l
-        self.n self v > @
-  base.eo: |
-    [] > base
-      memory > x
-      [self v] > n
-        x.write v > @
-      [self v] > o
-        self.n self v > @
-      [self v] > m
-        self.o self v > @
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+        [self v] > o
+          self.n self v > @
+        [self v] > m
+          self.o self v > @
+      [] > derived
+        base > @
+        [self v] > n1
+          self.m self v > @
+        [self v] > l
+          self.n self v > @

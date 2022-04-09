@@ -43,10 +43,6 @@ bad:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
     [] > test
       [self arr] > doSomething
         div. > @
@@ -90,10 +86,6 @@ good:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
     [] > test
       [self arr] > doSomething
         arr.length > len

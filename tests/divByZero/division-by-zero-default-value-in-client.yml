@@ -38,15 +38,11 @@ bad:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
     [] > test
       [] > base
         memory > x
 
-      [] > clientCallDefaultValue
+      [] > client
         base.x > x
         [self] > n
           stdout > @
@@ -87,10 +83,6 @@ good:
         }
     }
   test.eo: |
-    +package sandbox
-    +alias org.eolang.io.stdout
-    +alias org.eolang.txt.sprintf
-
     [] > test
       [] > base
         memory > x

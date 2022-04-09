@@ -63,19 +63,17 @@ bad:
         }
     }
   test.eo: |
-    +alias base MutualRecursionExample.base
-
     [] > test
-      base > @
-      [self v] > n
-        self.m self v > @
-  base.eo: |
-    [] > base
-      memory > x
-      [self v] > n
-        x.write v > @
-      [self v] > m
-        self.n self v > @
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+        [self v] > m
+          self.n self v > @
+      [] > derived
+        base > @
+        [self v] > n
+          self.m self v > @
 good:
   source.cpp: |
     #include <memory>
@@ -131,16 +129,14 @@ good:
         }
     }
   test.eo: |
-    +alias base MutualRecursionExample.base
-
     [] > test
-      base > @
-      [self v] > n1
-        self.m self v > @
-  base.eo: |
-    [] > base
-      memory > x
-      [self v] > n
-        x.write v > @
-      [self v] > m
-        self.n self v > @
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+        [self v] > m
+          self.n self v > @
+      [] > derived
+        base > @
+        [self v] > n1
+          self.m self v > @

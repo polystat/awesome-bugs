@@ -75,14 +75,12 @@ bad:
           y > @
         [self z] > h
           z > @
-
       [] > child
-        test.parent > @
+        parent > @
         [self y] > g
           self.f self y > @
-
       [] > grandchild
-        test.child > @
+        child > @
         [self y] > f
           y > @
         [self z] > h
@@ -149,13 +147,11 @@ good:
           y > @
         [self z] > h
           z > @
-
       [] > child
-        test.parent > @
+        parent > @
         [self y] > g
           self.f self y > @
-
       [] > grandchild
-        test.child > @
+        child > @
         [self z] > h
           self.g self z > @
