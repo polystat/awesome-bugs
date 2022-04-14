@@ -1,2 +1,7 @@
 temp/
-results/
+build/
+SVF/
+results/*.txt
+!results/report/
+.idea/
+*.jar
