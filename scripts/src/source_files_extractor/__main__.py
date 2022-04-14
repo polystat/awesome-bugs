@@ -52,9 +52,10 @@ def process_file(file_path, out_path):
         return False
 
     # extract source files (bad and good cases)
-    source_files = \
-        get_sources(file_content, "bad") +\
+    source_files = (
+        get_sources(file_content, "bad") +
         get_sources(file_content, "good")
+    )
 
     # Write given sources to resulting folder
     write_sources(source_files, file_path, out_path)
