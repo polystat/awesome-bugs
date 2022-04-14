@@ -219,7 +219,7 @@ def generate_report(analyzer_reports, based_on_template):
 
     with doc.create(Section("Statistic table", numbering=False)):
         generate_statistic_table()
-        doc.append(NoEscape("\\vspace{0.5cm} Description"))
+        doc.append(NoEscape("\n\\medskip Description"))
         ls = Itemize()
         ls.add_item("True Positive(TP) - warnings exist and should be")
         ls.add_item("True Negative(TN) - no warnings and shouldn't be")
@@ -231,7 +231,7 @@ def generate_report(analyzer_reports, based_on_template):
     doc.append(NewPage())
     with doc.create(Section("Details table", numbering=False)):
         generate_details_table()
-        doc.append(NoEscape("\\vspace{0.5cm} Description"))
+        doc.append(NoEscape("\n\\medskip Description"))
         ls = Itemize()
         ls.add_item("OK = TP and PN")
         ls.add_item("FN = FN and TP")
