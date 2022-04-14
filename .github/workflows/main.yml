@@ -55,7 +55,6 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y clang-tidy cmake
           python3 -m build_sources temp/sources build
-          mkdir results
           python3 -m clang_tidy -p ./build > results/clang-out.txt
           cat results/clang-out.txt
 
@@ -85,9 +84,10 @@ jobs:
       - uses: yegor256/latexmk-action@0.4.0
         with:
           cmd: latexmk
-          path: results/
-          opts: -pdf
-          packages: href-ul lastpage multirow
+          path: results/report
+          opts: report -pdf -shell-escape -f -quiet
+          packages: href-ul lastpage minted ffcode mdframed biblatex
+            needspace zref environ framed xstring catchfile fvextra
 
       # Saving artifacts
       - name: Upload results
@@ -96,5 +96,5 @@ jobs:
           name: reports
           path: |
             results/*.txt
-            results/*.tex
-            results/*.pdf
+            results/report/report.tex
+            results/report/*.pdf
