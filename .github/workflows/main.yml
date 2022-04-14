@@ -78,7 +78,7 @@ jobs:
           python3 -m cppcheck temp/sources/cpp results
 
       - name: Analyze reports
-        run: python3 -m analyze_reports
+        run: python3 -m analyze_reports true
 
       # Generate pdf
       - uses: yegor256/latexmk-action@0.4.0

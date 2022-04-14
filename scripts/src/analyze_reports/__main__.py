@@ -1,5 +1,5 @@
-import logging
 import os.path
+import sys
 
 from pylatex.base_classes import Options
 from pylatex.utils import bold
@@ -42,7 +42,7 @@ def get_test_files_paths(code_path):
 
 
 # Generation latex report according to analyzers results
-def generate_report(analyzer_reports):
+def generate_report(analyzer_reports, based_on_template):
     def generate_statistic_table():
         table = Tabular("|l|l|" + "r|" * 9, row_height=1.25)
         # Head
@@ -137,7 +137,9 @@ def generate_report(analyzer_reports):
                         for result in report.results:
                             en.add_item(str(result))
 
-    def get_template():
+    # Latex document based on an article template
+    def get_doc_on_template():
+        # Prepare template
         temp_path = os.path.join("results", "report", "report-template.tex")
         with open(temp_path, "r") as r:
             file = r.read()
@@ -160,6 +162,7 @@ def generate_report(analyzer_reports):
         def f(n):
             return str(round(n * 100))
 
+        # Fill parameters
         file = (
             file.replace("#number_of_tests", str(number_of_tests))
             .replace("#c_div_by_zero", f(c_div_by_zero.accuracy))
@@ -168,28 +171,44 @@ def generate_report(analyzer_reports):
             .replace("#c_p_div_by_zero", f(c_p_div_by_zero))
             .replace("#c_p_mutual_recursion", f(c_p_mutual_recursion))
         )
-        return file
 
-    # Create latex document
-    doc = Document(
-        documentclass=Command(
-            "documentclass", options=Options("journal"), arguments="IEEEtran"
+        # Create latex document
+        d = Document(
+            documentclass=Command(
+                "documentclass",
+                options=Options("journal"),
+                arguments="IEEEtran",
+            )
         )
-    )
+
+        d.packages.append(Package(NoEscape("minted")))
+        d.packages.append(Package(NoEscape("ffcode")))
+        d.packages.append(Package(NoEscape("mdframed")))
+        d.packages.append(Package(NoEscape("float")))
+        d.packages.append(Package(NoEscape("graphicx")))
+        d.packages.append(Package(NoEscape("biblatex")))
+        d.packages.append(Package(NoEscape("amsmath")))
+        d.packages.append(NoEscape("\\bibliography{references.bib}"))
+        d.append(NoEscape("\\usemintedstyle{bw}"))
+
+        # Append the template
+        d.append(NoEscape(file))
+        return d
+
+    # A new Latex document without template
+    def get_doc():
+        geometry_options = {"margin": "0.5in", "top": "1in", "bottom": "1in"}
+        return Document(geometry_options=geometry_options)
+
+    if based_on_template:
+        try:
+            doc = get_doc_on_template()
+        except KeyError:
+            doc = get_doc()
+            pass
+    else:
+        doc = get_doc()
     doc.packages.append(Package(NoEscape("href-ul")))
-    doc.packages.append(Package(NoEscape("minted")))
-    doc.packages.append(Package(NoEscape("ffcode")))
-    doc.packages.append(Package(NoEscape("mdframed")))
-    doc.packages.append(Package(NoEscape("float")))
-    doc.packages.append(Package(NoEscape("graphicx")))
-    doc.packages.append(Package(NoEscape("biblatex")))
-    doc.packages.append(Package(NoEscape("amsmath")))
-
-    doc.packages.append(NoEscape("\\bibliography{references.bib}"))
-    doc.append(NoEscape("\\usemintedstyle{bw}"))
-
-    # Append the template
-    doc.append(NoEscape(get_template()))
 
     with doc.create(Section("Statistic table", numbering=False)):
         generate_statistic_table()
@@ -241,7 +260,12 @@ def get_test_case_result(path, results, exceptions):
 
 
 def run():
-    logging.basicConfig(level=logging.DEBUG)
+    # Read arguments
+    if len(sys.argv) == 2:
+        based_on_template = sys.argv[1].lower() == "true"
+    else:
+        print("Wrong number of arguments")
+        return
 
     parsers = {
         PolystatParser(): [],
@@ -260,7 +284,7 @@ def run():
     for analyzer, report in analyzer_reports.items():
         report.update_statistic()
 
-    generate_report(analyzer_reports)
+    generate_report(analyzer_reports, based_on_template)
     print("Done!")
 
 
