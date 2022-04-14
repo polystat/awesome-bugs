@@ -129,11 +129,11 @@ class AnalyzerReport:
         )
 
         # Get errors for which test are exist
-        with open("tests/errors.txt") as errors_file:
-            errors = [x.strip() for x in errors_file.readlines()]
+        with open("tests/errors.txt") as e:
+            errs = [x.strip() for x in e.readlines() if not x.startswith("-")]
 
         # Calculation statistic per errors
-        for error in errors:
+        for error in errs:
             e_result_paths = [x for x in result_paths if error in x]
             e_source_paths = [x for x in source_paths if error in x]
             e_exceptions = [x for x in exceptions if error in x]
