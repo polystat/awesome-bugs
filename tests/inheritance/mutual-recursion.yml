@@ -1,4 +1,4 @@
-title: The base mutual case example
+title: The base mutual recursion case example
 description: >
   One of the methods of the base class overrides in the derived class
   and results in a mutual recursion

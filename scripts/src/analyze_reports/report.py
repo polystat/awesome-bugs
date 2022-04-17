@@ -54,6 +54,7 @@ class AnalyzerStatistic:
     precision: float = 0
     recall: float = 0
     F1: float = 0
+    number_of_tests: int = 0
 
     def dict(self) -> dict:
         return {
@@ -65,6 +66,7 @@ class AnalyzerStatistic:
             "precision": self.precision,
             "recall": self.recall,
             "F1": self.recall,
+            "number_of_tests": self.number_of_tests,
         }
 
 
@@ -81,7 +83,7 @@ class AnalyzerReport:
     analyzer: str
     source_path: str
     report_path: str
-    error_statistics: list[ErrorStatistic]
+    error_statistics: dict[str, AnalyzerStatistic]
     statistic: AnalyzerStatistic
 
     def __init__(
@@ -95,7 +97,7 @@ class AnalyzerReport:
         self.analyzer = analyzer
         self.source_path = source_path
         self.report_path = report_path
-        self.error_statistics = []
+        self.error_statistics = {}
         self.statistic = AnalyzerStatistic()
 
     def filter(
@@ -138,7 +140,7 @@ class AnalyzerReport:
             stat = self.calculate_statistic(
                 e_source_paths, e_result_paths, e_exceptions
             )
-            self.error_statistics.append(ErrorStatistic(error, stat))
+            self.error_statistics[error] = stat
 
     @staticmethod
     def calculate_statistic(source, results, exceptions):
@@ -181,6 +183,8 @@ class AnalyzerReport:
                 * (stat.precision * stat.recall)
                 / (stat.precision + stat.recall)
             )
+
+        stat.number_of_tests = total
 
         return stat
 

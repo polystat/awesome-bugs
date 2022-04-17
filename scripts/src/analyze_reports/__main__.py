@@ -1,6 +1,7 @@
 import logging
 import os.path
 
+from pylatex.base_classes import Options
 from pylatex.utils import bold
 from scripts.src.report_parsers import ClangTidyParser
 from scripts.src.report_parsers import PolystatParser
@@ -8,7 +9,6 @@ from scripts.src.report_parsers import SVFParser
 from scripts.src.report_parsers import CppcheckParser
 from pylatex import (
     Document,
-    Command,
     Tabular,
     Itemize,
     NewPage,
@@ -19,6 +19,7 @@ from pylatex import (
     escape_latex,
     NoEscape,
     Package,
+    Command,
 )
 from scripts.src.analyze_reports.report import AnalyzerReport
 from pathlib import Path
@@ -62,10 +63,10 @@ def generate_report(analyzer_reports):
         table.add_hline()
 
         # Body
-        def get_row(analyzer_name, error, s):
+        def get_row(analyzer_name, err, s):
             return [
                 analyzer_name,
-                error,
+                err,
                 s.true_positive,
                 s.true_negative,
                 s.false_positive,
@@ -77,17 +78,14 @@ def generate_report(analyzer_reports):
                 f"{100*s.F1:.1f}%",
             ]
 
-        for analyzer in analyzer_reports:
+        for analyzer, report in analyzer_reports.items():
             table.add_hline()
-            for error_statistic in analyzer.error_statistics:
-                stat = error_statistic.statistic
-                table.add_row(
-                    get_row(analyzer.analyzer, error_statistic.error, stat)
-                )
+            for error, stat in report.error_statistics.items():
+                table.add_row(get_row(analyzer, error, stat))
                 table.add_hline()
             # total results for analyzer
-            stat = analyzer.statistic
-            table.add_row(get_row(analyzer.analyzer, "All", stat), mapper=bold)
+            stat = report.statistic
+            table.add_row(get_row(analyzer, "All", stat), mapper=bold)
             table.add_hline()
         doc.append(table)
 
@@ -99,16 +97,16 @@ def generate_report(analyzer_reports):
         table.add_hline()
         table.add_row(
             MultiColumn(size=1, data="File", align="|c|"),
-            *[ar.analyzer for ar in analyzer_reports],
+            *[ar for ar in analyzer_reports.keys()],
         )
         table.add_hline()
 
         # table body
         results = {}
-        for analyzer in analyzer_reports:
+        for analyzer, report in analyzer_reports.items():
             # split error messages and exceptions
             expts, result_paths = [], []
-            for ar in analyzer.results:
+            for ar in report.results:
                 (expts, result_paths)[ar.error_type != "Exception"].append(
                     os.path.basename(
                         ar.file_path
@@ -116,64 +114,111 @@ def generate_report(analyzer_reports):
                         else os.path.dirname(ar.file_path)
                     )
                 )
-            results[analyzer.analyzer] = [result_paths, expts]
+            results[analyzer] = [result_paths, expts]
 
         for test in test_paths:
             url = os.path.join(repo_url, test.replace("\\", "/"))
-            txt = hyperlink(url, test)
+            txt = hyperlink(url, test.replace("tests/", ""))
             table.add_row(
                 txt,
                 *[
-                    get_test_case_result(test, *results[ar.analyzer])
-                    for ar in analyzer_reports
+                    get_test_case_result(test, *results[ar])
+                    for ar in analyzer_reports.keys()
                 ],
             )
             table.add_hline()
         doc.append(table)
 
     def extract_error_messages():
-        for analyzer in analyzer_reports:
-            if len(analyzer.results) != 0:
-                with doc.create(
-                    Subsection(analyzer.analyzer, numbering=False)
-                ):
+        for analyzer, report in analyzer_reports.items():
+            if len(report.results) != 0:
+                with doc.create(Subsection(analyzer, numbering=False)):
                     with doc.create(Enumerate()) as en:
-                        for result in analyzer.results:
+                        for result in report.results:
                             en.add_item(str(result))
 
+    def get_template():
+        temp_path = os.path.join("results", "report", "report-template.tex")
+        with open(temp_path, "r") as r:
+            file = r.read()
+
+        results_list = list(analyzer_reports.values())
+        number_of_tests = results_list[0].statistic.number_of_tests
+        # c - stands for Clang-Tidy
+        c = analyzer_reports["Clang-Tidy"]
+        c_div_by_zero = c.error_statistics["division-by-zero"]
+        # p - stands for Polystat
+        p = analyzer_reports["Polystat"]
+        p_div_by_zero = p.error_statistics["division-by-zero"]
+        p_mutual_recursion = p.error_statistics["mutual-recursion"]
+
+        c_p_div_by_zero = p_mutual_recursion.accuracy - c_div_by_zero.accuracy
+        # With an assumption that clang will not find any mutual recursion
+        c_p_mutual_recursion = p_mutual_recursion.accuracy - 0.5
+
+        # Shorten formatting
+        def f(n):
+            return str(round(n * 100))
+
+        file = (
+            file.replace("#number_of_tests", str(number_of_tests))
+            .replace("#c_div_by_zero", f(c_div_by_zero.accuracy))
+            .replace("#p_mutual_recursion", f(p_mutual_recursion.accuracy))
+            .replace("#p_div_by_zero", f(p_div_by_zero.accuracy))
+            .replace("#c_p_div_by_zero", f(c_p_div_by_zero))
+            .replace("#c_p_mutual_recursion", f(c_p_mutual_recursion))
+        )
+        return file
+
     # Create latex document
-    geometry_options = {"margin": "0.5in", "top": "1in", "bottom": "1in"}
-    doc = Document(geometry_options=geometry_options)
+    doc = Document(
+        documentclass=Command(
+            "documentclass", options=Options("journal"), arguments="IEEEtran"
+        )
+    )
     doc.packages.append(Package(NoEscape("href-ul")))
-    doc.append(Command("large"))
+    doc.packages.append(Package(NoEscape("minted")))
+    doc.packages.append(Package(NoEscape("ffcode")))
+    doc.packages.append(Package(NoEscape("mdframed")))
+    doc.packages.append(Package(NoEscape("float")))
+    doc.packages.append(Package(NoEscape("graphicx")))
+    doc.packages.append(Package(NoEscape("biblatex")))
+    doc.packages.append(Package(NoEscape("amsmath")))
+
+    doc.packages.append(NoEscape("\\bibliography{references.bib}"))
+    doc.append(NoEscape("\\usemintedstyle{bw}"))
+
+    # Append the template
+    doc.append(NoEscape(get_template()))
 
     with doc.create(Section("Statistic table", numbering=False)):
         generate_statistic_table()
-        with doc.create(Subsection("Description", numbering=False)):
-            ls = Itemize()
-            ls.add_item("True Positive(TP) - warnings exist and should be")
-            ls.add_item("True Negative(TN) - no warnings and shouldn't be")
-            ls.add_item("False Negative(FN) - no warnings, but they should be")
-            ls.add_item("False Positive(FP) - warnings exist but shouldn't be")
-            ls.add_item("Errors(ERR) - errors/exceptions during analysis")
-            doc.append(ls)
+        doc.append(NoEscape("\\vspace{0.5cm} Description"))
+        ls = Itemize()
+        ls.add_item("True Positive(TP) - warnings exist and should be")
+        ls.add_item("True Negative(TN) - no warnings and shouldn't be")
+        ls.add_item("False Negative(FN) - no warnings, but they should be")
+        ls.add_item("False Positive(FP) - warnings exist but shouldn't be")
+        ls.add_item("Errors(ERR) - errors/exceptions during analysis")
+        doc.append(ls)
 
     doc.append(NewPage())
     with doc.create(Section("Details table", numbering=False)):
         generate_details_table()
-        with doc.create(Subsection("Description", numbering=False)):
-            with doc.create(Itemize()) as ls:
-                ls.add_item("OK = TP and PN")
-                ls.add_item("FN = FN and TP")
-                ls.add_item("FP = FP and TN")
-                ls.add_item("FF = FP and FN")
-                ls.add_item("E - errors/exceptions during analysis")
+        doc.append(NoEscape("\\vspace{0.5cm} Description"))
+        ls = Itemize()
+        ls.add_item("OK = TP and PN")
+        ls.add_item("FN = FN and TP")
+        ls.add_item("FP = FP and TN")
+        ls.add_item("FF = FP and FN")
+        ls.add_item("E - errors/exceptions during analysis")
+        doc.append(ls)
 
-    doc.append(NewPage())
     with doc.create(Section("Detected defect details", numbering=False)):
         extract_error_messages()
 
-    doc.generate_tex(os.path.join("results", "report"))
+    # Generate final .tex file
+    doc.generate_tex(os.path.join("results", "report", "report"))
 
 
 # Determines how the analyzer worked
@@ -204,16 +249,16 @@ def run():
         SVFParser(): [],
         CppcheckParser(): [lambda row: row.error_type != "note"],
     }
-    analyzer_reports: list[AnalyzerReport] = []
+    analyzer_reports: dict[AnalyzerReport] = {}
 
     for parser, predicates in parsers.items():
         report = parser.parse()
         for predicate in predicates:
             report = report.filter(predicate)
-        analyzer_reports.append(report)
+        analyzer_reports[parser.ANALYZER_NAME] = report
 
-    for analyzer in analyzer_reports:
-        analyzer.update_statistic()
+    for analyzer, report in analyzer_reports.items():
+        report.update_statistic()
 
     generate_report(analyzer_reports)
     print("Done!")
