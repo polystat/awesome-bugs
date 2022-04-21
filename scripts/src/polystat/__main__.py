@@ -7,11 +7,11 @@ import sys
 # As an input it takes:
 #  - a path to polystat.jar file
 #  - a path to a folder with .eo source files
-#  - a path to a temp folder for interim Polystat processes
 #  - a path to a folder where a report will be generated
+#  - tag, appended to the report name
 
 
-def run_polystat(polystat_file, sources_folder_path, result_folder_path):
+def run_polystat(polystat_file, sources_folder_path, result_folder_path, report_tag):
     results = []
     # Run Polystat analysis for each test case
     for root, dirs, files in os.walk(sources_folder_path):
@@ -29,7 +29,7 @@ def run_polystat(polystat_file, sources_folder_path, result_folder_path):
             results.append(case_result)
 
     # Write results to file
-    result_file_path = os.path.join(result_folder_path, "eo-out.txt")
+    result_file_path = os.path.join(result_folder_path, "polystat-" + report_tag + "-out.txt")
     with open(result_file_path, "w") as fw:
         fw.write("".join(sorted(results)))
     print("Polystat analysis completed")
@@ -37,15 +37,16 @@ def run_polystat(polystat_file, sources_folder_path, result_folder_path):
 
 def main():
     # Read arguments
-    if len(sys.argv) == 4:
+    if len(sys.argv) == 5:
         polystat_file = sys.argv[1]
         sources_folder_path = sys.argv[2]
         result_folder_path = sys.argv[3]
+        report_tag = sys.argv[4]
     else:
         print("Wrong number of arguments")
         return
 
-    run_polystat(polystat_file, sources_folder_path, result_folder_path)
+    run_polystat(polystat_file, sources_folder_path, result_folder_path, report_tag)
 
 
 if __name__ == "__main__":

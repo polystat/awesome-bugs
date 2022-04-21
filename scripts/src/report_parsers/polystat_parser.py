@@ -44,7 +44,7 @@ def get_analyze_report_rows(row) -> list[AnalyzerReportRow]:
 
 class PolystatParser(Parser):
     SOURCE_PATH = os.path.join("temp", "sources", "eo")
-    REPORT_PATH = os.path.join("results", "eo-out.txt")
+    REPORT_PATH = os.path.join("results", "polystat-eo-out.txt")
     ANALYZER_NAME = "Polystat"
 
     def parse(self) -> AnalyzerReport:
