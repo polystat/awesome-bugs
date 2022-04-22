@@ -48,7 +48,8 @@ jobs:
           python3 -m pip install -r scripts/requirements.txt
           python3 -m pip install -e ./scripts
       - name: Extracting source files from correct YAML files
-        run: python3 -m source_files_extractor tests temp/sources
+        run: |
+          python3 -m source_files_extractor tests temp/sources
 
       - name: Run clang-tidy and save reports to "results" folder
         run: |
@@ -58,11 +59,18 @@ jobs:
           python3 -m clang_tidy -p ./build > results/clang-out.txt
           cat results/clang-out.txt
 
-      - name: Run Polystat and save reports to "results" folder
+      - name: Run Polystat (EO) and save reports to "results" folder
         run: |
           curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.6.0/polystat-0.6.0-jar-with-dependencies.jar"
-          python3 -m polystat polystat.jar temp/sources/eo results
-          cat results/eo-out.txt
+          python3 -m polystat polystat.jar temp/sources/eo results "eo"
+          cat results/polystat-eo-out.txt
+
+      - name: Run Polystat (Java via J2EO) and save reports to "results" folder
+        run: |
+          curl -L -o j2eo.jar "https://search.maven.org/remotecontent?filepath=org/polystat/j2eo/0.4.0/j2eo-0.4.0.jar"
+          python3 -m j2eo j2eo.jar temp/sources/java temp/sources/j2eo results
+          python3 -m polystat polystat.jar temp/sources/j2eo results "j2eo"
+          cat results/polystat-j2eo-out.txt
 
       - name: SVF analysis
         run: |

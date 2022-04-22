@@ -50,7 +50,8 @@ It assumes such a structure of files:
 awesome-bugs/
   results/
     clang-out.txt
-    eo-out.txt
+    polystat-eo-out.txt
+    polystat-j2eo-out.txt
   temp/
     polystat/
     sources/
