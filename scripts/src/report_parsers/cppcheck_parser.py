@@ -45,7 +45,10 @@ class CppcheckParser(Parser):
 
         with open(self.REPORT_PATH) as report:
             file_content = report.read().strip() + "\n"
-            parsed_output = error.parse(file_content)
+            if file_content == "\n":
+                parsed_output = []
+            else:
+                parsed_output = error.parse(file_content)
             return AnalyzerReport(
                 parsed_output,
                 self.ANALYZER_NAME,
