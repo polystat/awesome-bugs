@@ -10,11 +10,21 @@ import sys
 #  - a path to a folder where a .eo will be output
 #  - a path to a folder where stdout logs will be saved
 
-def run_j2eo(j2eo_file, sources_folder_path, result_folder_path, stdout_folder_path):
+
+def run_j2eo(
+    j2eo_file, sources_folder_path, result_folder_path, stdout_folder_path
+):
     results = []
     # Run J2EO for all input .java files
     output = subprocess.run(
-        ["java", "-jar", j2eo_file, "-o", result_folder_path, sources_folder_path],
+        [
+            "java",
+            "-jar",
+            j2eo_file,
+            "-o",
+            result_folder_path,
+            sources_folder_path,
+        ],
         capture_output=True,
         encoding="latin1",
     )
@@ -39,7 +49,9 @@ def main():
         print("Wrong number of arguments")
         return
 
-    run_j2eo(j2eo_file, sources_folder_path, result_folder_path, stdout_folder_path)
+    run_j2eo(
+        j2eo_file, sources_folder_path, result_folder_path, stdout_folder_path
+    )
 
 
 if __name__ == "__main__":

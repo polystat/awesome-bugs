@@ -11,7 +11,9 @@ import sys
 #  - tag, appended to the report name
 
 
-def run_polystat(polystat_file, sources_folder_path, result_folder_path, report_tag):
+def run_polystat(
+    polystat_file, sources_folder_path, result_folder_path, report_tag
+):
     results = []
     # Run Polystat analysis for each test case
     for root, dirs, files in os.walk(sources_folder_path):
@@ -29,7 +31,9 @@ def run_polystat(polystat_file, sources_folder_path, result_folder_path, report_
             results.append(case_result)
 
     # Write results to file
-    result_file_path = os.path.join(result_folder_path, "polystat-" + report_tag + "-out.txt")
+    result_file_path = os.path.join(
+        result_folder_path, "polystat-" + report_tag + "-out.txt"
+    )
     with open(result_file_path, "w") as fw:
         fw.write("".join(sorted(results)))
     print("Polystat analysis completed")
@@ -46,7 +50,9 @@ def main():
         print("Wrong number of arguments")
         return
 
-    run_polystat(polystat_file, sources_folder_path, result_folder_path, report_tag)
+    run_polystat(
+        polystat_file, sources_folder_path, result_folder_path, report_tag
+    )
 
 
 if __name__ == "__main__":
