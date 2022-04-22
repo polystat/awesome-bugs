@@ -42,10 +42,10 @@ def get_analyze_report_rows(row) -> list[AnalyzerReportRow]:
     return exceptions
 
 
-class PolystatParser(Parser):
-    SOURCE_PATH = os.path.join("temp", "sources", "eo")
-    REPORT_PATH = os.path.join("results", "polystat-eo-out.txt")
-    ANALYZER_NAME = "Polystat (EO)"
+class PolystatJavaParser(Parser):
+    SOURCE_PATH = os.path.join("temp", "sources", "j2eo")
+    REPORT_PATH = os.path.join("results", "polystat-j2eo-out.txt")
+    ANALYZER_NAME = "Polystat (Java)"
 
     def parse(self) -> AnalyzerReport:
         newline = string("\n")
@@ -81,4 +81,4 @@ class PolystatParser(Parser):
 if __name__ == "__main__":
     from pprint import pprint
 
-    pprint(PolystatParser().parse(), width=140)
+    pprint(PolystatJavaParser().parse(), width=140)

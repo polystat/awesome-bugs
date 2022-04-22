@@ -5,6 +5,7 @@ from pylatex.base_classes import Options
 from pylatex.utils import bold
 from scripts.src.report_parsers import ClangTidyParser
 from scripts.src.report_parsers import PolystatParser
+from scripts.src.report_parsers import PolystatJavaParser
 from scripts.src.report_parsers import SVFParser
 from scripts.src.report_parsers import CppcheckParser
 from pylatex import (
@@ -156,10 +157,14 @@ def generate_report(analyzer_reports, based_on_template):
         # c - stands for Clang-Tidy
         c = analyzer_reports["Clang-Tidy"]
         c_div_by_zero = c.error_statistics["division-by-zero"]
-        # p - stands for Polystat
-        p = analyzer_reports["Polystat"]
+        # p - stands for Polystat for EO
+        p = analyzer_reports["Polystat (EO)"]
         p_div_by_zero = p.error_statistics["division-by-zero"]
         p_mutual_recursion = p.error_statistics["mutual-recursion"]
+        # pj - stands for Polystat for Java
+        pj = analyzer_reports["Polystat (Java)"]
+        pj_div_by_zero = p.error_statistics["division-by-zero"]
+        pj_mutual_recursion = p.error_statistics["mutual-recursion"]
 
         c_p_div_by_zero = p_mutual_recursion.accuracy - c_div_by_zero.accuracy
         # With an assumption that clang will not find any mutual recursion
@@ -175,6 +180,8 @@ def generate_report(analyzer_reports, based_on_template):
             .replace("#c_div_by_zero", f(c_div_by_zero.accuracy))
             .replace("#p_mutual_recursion", f(p_mutual_recursion.accuracy))
             .replace("#p_div_by_zero", f(p_div_by_zero.accuracy))
+            .replace("#pj_mutual_recursion", f(pj_mutual_recursion.accuracy))
+            .replace("#pj_div_by_zero", f(pj_div_by_zero.accuracy))
             .replace("#c_p_div_by_zero", f(c_p_div_by_zero))
             .replace("#c_p_mutual_recursion", f(c_p_mutual_recursion))
         )
@@ -276,6 +283,7 @@ def run():
 
     parsers = {
         PolystatParser(): [],
+        PolystatJavaParser(): [],
         ClangTidyParser(): [lambda row: row.error_type != "note"],
         SVFParser(): [],
         CppcheckParser(): [lambda row: row.error_type != "note"],
