@@ -5,7 +5,6 @@ from pylatex.base_classes import Options
 from pylatex.utils import bold
 from scripts.src.report_parsers import ClangTidyParser
 from scripts.src.report_parsers import PolystatParser
-from scripts.src.report_parsers import PolystatJavaParser
 from scripts.src.report_parsers import SVFParser
 from scripts.src.report_parsers import CppcheckParser
 from pylatex import (
@@ -284,8 +283,8 @@ def run():
         return
 
     parsers = {
-        PolystatParser(): [],
-        PolystatJavaParser(): [],
+        PolystatParser("eo", "polystat-eo-out.txt", "EO"): [],
+        PolystatParser("j2eo", "polystat-j2eo-out.txt", "Java"): [],
         ClangTidyParser(): [lambda row: row.error_type != "note"],
         SVFParser(): [],
         CppcheckParser(): [lambda row: row.error_type != "note"],

@@ -43,9 +43,17 @@ def get_analyze_report_rows(row) -> list[AnalyzerReportRow]:
 
 
 class PolystatParser(Parser):
-    SOURCE_PATH = os.path.join("temp", "sources", "eo")
-    REPORT_PATH = os.path.join("results", "polystat-eo-out.txt")
-    ANALYZER_NAME = "Polystat (EO)"
+    # Since Polystat can work with different languages, the parser
+    # can be parameterized through the constructor (with EO by default)
+    def __init__(
+        self,
+        sources=os.path.join("temp", "sources", "eo"),
+        result_file=os.path.join("results", "polystat-eo-out.txt"),
+        language="Polystat (EO)",
+    ):
+        self.SOURCE_PATH = os.path.join("temp", "sources", sources)
+        self.REPORT_PATH = os.path.join("results", result_file)
+        self.ANALYZER_NAME = f"Polystat ({language})"
 
     def parse(self) -> AnalyzerReport:
         newline = string("\n")
