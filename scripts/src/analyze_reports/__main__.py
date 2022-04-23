@@ -21,6 +21,7 @@ from pylatex import (
     NoEscape,
     Package,
     Command,
+    LongTable,
 )
 from scripts.src.analyze_reports.report import AnalyzerReport
 from pathlib import Path
@@ -100,7 +101,7 @@ def generate_report(analyzer_reports, based_on_template):
     def generate_details_table():
         repo_url = "https://github.com/Polystat/awesome-bugs/blob/master/"
         test_paths = sorted(get_test_files_paths("tests"))
-        table = Tabular("|l|" + "c|" * len(analyzer_reports), row_height=1.25)
+        table = LongTable("|l|" + "c|" * len(analyzer_reports), row_height=1.2)
         # table head
         table.add_hline()
         table.add_row(
@@ -223,6 +224,7 @@ def generate_report(analyzer_reports, based_on_template):
     else:
         doc = get_doc()
     doc.packages.append(Package(NoEscape("href-ul")))
+    doc.packages.append(Package(NoEscape("longtable")))
 
     with doc.create(Section("Statistic table", numbering=False)):
         generate_statistic_table()
