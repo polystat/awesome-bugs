@@ -97,7 +97,7 @@ jobs:
       # Generate pdf
       - name: Get IEEEtran
         run: |
-          curl -L -o IEEEtran.cls "https://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/IEEEtran.cls"
+          curl -L -o results/report/IEEEtran.cls "https://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/IEEEtran.cls"
       - uses: yegor256/latexmk-action@0.4.0
         with:
           cmd: latexmk
