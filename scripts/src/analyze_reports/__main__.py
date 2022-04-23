@@ -164,8 +164,8 @@ def generate_report(analyzer_reports, based_on_template):
         p_mutual_recursion = p.error_statistics["mutual-recursion"]
         # pj - stands for Polystat for Java
         pj = analyzer_reports["Polystat (Java)"]
-        pj_div_by_zero = p.error_statistics["division-by-zero"]
-        pj_mutual_recursion = p.error_statistics["mutual-recursion"]
+        pj_div_by_zero = pj.error_statistics["division-by-zero"]
+        pj_mutual_recursion = pj.error_statistics["mutual-recursion"]
 
         c_p_div_by_zero = p_mutual_recursion.accuracy - c_div_by_zero.accuracy
         # With an assumption that clang will not find any mutual recursion
