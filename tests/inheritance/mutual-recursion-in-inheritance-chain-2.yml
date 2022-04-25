@@ -55,6 +55,7 @@ bad:
     class Derived extends Base {}
 
     class DerivedAgain extends Derived {
+        @Override
         public void n(int v) {
             m(v);
         }

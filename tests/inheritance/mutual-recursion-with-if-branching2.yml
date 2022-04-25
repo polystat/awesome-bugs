@@ -66,6 +66,7 @@ bad:
     }
 
     class Derived extends Base {
+        @Override
         public void n() {
             if (getX() == 0) {
                 incrX();
@@ -157,6 +158,7 @@ good:
     }
 
     class Derived extends Base {
+        @Override
         public void n() {
             if (getX() == 1) {
                 m();

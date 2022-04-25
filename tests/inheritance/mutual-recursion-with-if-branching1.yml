@@ -61,6 +61,7 @@ bad:
     }
 
     class Derived extends Base {
+        @Override
         public void n() {
             if (true) {
                 m();
@@ -147,6 +148,7 @@ good:
     }
 
     class Derived extends Base {
+        @Override
         public void n() {
             if (false) {
                 m();
