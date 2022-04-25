@@ -18,6 +18,18 @@ bad:
     auto main() -> int {
         cout << test(100);
     }
+  Test.java: |
+    import java.util.Vector;
+    
+    public class Test {
+        public static int test(int x) {
+            Vector<Integer> a = new Vector<>();
+            return x / a.size();
+        }
+        public static void main(String[] args) {
+            System.out.println(test(100));
+        }
+    }
   test.eo: |
     [x] > test
       div. > @
@@ -36,6 +48,22 @@ good:
 
     auto main() -> int {
         cout << test(100);
+    }
+  Test.java: |
+    import java.util.Vector;
+
+    public class Test {
+        public static int test(int x) {
+            Vector<Integer> a = new Vector<>(){{
+                add(1);
+                add(2);
+                add(3);
+            }};
+            return x / a.size();
+        }
+        public static void main(String[] args) {
+            System.out.println(test(100));
+        }
     }
   test.eo: |
     [x] > test

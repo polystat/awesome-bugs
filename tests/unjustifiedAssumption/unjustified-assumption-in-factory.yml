@@ -18,8 +18,8 @@ bad:
         class getParent {
         public:
             virtual int f(int x) {
-                int y1 = x - 5;
-                assert(y1 > 0);
+                int t = x - 5;
+                assert(t > 0);
                 return x;
             }
             virtual int g(int y) {
@@ -56,14 +56,58 @@ bad:
             p->h(x);
             delete p;
       }
+  Test.java: |
+    class ParentFactory {
+        static class GetParent {
+            public int f(int x) {
+                int t = x - 5;
+                assert (t > 0);
+                return x;
+            }
+
+            public int g(int y) {
+                return f(y);
+            }
+
+            public int h(int z) {
+                return z;
+            }
+        }
+    }
+
+    class Child extends ParentFactory.GetParent {
+        @Override
+        public int f(int y) {
+            return y;
+        }
+        @Override
+        public int h(int z) {
+            return g(z);
+        }
+    };
+
+    public class Test {
+        public static void main(String[] args) {
+            int x = 10;
+
+            var p = new ParentFactory.GetParent();
+            p.g(x);
+            x -= 5;
+            p.h(x);
+
+            p = new Child();
+            p.g(x);
+            p.h(x);
+        }
+    }
   test.eo: |
     [] > test
       [] > base_factory
         [] > get_base
           [self x] > f
-            x.sub 5 > y1
+            x.sub 5 > t
             seq > @
-              assert (0.less y1)
+              assert (0.less t)
               x
           [self y] > g
             self.f self y > @
@@ -85,8 +129,8 @@ good:
         class getParent {
         public:
             virtual int f(int x) {
-                int y1 = x - 5;
-                assert(y1 > 0);
+                int t = x - 5;
+                assert(t > 0);
                 return x;
             }
             virtual int g(int y) {
@@ -120,14 +164,54 @@ good:
             p->h(x);
             delete p;
     }
+  Test.java: |
+    class ParentFactory {
+        static class GetParent {
+            public int f(int x) {
+                int t = x - 5;
+                assert (t > 0);
+                return x;
+            }
+
+            public int g(int y) {
+                return f(y);
+            }
+
+            public int h(int z) {
+                return z;
+            }
+        }
+    }
+
+    class Child extends ParentFactory.GetParent {
+        @Override
+        public int h(int z) {
+            return g(z);
+        }
+    };
+
+    public class Test {
+        public static void main(String[] args) {
+            int x = 10;
+
+            var p = new ParentFactory.GetParent();
+            p.g(x);
+            x -= 5;
+            p.h(x);
+
+            p = new Child();
+            p.g(x);
+            p.h(x);
+        }
+    }
   test.eo: |
     [] > test
       [] > base_factory
         [] > get_base
           [self x] > f
-            x.sub 5 > y1
+            x.sub 5 > t
             seq > @
-              assert (0.less y1)
+              assert (0.less t)
               x
           [self y] > g
             self.f self y > @

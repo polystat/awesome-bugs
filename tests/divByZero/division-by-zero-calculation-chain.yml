@@ -16,11 +16,21 @@ bad:
     auto main() -> int {
         cout << test(200);
     }
+  Test.java: |
+    public class Test {
+        public static int test(int x) {
+            return 100 / (100 * (100 + (100 - x)));
+        }
+        public static void main(String[] args) {
+            System.out.println(test(200));
+        }
+    }
   test.eo: |
     [x] > test
       div. > @
         100
         mul.
+          100
           add.
             100
             sub.
@@ -38,10 +48,20 @@ good:
     auto main() -> int {
         cout << test(200);
     }
+  Test.java: |
+    public class Test {
+        public static int test(int x) {
+            return (100 * (100 + (100 - x))) / 100;
+        }
+        public static void main(String[] args) {
+            System.out.println(test(200));
+        }
+    }
   test.eo: |
     [x] > test
       div. > @
         mul.
+          100
           add.
             100
             sub.

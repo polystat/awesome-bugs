@@ -15,6 +15,16 @@ bad:
     auto main() -> int {
         cout << test(10, 0);
     }
+  Test.java: |
+    public class Test {
+        public static int test(int x, int y) {
+            return x / y;
+        }
+
+        public static void main(String[] args) {
+            System.out.println(test(10, 0));
+        }
+    }
   test.eo: |
     [x y] > test
       x.div y > @
@@ -23,12 +33,22 @@ good:
     #include <iostream>
     using namespace std;
 
-    auto test(int x, int y) -> int {
+    auto test(int x) -> int {
         return x / 10;
     }
 
     auto main() -> int {
-        cout << test(10, 0);
+        cout << test(10);
+    }
+  Test.java: |
+    public class Test {
+        public static int test(int x) {
+            return x / 10;
+        }
+
+        public static void main(String[] args) {
+            System.out.println(test(10));
+        }
     }
   test.eo: |
     [x] > test

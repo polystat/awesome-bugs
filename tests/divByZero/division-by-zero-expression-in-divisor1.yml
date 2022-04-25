@@ -16,6 +16,15 @@ bad:
     auto main() -> int {
         cout << test(10, 0, 0);
     }
+  Test.java: |
+    public class Test {
+        public static int test(int x, int y, int z) {
+            return x / (y + z);
+        }
+        public static void main(String[] args) {
+            System.out.println(test(10, 0, 0));
+        }
+    }
   test.eo: |
     [x y z] > test
       x.div (y.add z) > @
@@ -36,6 +45,21 @@ good:
 
     auto main() -> int {
         cout << test(10, 0, 0);
+    }
+  Test.java: |
+    public class Test {
+        public static int test(int x, int y, int z) {
+            int s = y + z;
+            if (s == 0) {
+                return 0;
+            }
+            else {
+                return x / s;
+            }
+        }
+        public static void main(String[] args) {
+            System.out.println(test(10, 0, 0));
+        }
     }
   test.eo: |
     [x y] > test

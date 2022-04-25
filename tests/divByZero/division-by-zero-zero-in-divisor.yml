@@ -15,6 +15,16 @@ bad:
     auto main() -> int {
         cout << test();
     }
+  Test.java: |
+    public class Test {
+        public static int test() {
+            return 1 / 0;
+        }
+
+        public static void main(String[] args) {
+            System.out.println(test());
+        }
+    }
   test.eo: |
     [] > test
       1.div 0 > @
@@ -29,6 +39,16 @@ good:
 
     auto main() -> int {
         cout << test();
+    }
+  Test.java: |
+    public class Test {
+        public static int test() {
+            return 1 / 10;
+        }
+
+        public static void main(String[] args) {
+            System.out.println(test());
+        }
     }
   test.eo: |
     [] > test

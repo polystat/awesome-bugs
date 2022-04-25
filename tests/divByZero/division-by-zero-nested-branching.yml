@@ -27,6 +27,28 @@ bad:
     auto main() -> int {
         cout << test(false, true, 0, 0);
     }
+  Test.java: |
+    public class Test {
+        public static int test(boolean x, boolean y, int z, int w) {
+            int result;
+            if (x) {
+                result = z;
+            }
+            else {
+                if (y) {
+                    result = w / z;
+                }
+                else {
+                    result = w;
+                }
+            }
+            return result;
+        }
+
+        public static void main(String[] args) {
+            System.out.println(test(false, true, 0, 0));
+        }
+    }
   test.eo: |
     [x y z w] > test
       x.if > @
@@ -39,7 +61,7 @@ good:
     #include <iostream>
     using namespace std;
 
-    auto test(bool x,  int z, int w) -> int {
+    auto test(bool x, int z, int w) -> int {
         int result = 0;
         if (x) {
             result = z;
@@ -57,6 +79,28 @@ good:
 
     auto main() -> int {
         cout << test(true, 0, 0);
+    }
+  Test.java: |
+    public class Test {
+        public static int test(boolean x, int z, int w) {
+            int result;
+            if (x) {
+                result = z;
+            }
+            else {
+                if (false) {
+                    result = w / z;
+                }
+                else {
+                    result = w;
+                }
+            }
+            return result;
+        }
+
+        public static void main(String[] args) {
+            System.out.println(test(false, 0, 0));
+        }
     }
   test.eo: |
     [x z w] > test

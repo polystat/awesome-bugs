@@ -18,6 +18,19 @@ bad:
     auto main() -> int {
         cout << test(1, 0);
     }
+  Test.java: |
+    public class Test {
+        public static int f(int y) {
+            return y;
+        }
+        public static int test(int x, int y) {
+            return x / f(y);
+        }
+    
+        public static void main(String[] args) {
+            System.out.println(test(1, 0));
+        }
+    }
   test.eo: |
     [x y] > test
       [] > f
@@ -37,6 +50,19 @@ good:
 
     auto main() -> int {
         cout << test(1);
+    }
+  Test.java: |
+    public class Test {
+        public static int f() {
+            return 10;
+        }
+        public static int test(int x) {
+            return x / f();
+        }
+
+        public static void main(String[] args) {
+            System.out.println(test(1));
+        }
     }
   test.eo: |
     [x] > test

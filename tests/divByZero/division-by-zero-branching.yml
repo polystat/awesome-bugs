@@ -23,6 +23,22 @@ bad:
     auto main() -> int {
         cout << test(false, 0, 0);
     }
+  Test.java: |
+    public class Test {
+        public static int test(boolean x, int y, int z) {
+            int result;
+            if (x) {
+                result = y;
+            }
+            else {
+                result = z / y;
+            }
+            return result;
+        }
+        public static void main(String[] args) {
+            System.out.println(test(false, 0, 0));
+        }
+    }
   test.eo: |
     [x y z] > test
       x.if > @
@@ -46,6 +62,22 @@ good:
 
     auto main() -> int {
         cout << test(0, 0);
+    }
+  Test.java: |
+    public class Test {
+        public static int test(int y, int z) {
+            int result;
+            if (true) {
+                result = y;
+            }
+            else {
+                result = z / y;
+            }
+            return result;
+        }
+        public static void main(String[] args) {
+            System.out.println(test(0, 0));
+        }
     }
   test.eo: |
     [y z] > test

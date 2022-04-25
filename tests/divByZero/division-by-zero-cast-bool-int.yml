@@ -16,6 +16,16 @@ bad:
     auto main() -> int {
         cout << test(false);
     }
+  Test.java: |
+    public class Test {
+        public static int test(boolean x) {
+            int intX = x ? 1 : 0;
+            return 100 / intX;
+        }
+        public static void main(String[] args) {
+            System.out.println(test(false));
+        }
+    }
   test.eo: |
     [x] > test
       div. > @
@@ -33,6 +43,16 @@ good:
 
     auto main() -> int {
         cout << test();
+    }
+  Test.java: |
+    public class Test {
+        public static int test() {
+            int intX = (1 == 1) ? 1 : 0;
+            return 100 / intX;
+        }
+        public static void main(String[] args) {
+            System.out.println(test());
+        }
     }
   test.eo: |
     [] > test
