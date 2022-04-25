@@ -1,0 +1,118 @@
+title: Direct access(write) to the base class non-primitive state
+description: >
+  Here, direct access(write) to the base class occurs in the descendant class
+  directly through access to the field, and not through the setter. But state
+  is not a primitive type
+features:
+  - inheritance
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    struct Data {
+        int value = 0;
+    };
+
+    class A {
+    protected:
+        Data state = {0};
+    };
+
+    class B : public A {
+    public:
+        void n(int x) { 
+            state = {x + 2};
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class Data {
+        public int value = 0;
+    }
+    class A {
+        protected Data state = new Data();
+    }
+
+    class B extends A {
+        void n(int x) {
+            state.value = x + 2;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            b.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        cage > state
+      [] > b
+        a > @
+        [self x] > n
+          x.add 2 > tmp
+          self.state.write tmp > @
+good:
+  source.cpp: |
+    struct Data {
+        int value = 0;
+    };
+
+    class A {
+    protected:
+        Data state = {0};
+    public:
+        void setState(int x) { state = {x}; }
+    };
+
+    class B : public A {
+    public:
+        void n(int x) { 
+            int tmp = x + 2;
+            setState(tmp);
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class Data {
+        public int value = 0;
+    }
+    class A {
+        protected Data state = new Data();
+        void setState(int x) { state.value = x; }
+    }
+
+    class B extends A {
+        void n(int x) {
+            int tmp = x + 2;
+            setState(tmp);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            b.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        cage > state
+        [self x] > get_state
+          self.state.write x > @
+      [] > b
+        a > @
+        [self x] > n
+          x.add 2 > tmp
+          self.get_state self tmp > @

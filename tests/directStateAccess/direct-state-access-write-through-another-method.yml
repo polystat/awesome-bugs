@@ -1,0 +1,130 @@
+title: Direct access(write) to the base class state through another method
+description: >
+  Here, access to the base class(write) happens indirectly through another
+  method that takes the state of the base class as an argument by reference,
+  and modifies it.
+features:
+  - inheritance
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    #include <memory>
+    
+    class A {
+    protected:
+        int state = 0;
+    };
+
+    class B : public A {
+    public:
+        void m(int &x, int y) {
+            x = y;
+        }
+        void n(int y) {
+            m(state, y);
+        }
+    };
+
+    auto main() -> int {
+        auto b = std::make_unique<B>();
+        b->n(3);
+    }
+  Test.java: |
+    class Data {
+        public int value = 0;
+    }
+    class A {
+        protected Data state = new Data();
+    }
+
+    class B extends A {
+        public void m(Data x, int y) {
+            x.value = y;
+        }
+        public void n(int y) {
+            m(state, y);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            b.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+      [] > b
+        a > @
+        [self x y] > m
+          x.write y > @
+        [self y] > n
+          self.m self (self.state) y > @
+good:
+  source.cpp: |
+    #include <memory>
+    
+    class A {
+    protected:
+        int state = 0;
+    public:
+        void m(int &x, int y) {
+            x = y;
+        }
+        void o(int y) { 
+            m(state, y);
+        }
+    };
+    
+    class B : public A {
+    public:
+        void n(int y) {
+            o(y);
+        }
+    };
+    
+    auto main() -> int {
+        auto b = std::make_unique<B>();
+        b->n(3);
+    }
+  Test.java: |
+    class Data {
+        public int value = 0;
+    }
+    class A {
+        protected Data state = new Data();
+        public void m(Data x, int y) {
+            x.value = y;
+        }
+        public void o(int y) {
+            m(state, y);
+        }
+    }
+
+    class B extends A {
+        public void n(int y) {
+            o(y);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            b.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+        [self x y] > m
+          x.write y > @
+        [self y] > o
+          self.m self (self.state) y > @
+      [] > b
+        a > @
+        [self y] > n
+          self.o self y > @

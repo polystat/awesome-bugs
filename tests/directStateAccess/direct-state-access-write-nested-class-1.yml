@@ -1,0 +1,128 @@
+title: Direct access(write) to the base class state in a chain of nested classes
+description: >
+  Here, in the inherited class, an attempt is made to access(write) the field
+  of the innermost nested class of the base class.
+features:
+  - inheritance
+  - nested
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    class A {
+    public:
+        class InnerA {
+        public:
+            class VeryInnerA {
+            protected:
+                int state = 0;
+            };
+        };
+    };
+
+    class B: public A::InnerA::VeryInnerA {
+    public:
+        void n(int x) {
+            int tmp = x + 2;
+            state = tmp;
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class A {
+        class Inner {
+            static class VeryInner {
+                protected int state = 0;
+            }
+        }
+    }
+
+    class B extends A.Inner.VeryInner {
+        public void n(int x) {
+            state = x + 2;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            b.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        [] > inner_a
+          [] > very_inner_a
+            memory > state
+      [] > b
+        a > @
+        [self x] > n
+          x.add 2 > tmp
+          self.inner_a.very_inner_a.state.write tmp > @
+good:
+  source.cpp: |
+    class A {
+    public:
+        class InnerA {
+        public:
+            class VeryInnerA {
+            protected:
+                int state = 0;
+            public:
+                void setState(int x) { state = x; }
+            };
+        };
+    };
+
+    class B: public A::InnerA::VeryInnerA {
+    public:
+        void n(int x) {
+            int tmp = x + 2;
+            setState(tmp);
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class A {
+        class Inner {
+            static class VeryInner {
+                protected int state = 0;
+                void setState(int x) { state = x; }
+            }
+        }
+    }
+
+    class B extends A.Inner.VeryInner {
+        public void n(int x) {
+            int tmp = x + 2;
+            setState(tmp);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            b.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        [] > inner_a
+          memory > state
+          [self x] > get_state
+            self.state.write x > @
+      [] > b
+        a > @
+        [self x] > n
+          x.add 2 > tmp
+          self.inner_a.very_inner_a.get_state self tmp > @

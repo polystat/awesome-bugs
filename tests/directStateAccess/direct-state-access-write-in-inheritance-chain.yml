@@ -1,0 +1,120 @@
+title: Direct access(write) to the base class state in a chain of inheritance
+description: >
+  Here, direct access(write) to the base class state occurs through 
+  the inheritance chain, in which the access to the field of the base class
+  occurs in the last element of the inheritance chain.
+features:
+  - inheritance
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    #include <memory>
+    
+    class A {
+    protected:
+        int state = 0;
+    };
+
+    class B: public A { };
+
+    class C : public B {
+    public:
+        void n(int x) { 
+            state = x + 2;
+        }
+    };
+
+    auto main() -> int {
+        auto c = std::make_unique<C>();
+        c->n(3);
+    }
+  Test.java: |
+    class A {
+        protected int state = 0;
+    }
+
+    class B extends A { }
+
+    class C extends B {
+        public void n(int x) {
+            state = x + 2;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var c = new C();
+            c.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+      [] > b
+        a > @
+      [] > c
+        b > @
+        [self x] > n
+          x.add 2 > tmp
+          self.state.write tmp > @
+good:
+  source.cpp: |
+    #include <memory>
+    
+    class A {
+    protected:
+        int state = 0;
+    public:
+        void setState(int x) { state = x; }
+    };
+
+    class B: public A { };
+
+    class C : public B {
+    public:
+        void n(int x) { 
+            int tmp = x + 2;
+            setState(tmp);
+        }
+    };
+
+    auto main() -> int {
+        auto c = std::make_unique<C>();
+        c->n(3);
+    }
+  Test.java: |
+    class A {
+        protected int state = 0;
+        void setState(int x) { state = x; }
+    }
+
+    class B extends A { }
+
+    class C extends B {
+        public void n(int x) {
+            int tmp = x + 2;
+            setState(tmp);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var c = new C();
+            c.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+        [self x] > set_state
+            self.state.write x > @
+      [] > b
+        a > @
+      [] > c
+        b > @
+        [self x] > n
+          x.add 2 > tmp
+          self.set_state self tmp > @

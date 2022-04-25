@@ -1,0 +1,100 @@
+title: The simplest example of direct access(write) to the base class state
+description: >
+  Here, direct access(write) to the base class occurs in the descendant class
+  directly through access to the field, and not through method of the base class.
+features:
+  - inheritance
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    class A {
+    protected:
+        int state = 0;
+    };
+
+    class B : public A {
+    public:
+        void n(int x) { 
+            state = x;
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class A {
+        protected int state = 0;
+    }
+
+    class B extends A {
+        public void n(int x) {
+            state = x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            b.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+      [] > b
+        a > @
+        [self x] > n
+          self.state.write x > @
+good:
+  source.cpp: |
+    class A {
+    protected:
+        int state = 0;
+    public:
+        void setState(int x) { state = x; }
+    };
+
+    class B : public A {
+    public:
+        void n(int x) { 
+            setState(x);
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class A {
+        protected int state = 0;
+        void setState(int x) { state = x; }
+    }
+
+    class B extends A {
+        public void n(int x) {
+            int tmp = x + 2;
+            setState(tmp);
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            b.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+        [self x] > set_state
+          self.state.write x > @
+      [] > b
+        a > @
+        [self x] > n
+          self.set_state self x > @

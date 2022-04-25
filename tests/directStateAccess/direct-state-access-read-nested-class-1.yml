@@ -1,0 +1,127 @@
+title: Direct access(read) to the base class state in a chain of nested classes
+description: > 
+  Here, in the inherited class, an attempt is made to access(read) the field
+  of the innermost nested class of the base class.
+features:
+  - inheritance
+  - nested
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    class A {
+    public:
+        class InnerA {
+        public:
+            class VeryInnerA {
+            protected:
+                int state = 0;
+            };
+        };
+    };
+
+    class B: public A::InnerA::VeryInnerA {
+    public:
+        auto n(int x) -> int{
+            return state + x;
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class A {
+        class Inner {
+            static class VeryInner {
+                protected int state = 0;
+            }
+        }
+    }
+
+    class B extends A.Inner.VeryInner {
+        public int n(int x) {
+            return state + x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n(3));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        [] > inner_a
+          [] > very_inner_a
+            memory > state
+      [] > b
+        a > @
+        [self x] > n
+          a.self.inner_a.very_inner_a.state.add x > @
+good:
+  source.cpp: |
+    class A {
+    public:
+        class InnerA {
+        public:
+            class VeryInnerA {
+            protected:
+                int state = 0;
+            public:
+                auto getState() -> int {
+                    return state;
+                }
+            };
+        };
+    };
+
+    class B: public A::InnerA::VeryInnerA {
+    public:
+        auto n(int x) -> int {
+            return getState() + x;
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class A {
+        class Inner {
+            static class VeryInner {
+                protected int state = 0;
+                public int getState() { return state; }
+            }
+        }
+    }
+
+    class B extends A.Inner.VeryInner {
+        public int n(int x) {
+            return getState() + x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n(3));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        [] > inner_a
+          [] > very_inner_a
+            memory > state
+            [self] > get_state
+              self.state > @
+      [] > b
+        a > @
+        [self x] > n
+          self.inner_a.very_inner_a.get_state self > tmp
+          tmp.add x > @

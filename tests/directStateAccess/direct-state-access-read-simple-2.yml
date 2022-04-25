@@ -1,0 +1,99 @@
+title: The simplest example of direct access(read) to the base class state
+description: >
+  Here, direct access(read) to the base class occurs in the descendant class
+  directly through access to the field, and not through a method of the base class.
+features:
+  - inheritance
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    class A {
+    protected:
+        int state = 0;
+    };
+
+    class B : public A {
+    public:
+        auto n() -> int {
+            return state;
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n();
+    }
+  Test.java: |
+    class A {
+        protected int state = 0;
+    }
+
+    class B extends A {
+        public int n() {
+            return state;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n());
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+      [] > b
+        a > @
+        [self] > n
+          self.state > @
+good:
+  source.cpp: |
+    class A {
+    protected:
+        int state = 0;
+    public:
+        auto getState() { return state; }
+    };
+
+    class B : public A {
+    public:
+        auto n() -> int {
+            return getState();
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n();
+    }
+  Test.java: |
+    class A {
+        protected int state = 0;
+        public int getState() { return state; }
+    }
+
+    class B extends A {
+        public int n() {
+            return getState();
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n());
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+        [self] > get_state
+          self.state > @
+      [] > b
+        a > @
+        [self] > n
+          self.get_state self > @

@@ -1,0 +1,153 @@
+title: Direct access(read) to the base class state in a chain of inheritance with nested state
+description: >
+  Here, direct access(read) to the base class state occurs through 
+  the inheritance chain, in which the access to the field of the base class
+  occurs in the last element of the inheritance chain. Base class state is
+  deeply nested.
+features:
+  - inheritance
+  - nested
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    class A {
+    public:
+        class InnerA {
+        public:
+            class VeryInnerA {
+            protected:
+                int state = 0;
+            };
+        };
+    };
+    
+    class B: public A::InnerA::VeryInnerA { };
+    
+    class C: public B { };
+    
+    class D: C {
+    public:
+        auto n(int x) -> int{
+            return state + x;
+        }
+    };
+    
+    auto main() -> int {
+        D d;
+        d.n(3);
+    }
+  Test.java: |
+    class A {
+        class Inner {
+            static class VeryInner {
+                protected int state = 0;
+            }
+        }
+    }
+
+    class B extends A.Inner.VeryInner { }
+
+    class C extends  B { }
+
+    class D extends C {
+        public int n(int x) {
+            return state + x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var d = new D();
+            System.out.println(d.n(3));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        [] > inner_a
+          [] > very_inner_a
+            memory > state
+      [] > b
+        a > @
+      [] > c
+        b > @
+      [] > d
+        c > @
+        [self x] > n
+          a.self.inner_a.very_inner_a.state.add x > @
+good:
+  source.cpp: |
+    class A {
+    public:
+        class InnerA {
+        public:
+            class VeryInnerA {
+            protected:
+                int state = 0;
+            public:
+                auto getState() -> int {
+                    return state;
+                }
+            };
+        };
+    };
+    
+    class B: public A::InnerA::VeryInnerA { };
+    
+    class C: public B { };
+    
+    class D: C {
+    public:
+        auto n(int x) -> int {
+            return getState() + x;
+        }
+    };
+    
+    auto main() -> int {
+        D d;
+        d.n(3);
+    }
+  Test.java: |
+    class A {
+        class Inner {
+            static class VeryInner {
+                protected int state = 0;
+                public int getState() { return state; }
+            }
+        }
+    }
+
+    class B extends A.Inner.VeryInner { }
+
+    class C extends  B { }
+
+    class D extends C {
+        public int n(int x) {
+            return getState() + x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var d = new D();
+            System.out.println(d.n(3));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        [] > inner_a
+          [] > very_inner_a
+            memory > state
+            [self] > get_state
+              self.state > @
+      [] > b
+        a > @
+      [] > c
+        b > @
+      [] > d
+        c > @
+        [self x] > n
+          self.inner_a.very_inner_a.get_state self > s
+          s.add x > @

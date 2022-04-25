@@ -1,0 +1,115 @@
+title: Direct access(read) to the base class non-primitive state
+description: >
+  Here, direct access(read) to the base class occurs in the descendant class
+  directly through access to the field, and not through the setter. But state
+  is not a primitive type
+features:
+  - inheritance
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    struct Data {
+        int value = 0;
+    };
+    
+    class A {
+    protected:
+        Data state = {0};
+    };
+    
+    class B : public A {
+    public:
+        auto n(int x) -> int {
+            return state.value + x;
+        }
+    };
+    
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class Data {
+        public int value = 0;
+    }
+    class A {
+        protected Data state = new Data();
+    }
+
+    class B extends A {
+        public int n(int x) {
+            return state.value + x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n(3));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        cage > state
+      [] > b
+        a > @
+        [self x] > n
+          self.state.add x > @
+good:
+  source.cpp: |
+    struct Data {
+        int value = 0;
+    };
+    
+    class A {
+    protected:
+        Data state = {0};
+    public:
+        auto getState() { return state; }    
+    };
+    
+    class B : public A {
+    public:
+        auto n(int x) -> int {
+            return getState().value + x;
+        }
+    };
+    
+    auto main() -> int {
+        B b;
+        b.n(3);
+    }
+  Test.java: |
+    class Data {
+        public int value = 0;
+    }
+    class A {
+        protected Data state = new Data();
+        public Data getState() { return state; }
+    }
+
+    class B extends A {
+        public int n(int x) {
+            return getState().value + x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n(3));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        cage > state
+        [self] > get_state
+          self.state > @
+      [] > b
+        a > @
+        [self x] > n
+          self.get_state self > s
+          s.add x > @

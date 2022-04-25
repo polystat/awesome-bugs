@@ -1,0 +1,112 @@
+title: Direct access(read) to the base class state in factory pattern
+description: >
+  Here, in the method of derived class occurs direct access(read) to the 
+  state of the base class. The base class is a product of factory AFactory.
+features:
+  - inheritance
+  - encapsulation
+  - method
+bad:
+  source.cpp: |
+    class AFactory {
+    public:
+        class GetA {
+        protected:
+            int state = 0;
+        };
+    };
+
+    class B : public AFactory::GetA {
+    public:
+        auto n(int x) -> int {
+            return state + x;
+        }
+    };
+
+    auto main() -> int {
+        B bInstance;
+        bInstance.n(3);
+    }
+  Test.java: |
+    class AFactory {
+        static class GetA {
+            protected int state = 0;
+        }
+    }
+
+    class B extends AFactory.GetA {
+        public int n(int x) {
+            return state + x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n(3));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a_factory
+        [] > get_a
+          memory > state
+      [] > b
+        a_factory.get_a > @
+        [self x] > n
+          a_factory.get_a.state.add x > @
+good:
+  source.cpp: |
+    class AFactory {
+    public:
+        class GetA {
+        protected:
+            int state = 0;
+        public:
+            auto getState() { return state; }
+        };
+    };
+
+    class B : public AFactory::GetA {
+    public:
+        auto n(int x) -> int {
+            return getState() + x;
+        }
+    };
+
+    auto main() -> int {
+        B bInstance;
+        bInstance.n(3);
+    }
+  Test.java: |
+    class AFactory {
+        static class GetA {
+            protected int state = 0;
+            public int getState() { return state; }
+        }
+    }
+
+    class B extends AFactory.GetA {
+        public int n(int x) {
+            return getState() + x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n(3));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a_factory
+        [] > get_a
+          memory > state
+          [self] > get_state
+            self.state > @
+      [] > b
+        a_factory.get_a > @
+        [self x] > n
+          self.get_state self > s
+          s.add x > @

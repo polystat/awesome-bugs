@@ -1,0 +1,116 @@
+title: Direct access(read) to the base class state in calculation chain
+description: >
+  Here, direct access(read) to the base class state occurs in a chain 
+  of mathematical operations in the "outer" part of an expression
+features:
+  - inheritance
+  - encapsulation
+  - method
+language: cpp
+bad:
+  source.cpp: |
+    class A {
+    protected:
+        int state = 0;
+    };
+    
+    class B : public A {
+    public:
+        auto n(int x) -> int {
+            return state + (100 * (100 + (100 - x)));
+        }
+    };
+    
+    auto main() -> int {
+        B b;
+        b.n(5);
+    }
+  Test.java: |
+    class A {
+        protected int state = 0;
+    };
+
+    class B extends A {
+        public int n(int x) {
+            return state + (100 * (100 + (100 - x)));
+        }
+    };
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n(5));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+      [] > b
+        a > @
+        [self x] > n
+          add. > @
+            self.state
+            mul.
+              100
+              add.
+                100
+                sub.
+                  100
+                  x
+good:
+  source.cpp: |
+    class A {
+    protected:
+        int state = 0;
+    public:
+        auto getState() { return state; }
+    };
+
+    class B : public A {
+    public:
+        auto n(int x) -> int {
+            return getState() + (100 * (100 + (100 - x)));
+        }
+    };
+
+    auto main() -> int {
+        B b;
+        b.n(5);
+    }
+  Test.java: |
+    class A {
+        protected int state = 0;
+        public int getState() { return state; }
+    };
+
+    class B extends A {
+        public int n(int x) {
+            return getState() + (100 * (100 + (100 - x)));
+        }
+    };
+
+    public class Test {
+        public static void main(String[] args) {
+            var b = new B();
+            System.out.println(b.n(5));
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > a
+        memory > state
+        [self] > get_state
+          self.state > @
+      [] > b
+        a > @
+        [self x] > n
+          add. > @
+            self.get_state self
+            mul.
+              100
+              add.
+                100
+                sub.
+                  100
+                  x
