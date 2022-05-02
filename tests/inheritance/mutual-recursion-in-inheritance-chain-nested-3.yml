@@ -1,0 +1,188 @@
+title: Mutual recursion in a chain of inheritance in nested classes
+description: >
+  Mutual recursion occurs in the inheritance chain when adding
+  a new method m in the first derived class and overriding method n
+  in the last class of the inheritance chain. The inheritance chain 
+  is in the innermost element of the nested class chain.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    #include <memory>
+
+    class VeryOuter {
+    public:
+        class Outer {
+        public:
+            class Base {
+            private:
+                int x = 0;
+            public:
+                Base() = default;
+                virtual ~Base() = default;
+
+                virtual void n(int v) {
+                    this->x = v;
+                }
+            };
+
+            class Derived : public Base {
+            public:
+                void m(int v) {
+                    this->n(v);
+                }
+            };
+
+            class DerivedAgain : public Derived {
+            public:
+                void n(int v) override {
+                    this->m(v);
+                }
+            };
+        };
+    };
+
+    auto main() -> int {
+        std::unique_ptr<VeryOuter::Outer::Base> d =
+            std::make_unique<VeryOuter::Outer::DerivedAgain>();
+        d->n(12);
+    }
+  Test.java: |
+    class VeryOuter {
+        class Outer {
+            class Base {
+                private int x = 0;
+                public int getX() { return x; }
+                public void n(int v) {
+                    x = v;
+                }
+            }
+
+            class Derived extends Base {
+                public void m(int v) {
+                    n(v);
+                }
+            }
+
+            class DerivedAgain extends Derived {
+                @Override
+                public void n(int v) {
+                    m(v);
+                }
+            }
+        }
+    }
+    
+    public class Test {
+        public static void main(String[] args) {
+            Base d = ((new VeryOuter()).new Outer()).new DerivedAgain();
+            d.n(12);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > very_outer
+        [] > outer
+          [] > base
+            memory > x
+            [self v] > n
+              x.write v > @
+          [] > derived
+            base > @
+            [self v] > m
+              self.n self v > @
+          [] > derived_again
+            derived > @
+            [self v] > n
+              self.m self v > @
+good:
+  source.cpp: |
+    #include <memory>
+
+    class VeryOuter {
+    public:
+        class Outer {
+        public:
+            class Base {
+            private:
+                int x = 0;
+            public:
+                Base() = default;
+                virtual ~Base() = default;
+
+                virtual void n(int v) {
+                    this->x = v;
+                }
+            };
+
+            class Derived : public Base {
+            public:
+                void m(int v) {
+                    this->n(v);
+                }
+            };
+
+            class DerivedAgain : public Derived {
+            public:
+                void n1(int v) {
+                    this->m(v);
+                }
+            };
+        };
+    };
+
+    auto main() -> int {
+        std::unique_ptr<VeryOuter::Outer::Base> d =
+            std::make_unique<VeryOuter::Outer::DerivedAgain>();
+        d->n(12);
+    }
+  Test.java: |
+    class VeryOuter {
+        class Outer {
+            class Base {
+                private int x = 0;
+                public int getX() { return x; }
+                public void n(int v) {
+                    x = v;
+                }
+            }
+
+            class Derived extends Base {
+                public void m(int v) {
+                    n(v);
+                }
+            }
+
+            class DerivedAgain extends Derived {
+                public void n1(int v) {
+                    m(v);
+                }
+            }
+        }
+    }
+    
+    public class Test {
+        public static void main(String[] args) {
+            Base d = ((new VeryOuter()).new Outer()).new DerivedAgain();
+            d.n(12);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > very_outer
+        [] > outer
+          [] > base
+            memory > x
+            [self v] > n
+              x.write v > @
+          [] > derived
+            base > @
+            [self v] > m
+              self.n self v > @
+          [] > derived_again
+            derived > @
+            [self v] > n1
+              self.m self v > @

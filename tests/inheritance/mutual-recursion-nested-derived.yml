@@ -1,0 +1,162 @@
+title: Mutual recursion with a derived base class
+description: >
+  One of the methods of the base class overrides in the derived class
+  and results in a mutual recursion. The derived class is in the innermost
+  element of the nested class chain.
+features:
+  - inheritance
+  - nested
+  - method
+bad:
+  source.cpp: |
+    class Base {
+    private:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
+
+        virtual void n(int v) {
+            this->x = v;
+        }
+        void m(int v) {
+            this->n(v);
+        }
+    };
+
+    class VeryOuter {
+    public:
+        class Outer {
+        public:
+            class Derived : public Base {
+            public:
+                void n(int v) override {
+                    this->m(v);
+                }
+            };
+        };
+    };
+
+    auto main() -> int {
+        VeryOuter::Outer::Derived d;
+        d.n(3);
+    }
+  Test.java: |
+    class Base {
+        private int x = 0;
+        public int getX() { return x; }
+        public void n(int v) {
+            x = v;
+        }
+        public void m(int v) {
+            n(v);
+        }
+    }
+    
+    class VeryOuter {
+        class Outer {
+            class Derived extends Base {
+                @Override
+                public void n(int v) {
+                    m(v);
+                }
+            }
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Base d = ((new VeryOuter()).new Outer()).new Derived();
+            d.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+        [self v] > m
+          self.n self v > @
+      [] > very_outer
+        [] > outer
+          [] > derived
+            base > @
+            [self v] > n
+              self.m self v > @
+good:
+  source.cpp: |
+    class Base {
+    private:
+        int x = 0;
+    public:
+        Base() = default;
+        virtual ~Base() = default;
+
+        virtual void n(int v) {
+            this->x = v;
+        }
+        void m(int v) {
+            this->n(v);
+        }
+    };
+
+    class VeryOuter {
+    public:
+        class Outer {
+        public:
+            class Derived : public Base {
+            public:
+                void n1(int v) {
+                    this->m(v);
+                }
+            };
+        };
+    };
+
+    auto main() -> int {
+        VeryOuter::Outer::Derived d;
+        d.n(3);
+    }
+  Test.java: |
+    class Base {
+        private int x = 0;
+        public int getX() { return x; }
+        public void n(int v) {
+            x = v;
+        }
+        public void m(int v) {
+            n(v);
+        }
+    }
+    
+    class VeryOuter {
+        class Outer {
+            class Derived extends Base {
+                public void n1(int v) {
+                    m(v);
+                }
+            }
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Base d = ((new VeryOuter()).new Outer()).new Derived();
+            d.n(3);
+        }
+    }
+  test.eo: |
+    [] > test
+      [] > base
+        memory > x
+        [self v] > n
+          x.write v > @
+        [self v] > m
+          self.n self v > @
+      [] > very_outer
+        [] > outer
+          [] > derived
+            base > @
+            [self v] > n1
+              self.m self v > @
