@@ -2,7 +2,7 @@ title: Direct access(read) to the base class state in a chain of inheritance in 
 description: >
   Here, direct access(read) to the base class state occurs through 
   the inheritance chain, in which the access to the field of the base class
-  occurs in the last element of the inheritance chain. the inheritance chain 
+  occurs in the last element of the inheritance chain. The inheritance chain 
   is in the innermost element of the nested class chain.
 features:
   - inheritance
