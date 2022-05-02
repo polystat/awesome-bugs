@@ -7,7 +7,6 @@ features:
   - overriding
   - method
   - polymorphism
-language: cpp
 bad:
   source.cpp: |
     #include <memory>

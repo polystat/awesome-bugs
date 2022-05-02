@@ -6,7 +6,6 @@ features:
   - inheritance
   - overriding
   - method
-language: cpp
 bad:
   source.cpp: |
     class Base {
