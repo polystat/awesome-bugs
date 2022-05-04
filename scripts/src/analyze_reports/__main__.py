@@ -126,7 +126,7 @@ def generate_report(analyzer_reports, based_on_template):
 
         for test in test_paths:
             url = os.path.join(repo_url, test.replace("\\", "/"))
-            txt = hyperlink(url, test.replace("tests/", ""))
+            txt = hyperlink(url, os.path.basename(test))
             table.add_row(
                 txt,
                 *[
