@@ -105,7 +105,7 @@ def generate_report(analyzer_reports, based_on_template):
         table.add_hline()
         table.add_row(
             MultiColumn(size=1, data="File", align="|c|"),
-            *[ar for ar in analyzer_reports.keys()],
+            *[Command("rotate", ar) for ar in analyzer_reports.keys()],
         )
         table.add_hline()
 
@@ -224,6 +224,10 @@ def generate_report(analyzer_reports, based_on_template):
         doc = get_doc()
     doc.packages.append(Package(NoEscape("href-ul")))
     doc.packages.append(Package(NoEscape("longtable")))
+    doc.packages.append(Package(NoEscape("graphicx")))
+    doc.preamble.append(
+        NoEscape(r"\newcommand{\rotate}{\rotatebox[origin=c]{90}}")
+    )
 
     with doc.create(Section("Statistic table", numbering=False)):
         generate_statistic_table()
