@@ -166,7 +166,7 @@ def generate_report(analyzer_reports, based_on_template):
         pj_div_by_zero = pj.error_statistics["division-by-zero"]
         pj_mutual_recursion = pj.error_statistics["mutual-recursion"]
 
-        c_p_div_by_zero = p_mutual_recursion.accuracy - c_div_by_zero.accuracy
+        c_p_div_by_zero = c_div_by_zero.accuracy - p_div_by_zero.accuracy
         # With an assumption that clang will not find any mutual recursion
         c_p_mutual_recursion = p_mutual_recursion.accuracy - 0.5
 
