@@ -103,8 +103,8 @@ jobs:
           cmd: latexmk
           path: results/report
           opts: report -pdf -shell-escape -f -quiet
-          packages: href-ul lastpage minted ffcode mdframed biblatex
-            needspace zref environ framed xstring catchfile fvextra
+          packages: href-ul ffcode biblatex needspace zref environ framed
+            xstring catchfile fvextra
 
       # Saving artifacts
       - name: Upload results

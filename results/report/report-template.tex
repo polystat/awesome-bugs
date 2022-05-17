@@ -1,48 +1,37 @@
-\hyphenation{op-tical net-works semi-conduc-tor}
 
-% paper title
-\title{Polystat vs. Clang-Tidy:\\a preliminary static analysis benchmark report}
+\title{\polystat{} vs. Others: \texorpdfstring{\\}{} Static Analysis Tools Benchmark Report}
+\author{\polystat{} Team \texorpdfstring{\\}{} \today}% <-this % stops a space
 
-% author names
-\author{Polystat Innopolis Team \\ \today}% <-this % stops a space
-
-% The report headers
-%\markboth{EEET2493 Biomedical Instrumentation. Lab. Report 1, March 2019}%do not delete next lines
-%\markboth{EEET2493 Biomedical Instrumentation. Lab. Report 1, March 2019}%do not delete next lines
-%{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
-
-% make the title area
-\maketitle
-
-% As a general rule, do not put math, special symbols or citations
-% in the abstract or keywords.
 \begin{abstract}
-    This document presents a preliminary report on the performance of Polystat static analysis tool compared with Clang-Tidy across several types of defects in object-oriented programs.
+This document presents a preliminary report on the performance of \polystat{} compared with other static analysis tool across several types of defects in object-oriented programs.
 \end{abstract}
 
-%\begin{IEEEkeywords}
-%keywords, temperature, xxxx equation, etc.
-%\end{IEEEkeywords}
+\maketitle
+\pagestyle{plain}
 
 \section{Introduction}
-% Here we have the typical use of a "W" for an initial drop letter
-% and "RITE" in caps to complete the first word.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
 
-\IEEEPARstart{T}{he} goal of the Polystat project is to design and implement a static analyzer for object-oriented languages, based on a common model. EO programming language has been introduced by Yegor Bugayenko \cite{eolang-paper} in an attempt to distill his vision of the essence of object-oriented programming. The language is very minimalistic and is argued to be capable of representing faithfully many object-oriented structures commonly occurring in modern software engineering.
+\polystat{} is a static analyzer for object-oriented languages, based on $\varphi$-calculus. The calculus and EO programming language have been introduced by \citet{eolang-paper} in an attempt to distill his vision of the essence of object-oriented programming. EO is a very minimalistic programming language and is argued to be capable of representing faithfully many object-oriented structures commonly occurring in modern software engineering.
 
-Polystat static analysis tool has been developed by Yegor Bugayenko and Polystat Innopolis Team. At the time of writing, the tool consists of two main parts: (i) \texttt{polystat} itself offering the primary entry point and the module for division-by-zero defect detection, and (ii) \texttt{odin} module for object-related defect detection. Polystat is capable of analyzing EO programs.
+At the time of writing, \polystat{} consists of two main parts:
+\begin{inparaenum}[a)]
+\item \ff{polystat} itself offering the primary entry point and the module for division-by-zero defect detection, and
+\item \ff{odin} module for object-related defect detection.
+\end{inparaenum}
+\polystat{} is capable of analyzing only EO programs.
 
-Clang-Tidy is a clang-based tool that is capable to detect various defects in C++ programs. In particular, Clang-Tidy includes C and C++ checkers from Clang Static Analyzer project.
+For comparison with \polystat{}, we use popular open-source analyzers that are capable to detect defects in C++ programs: Clang-Tidy, Cppcheck, and SVF. In this document, we compare analyzers using several static analysis metrics and interpret the benchmark report.
 
-In this document, we compare Polystat and Clang-Tidy using several static analysis metrics and interpret the benchmark report. Our specific results are:
-\begin{enumerate}
-    \item We provide a methodology for comparing different static analysis tools across several programming languages;
-    \item We suggest a \emph{translation from C++ to EO}, to enable comparison of tools supporting different languages;
-    \item We give descriptions for \emph{three types of defects}: division by zero, unanticipated mutual recursion in subclasses, and unjustified assumptions in subclasses;
-    \item We establish that \emph{Polystat has accuracy of #p_mutual_recursion\%, a #c_p_mutual_recursion\% improvement over Clang-Tidy}, for detecting unanticipated mutual recursion in subclasses in object-oriented programs.
-\end{enumerate}
+As a result of the research we have established that:
+\begin{inparaenum}[a)]
+    \item among the analyzers participating in the comparison, only \polystat{} can find OOP-specific defects,
+    \item \polystat{} shows 100\% recall for these OOP-specific defects,
+    and
+    \item \polystat{} shows comparable performance for the common type of defects.
+\end{inparaenum}
+\Cref{tab:metrics} demonstrates the numbers collected.
+
+#summary_table
 
 \section{Materials and Methods}
 
@@ -50,19 +39,17 @@ In this section we describe our approach to benchmarking static analysis tools f
 
 \subsection{Comparing static analysis tools}
 
-For this report, we use a direct and simple approach of comparing static analysis tools. Put simply, we have a collection of example programs marked as \emph{good} (meaning that the program is defect-free) or \emph{bad} (meaning that is has some defect). We run static analysis tools on these programs and check whether the tool agrees with the markings.
+For this report, we use a direct and simple approach of comparing static analysis tools. Put simply, we have a collection of example programs marked as ``good'' (meaning that the program is defect-free) or ``bad'' (meaning that it has some defect). We run static analysis tools on these programs and check whether the tool agrees with the markings.
 
-The approach has several limitations, such as ignoring actual type, location and confidence level of defect reported by the tool, as well as supporting programs with multiple defects. However, for preliminary comparison, this approach works well.
+The approach has several limitations, such as ignoring actual type, location, and confidence level of defect reported by the tool, as well as supporting programs with multiple defects. However, for preliminary comparison, this approach works well.
 
-To organize the comparison, we collect a suite of test files for each type of defects.
-Each test file is targeting a specific circumstances of the defect. For instance, division by zero may be harder to detect for some tools when numeric type casting is involved, so we may add a test file for that scenario.
+To organize the comparison, we collect a suite of test files for each type of defects. Each test file is targeting a specific circumstances of the defect. For instance, division by zero may be harder to detect for some tools when numeric type casting is involved, so we may add a test file for that scenario.
 
-Each test file, for each supported programming language, presents two similar versions of a program~--- one \emph{good} and one \emph{bad}. The versions of the programs can be though of as ``before'' and ``after'' fixing the corresponding defect. The versions in different languages are expected to be equivalent, at least from a software engineer's perspective.
+Each test file, for each supported programming language, presents two similar versions of a program---one good and one bad. The versions of the programs can be thought of as ``before'' and ``after'' fixing the corresponding defect. The versions in different languages are expected to be equivalent, at least from a software engineer's perspective.
 
-\begin{figure}[ht]
-    \centering
-    \begin{mdframed}
-\begin{minted}{yaml}
+We implement test files as YAML documents with the following structure:
+
+\begin{ffcode}
 title: # Title
 description: >
   # Detailed description
@@ -77,90 +64,97 @@ good:
     # good C++ program
   test.eo: |
     # good EO program
-\end{minted}
-    \end{mdframed}
-    \caption{Test file structure in YAML format.}
-    \label{fig:test-file}
-\end{figure}
+\end{ffcode}
 
-We implement test files as YAML documents with structure as shown in Figure~\ref{fig:test-file}. Such YAML files are then used by automatic continuous integration scripts, to evaluate static analyzers whenever the benchmark suite repository on GitHub is updated.
+They are then used by automatic continuous integration scripts, to evaluate static analyzers whenever the benchmark suite repository on GitHub is updated.
 
-Assuming each tool is evaluated using one programming language, every test file contains essentially two programs. Running a tool on an a program leads to one of the following possible outcomes:
-\begin{enumerate}
-    \item TP (true positive)~--- defect is detected in a \emph{bad} file;
-    \item FP (false positive)~--- defect is detected in a \emph{good} file;
-    \item TN (true negative)~--- no defect detected in a \emph{good} file;
-    \item FN (false negative)~--- no defect detected in a \emph{bad} file;
-    \item ERR (error)~--- the tool exited with an non-zero exit code or crashed.
-\end{enumerate}
+\subsection{Metrics}\label{sec:metrics}
 
-Evaluating each tool on a collection of test files, we accumulate the following metrics:
-\begin{enumerate}
-    \item Total count per type of outcome (TP, FP, TN, FN, ERR);
-    \item \emph{Accuracy}~-- a ratio of \emph{true} outcomes to the total number of test programs; this metric helps understand how good a tool is at predicting the presence of a defect;
-    \item \emph{Precision}~--- a ratio of \emph{true positives} to the total number of \emph{positive} outcomes (predicted positives); this metric helps us understand how ``useful'' are positive detections of a defect in a program by a tool;
-    \item \emph{Recall}~--- a ratio of \emph{true positives} to the total number of \emph{bad} programs (actual positives); this metric helps us understand how well are actual defects detected by a tool;
-    \item \emph{F1 score}~--- a harmonic mean of Precision and Recall; this metric is commonly used for preliminary comparison of tools, as high F1 score indicates that both Precision and Recall are good.
-\end{enumerate}
+Assuming each tool is evaluated using one programming language, every test file contains essentially two programs. Running a tool on an a program leads to one of the following possible outcomes: True Positive~(TP), False Positive~(FP), True Negative~(TN), False Negative~(FN), or Error~(ERR). Evaluating each tool on a collection of test files, we accumulate the following metrics:
 
-\begin{figure}[ht]
-    \centering
-    \begin{mdframed}
-    \begin{align}
-        \mathsf{Accuracy} &=\frac{TP + TN} {TP + TN + FP + FN + ERR} \\
-        \mathsf{Precision} &= \frac{TP} {TP + FP} \\
-        \mathsf{Recall} &= \frac{TP} {TP + FN} \\
-        \mathsf{F1} &= \frac{2 \times \mathsf{Precision} \times \mathsf{Recall}} {\mathsf{Precision} + \mathsf{Recall}}
-    \end{align}
-    \end{mdframed}
-    \caption{Basic performance metrics for static analysis tools.}
-    \label{fig:metrics}
-\end{figure}
+Total count per type of outcome:
+\begin{equation*}
+\text{Total} = TP + TN + FP + FN + ERR.
+\end{equation*}
 
-Executing the overall benchmark produces an automated report, consisting of three parts. All metrics are grouped by the type of defect and the tool, forming the \emph{statistics table}. A detailed account of specific output for each tool run of every test is recorded in a \emph{details table}. All defect detection outputs are grouped by tool and presented in \emph{detection messages}. In this report we present only the statistics table, leaving the detailed parts of the report in the Appendix.
+``Accuracy'' as a ratio of TP+TN outcomes to the total number of test programs; this metric helps understand how good a tool is at predicting the presence of a defect:
+\begin{equation*}
+\text{Accuracy} = \frac{TP + TN}{\text{Total}}.
+\end{equation*}
+
+``Precision'' as a ratio of TP to the total number of TP+TN outcomes (predicted positives); this metric helps us understand how ``useful'' are positive detections of a defect in a program by a tool:
+\begin{equation*}
+\text{Precision} = \frac{TP}{TP + FP}.
+\end{equation*}
+
+``Recall'' as a ratio of TP+TN to the total number of FP+FN programs (actual positives); this metric helps us understand how well are actual defects detected by a tool:
+\begin{equation*}
+\text{Recall} = \frac{TP}{TP + FN}.
+\end{equation*}
+
+``F1 Score'' as a harmonic mean of Precision and Recall; this metric is commonly used for preliminary comparison of tools, as high F1 score indicates that both Precision and Recall are good:
+\begin{equation*}
+F1 = \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}.
+\end{equation*}
+
+Executing the overall benchmark produces an automated report, consisting of three parts. All metrics are grouped by the type of defect and the tool, forming the ``statistics table.'' A detailed account of specific output for each tool run of every test file is recorded in a ``details table.'' In this report we present only the statistics table, leaving the detailed parts of the report in the Appendix.
+
 
 \subsection{From C++ to EO}
 
-To properly compare Polystat with Clang-Tidy, we need a way to provide equivalent programs in C++ and EO. While \texttt{c2eo}, a C/C++ to EO translator, is under development, it is not ready to be used for the purposes of this benchmark. In particular, many code examples used in our test files cannot be translated by the tool at the moment of writing.
+To properly compare \polystat{} with other analyzers, we need a way to provide equivalent programs in C++ and EO. While \ff{c2eo}\footnote{For more details see \url{https://github.com/polystat/c2eo}}, a C/C++ to EO translator, is under development, it is not ready to be used for the purposes of this benchmark. In particular, many code examples used in our test files cannot be translated by the tool at the moment of writing.
 
-To facilitate comparison, we translate C++ programs to EO manually. Some translation techniques have been discussed by Bugayenko \cite{bugayenko2021reducing} and Kudasov, Shilov, and Stepanov \cite[Section 2]{KudasovShilovStepanov2021}. We apply those techniques manually, following these general principles:
-\begin{enumerate}
+To facilitate comparison, we translate C++ programs to EO manually. Some translation techniques have been discussed by \citet{bugayenko2021reducing} and \citet[Section 2]{KudasovShilovStepanov2021}. We apply those techniques manually, following these general principles:
+\begin{inparaenum}[a)]
     \item classes are translated to objects, capable of generating new objects;
     \item inheritance is approximated with decoration;
     \item \ff{return} value is assigned to \ff{@} attribute of a method.
-\end{enumerate}
+\end{inparaenum}
 
-While manual translation has its limitations, we believe that our test files are representative of Polystat's desired capabilities.
+While manual translation has its limitations, we believe that our test files are representative of \polystat{}'s desired capabilities.
 
 \subsection{Types of defects}
 
-In this report, we focus on three types of defects. The first one, \emph{division by zero}, is a basic type of defect supported by many tools. The other two are OOP-specific defects belonging to a category of fragile base class problems \cite{MikhajlovSekerinski1998}.
+In this report, we focus on four types of defects. The first one, ``division by zero,'' is a basic type of defect supported by many tools. The other three are OOP-specific defects belonging to a category of fragile base class problems~\citep{MikhajlovSekerinski1998}.
 
-\subsubsection{Division by zero}
+\begin{itemize}
+\item \ff{division-by-zero}: For this type of defect, we are looking for erroneous or at least fragile code, that may lead to a divide by zero error. \polystat{} detects this defect using an approach called ``find-a-reverse'' described by \citet{eolang-far}.
+Clang-Tidy supports detection of this defect via Clang Static Analyzer module \ff{core.DivideZero}\footnote{For more details see \url{https://clang.llvm.org/docs/analyzer/checkers.html}}.
+Support for this defect is also mentioned in Cppcheck, among other\footnote{For more details see \url{https://sourceforge.net/p/cppcheck/wiki/ListOfChecks/}} defects.
 
-For this type of defect, we are looking for erroneous or at least fragile code, that may lead to a divide by zero error. Polystat detects this defect using an approach called ``find-a-reverse'' described by Yegor Bugayenko \cite{eolang-far}.
-Clang-Tidy supports detection of this defect via Clang Static Analyzer module \texttt{core.DivideZero}\footnote{for more details see \url{https://clang.llvm.org/docs/analyzer/checkers.html\#core-dividezero}}.
+\item \ff{mutual-recursion}: Here, we are interested in mutual recursion that occurs as a result of dynamic dispatch (virtual method overriding in subclasses). This problem is described for class-based OOP languages by \citet[Section 3.1]{MikhajlovSekerinski1998} and for elegant objects by \citet[Section 3.2]{KudasovShilovStepanov2021}. \polystat{} supports this type of defect via \ff{odin} module. Other analyzers do not claim to support this.
 
-\subsubsection{Unanticipated mutual recursion in subclasses}
+\item \ff{unjustified-assumption}: Here, we are interested in unjustified assumptions that occurs as a result of dynamic dispatch (virtual method overriding in subclasses). This problem is described for class-based OOP languages by \citet[Section 3.3]{MikhajlovSekerinski1998} and for elegant objects by \citet{KudasovSim2022}. \polystat{} supports this type of defect via \texttt{odin} module. Other analyzers do not claim to support this.
 
-Here, we are interested in mutual recursion that occurs as a result of dynamic dispatch (virtual method overriding in subclasses). This problem is described for class-based OOP languages in \cite[Section 3.1]{MikhajlovSekerinski1998} and for elegant objects in \cite[Section 3.2]{KudasovShilovStepanov2021}. Polystat supports this type of defect via \texttt{odin} module. Clang-Tidy does not claim to support this.
+\item \ff{direct-state-access}: Here, we are interested in access (read/write) to the base class state without getters and setters methods. This problem is described for class-based OOP languages by \citet[Section 3.4]{MikhajlovSekerinski1998}. \polystat{} supports this type of defect via \ff{odin} module. Other analyzers do not claim to support this.
+\end{itemize}
 
-\subsubsection{Unjustified assumptions in subclasses}
+In future versions of \polystat{} more types of bugs will be detectable.
 
-Here, we are interested in unjustified assumptions that occurs as a result of dynamic dispatch (virtual method overriding in subclasses). This problem is described for class-based OOP languages in \cite[Section 3.3]{MikhajlovSekerinski1998} and for elegant objects in \cite{KudasovSim2022}. Polystat supports this type of defect via \texttt{odin} module. Clang-Tidy does not claim to support this.
+\subsection{Analyzers for comparison}
+
+The main criteria for choosing analyzers for comparison with \polystat{} were the availability and ease of integration. The selected analyzers are briefly described below:
+
+\begin{itemize}
+    \item \textbf{Clang-Tidy} is a clang-based tool that is capable to detect various defects in C++ programs. In particular, Clang-Tidy includes C and C++ checkers from Clang Static Analyzer project.
+    \item \textbf{Cppcheck} is an open source static code analysis tool for the C and C++ programming languages. It is versatile, and can check non-standard code including various compiler extensions, inline  assembly code, etc. Its internal preprocessor can handle includes, macros, and several preprocessor commands.
+    \item \textbf{SVF} is a source code analysis tool that enables interprocedural dependence analysis for LLVM-based languages. SVF is able to perform pointer alias analysis, memory SSA form construction, value-flow tracking for program variables and memory error checking.
+\end{itemize}
+
+If future reports we may use more analyzers.
 
 \section{Results}
-Benchmarking was carried out on a set of #number_of_tests tests. In statistic table in appendix, we can see a summary comparison of Polystat and Clang-Tidy performance over three types of defects.
+Benchmarking was carried out on a set of #number_of_tests tests. In the statistic table in the appendix, we can see a summary comparison of \polystat{} and other analyzer performance over four types of defects.
 
 Our interpretation of the metrics is as follows:
 \begin{enumerate}
-    \item Clang-Tidy does not claim and indeed does not find any of the OOP-specific defects. However, since it does not have false positives for those cases, the accuracy is exactly 50\%.
-    \item For divide-by-zero defect, Clang-Tidy shows #c_div_by_zero\% accuracy. We noticed that most of the false negatives were in examples with OOP features.
-    \item Polystat has an accuracy of #p_mutual_recursion\% for detecting unanticipated mutual recursion. Note that recall here is 100\%, meaning that Polystat has successfully detected all \emph{bad} programs in test files, however, because of some false negatives, the overall accuracy is not as high. The false negatives come from programs with branching (such as \ff{if} statements or \ff{while} loops), and in its current form Polystat cannot properly understand whether the condition should be taken into account. Still, Polystat demonstrates a #c_p_mutual_recursion\% improvement over Clang-Tidy for this type of defect.
-    \item The accuracy of the Polystat for the division-by-zero defect is #p_div_by_zero\%, which is only #c_p_div_by_zero\% less than that of the Clang-Tidy. Unlike Clang-Tidy, Polystat has some false positives. This is the main reason for the difference in accuracy. We assume that this difference may increase even more with more thorough testing.
+    \item For OOP-specific defects, only \polystat{} has TP results. That says about his ability to find such defects.
+    \item Analyzers that did not claim to support OOP-specific defects, given the absence of TP results, do not actually find them. However, since they do not have FPs for those cases, the accuracy is exactly 50\%.
+    \item \polystat{} shows 100\% Recall for the OOP-specific defects on our test suit, meaning that \polystat{} has successfully detected all bad programs in test files. This indicates its good ability to find such defects, however, because of some FNs, the overall Accuracy is not as high. The FNs come from programs with branching (such as \ff{if} statements or \ff{while} loops), and in its current form \polystat{} cannot properly understand whether the condition should be taken into account.
+    \item For the division-by-zero defect that is not specific to OOP programs, the Clang-Tidy showed the highest Accuracy of #c_div_by_zero\%. Polistat is only #c_p_div_by_zero\% behind.
 \end{enumerate}
 
-Overall, we see that Polystat shows comparable performance for the common type of defects (division by zero), while detecting OOP-related defects that Clang-Tidy is oblivious to.
+Overall, we see that \polystat{} shows comparable performance for the common type of defects (division by zero), while the detection of OOP-related defects among the considered analyzers is supported only by \polystat{}.
 
 \section{Discussion and Summary}
 
@@ -179,14 +173,11 @@ Our benchmark test suit allows comparing static analyzers in a few specific scen
 
 \section{Conclusion}
 
-In this report, we have presented a basic methodology for comparing static analysis tools, a translation approach for comparing C++ tools with EO tools, and benchmark results comparing Polystat and Clang-Tidy over test files covering three types of defects: division by zero, unanticipated mutual recursion in subclasses, and unjustified assumptions in subclasses.
+In this report, we have presented a basic methodology for comparing static analysis tools, a translation approach for comparing C++ tools with EO tools, and benchmark results comparing \polystat{} and other popular open source analyzers over test suit covering four types of defects: division by zero, unanticipated mutual recursion in subclasses, unjustified assumptions in subclasses, and direct access to the base class state.
 
-We have shown that Polystat offers comparable performance for basic defects like division by zero, and significantly outperforms Clang-Tidy for detecting OOP-specific defects.
-
+We have shown that \polystat{} offers comparable performance for basic defects like division by zero, and outperforms others for detecting OOP-specific defects.
 
 \printbibliography
 
 \onecolumn
 \appendix
-\subsection{Full Report}
-
