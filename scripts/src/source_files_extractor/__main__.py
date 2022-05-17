@@ -4,6 +4,7 @@ import os
 import sys
 import yaml
 import shutil
+from scripts.src.utilities import get_test_files_paths
 
 # Here we take all YAML files from the input folder, if files have
 # the correct structure - extract source code from them and write
@@ -15,23 +16,6 @@ import shutil
 
 # According to the README.md we should have such fields in our YAML files
 REQUIRED_KEYS = ["title", "description", "features", "bad", "good"]
-
-
-def filter_defect(f):
-    temp_path = os.path.join("tests", "errors.txt")
-    with open(temp_path, "r") as r:
-        errors = [x.strip() for x in r.readlines() if not x.startswith("-")]
-    return any(e in f for e in errors)
-
-
-# Searching for YAML files in the given path
-def get_test_files_paths(code_path):
-    code_samples_paths = []
-    for root, dirs, files in os.walk(code_path):
-        for file in files:
-            if filter_defect(file) and file.endswith(".yml"):
-                code_samples_paths.append(os.path.join(root, file))
-    return code_samples_paths
 
 
 # Path (file) processing
