@@ -95,16 +95,14 @@ jobs:
         run: python3 -m analyze_reports true
 
       # Generate pdf
-      - name: Get IEEEtran
-        run: |
-          curl -L -o results/report/IEEEtran.cls "https://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/IEEEtran.cls"
       - uses: yegor256/latexmk-action@0.4.0
         with:
           cmd: latexmk
           path: results/report
           opts: report -pdf -shell-escape -f -quiet
-          packages: href-ul ffcode biblatex needspace zref environ framed
-            xstring catchfile fvextra
+          packages: href-ul ffcode totpages acmart hyperxmp ifmtarg ncctools
+            preprint cleveref paralist comment biblatex needspace environ
+            framed xstring catchfile fvextra libertine inconsolata newtx
 
       # Saving artifacts
       - name: Upload results
