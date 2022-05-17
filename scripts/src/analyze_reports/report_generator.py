@@ -94,8 +94,8 @@ class ReportGenerator:
         )
         d.preamble.append(
             NoEscape(
-                r"\settopmatter{printfolios=false,printccs=false,\
-                printacmref=false}"
+                r"\settopmatter{printfolios=false,printccs=false," +
+                "printacmref=false}"
             )
         )
         d.packages.clear()
@@ -109,8 +109,8 @@ class ReportGenerator:
             Package(
                 NoEscape("biblatex"),
                 options=[
-                    "maxnames=1,minnames=1,natbib=true,citestyle=authoryear,\
-                    bibstyle=authoryear"
+                    "maxnames=1,minnames=1,natbib=true,citestyle=authoryear," +
+                    "bibstyle=authoryear"
                 ],
             )
         )
@@ -130,8 +130,8 @@ class ReportGenerator:
         with self.doc.create(Section("Statistic")):
             self.doc.append(
                 NoEscape(
-                    r"\Cref{tab:statistics} demonstrates detailed statistics\
-                     collected for each static analyzer."
+                    r"\Cref{tab:statistics} demonstrates detailed " +
+                    "statistics collected for each static analyzer."
                 )
             )
             self.doc.append(self.generate_statistic_table())
@@ -140,8 +140,8 @@ class ReportGenerator:
         with self.doc.create(Section("Details")):
             self.doc.append(
                 NoEscape(
-                    r"\Cref{tab:details} demonstrates detailed results for\
-                     each test by each analyzer."
+                    r"\Cref{tab:details} demonstrates detailed results for " +
+                    "each test by each analyzer."
                 )
             )
             self.doc.append(self.generate_details_table())
@@ -193,8 +193,8 @@ class ReportGenerator:
         table.append(tabular)
         table.add_caption(
             NoEscape(
-                r"The comparison of performance metrics for \polystat{}\
-                 and other static analyzers"
+                r"The comparison of performance metrics for \polystat{} " +
+                "and other static analyzers"
             )
         )
         table.append(NoEscape(r"\label{tab:metrics}"))
@@ -246,9 +246,9 @@ class ReportGenerator:
         table.append(tabular)
         table.add_caption(
             NoEscape(
-                r"Each analyzer has received the same set of tests and then\
-                its key metrics, which are explained in \cref{sec:metrics},\
-                have been collected."
+                "Each analyzer has received the same set of tests and " +
+                "then its key metrics, which are explained in " +
+                r"\cref{sec:metrics}, have been collected."
             )
         )
         table.append(NoEscape(r"\label{tab:statistics}"))
@@ -298,11 +298,11 @@ class ReportGenerator:
         table.append(NoEscape("\\bottomrule"))
         table.append(
             NoEscape(
-                r"\caption{Here, ``P'' means pass for Bad and Good cases,\
-                 ``PG'' means pass for Good cases,\
-                 ``PB'' means pass for Bad cases,\
-                 ``F'' means fails for Bad and Good cases,\
-                 and ``E'' means errors/exceptions during analysis}"
+                r"\caption{Here, ``P'' means pass for Bad and Good cases," +
+                "``PG'' means pass for Good cases," +
+                "``PB'' means pass for Bad cases," +
+                "``F'' means fails for Bad and Good cases," +
+                "and ``E'' means errors/exceptions during analysis}"
             )
         )
 
