@@ -246,9 +246,12 @@ class ReportGenerator:
         table.append(tabular)
         table.add_caption(
             NoEscape(
-                "Each analyzer has received the same set of tests and "
-                + "then its key metrics, which are explained in "
-                + r"\cref{sec:metrics}, have been collected."
+                "Each analyzer has received the same set of tests and then "
+                + r"its key metrics, which are explained in \cref{sec:metrics}"
+                + ", have been collected: the left column includes the name "
+                + "of the analyzer tested, the next one is the type of defect"
+                + r" as explained in \cref{sec:types}, then one column per "
+                + "each metric."
             )
         )
         table.append(NoEscape(r"\label{tab:statistics}"))
