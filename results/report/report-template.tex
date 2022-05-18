@@ -82,12 +82,12 @@ Total count per type of outcome:
 \text{Accuracy} = \frac{TP + TN}{\text{Total}}.
 \end{equation*}
 
-``Precision'' as a ratio of TP to the total number of TP+TN outcomes (predicted positives); this metric helps us understand how ``useful'' are positive detections of a defect in a program by a tool:
+``Precision'' as a ratio of TP to the total number of TP+FP outcomes (predicted positives); this metric helps us understand how ``useful'' are positive detections of a defect in a program by a tool:
 \begin{equation*}
 \text{Precision} = \frac{TP}{TP + FP}.
 \end{equation*}
 
-``Recall'' as a ratio of TP+TN to the total number of FP+FN programs (actual positives); this metric helps us understand how well are actual defects detected by a tool:
+``Recall'' as a ratio of TP to the total number of TP+FN programs (actual positives); this metric helps us understand how well are actual defects detected by a tool:
 \begin{equation*}
 \text{Recall} = \frac{TP}{TP + FN}.
 \end{equation*}
