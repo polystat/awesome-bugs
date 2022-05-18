@@ -258,12 +258,13 @@ class ReportGenerator:
         repo_url = "https://github.com/Polystat/awesome-bugs/blob/master/"
         test_paths = sorted(get_test_files_paths("tests"))
         table = LongTable(
-            "l|" + "c|" * (len(self.results) - 1) + "c", row_height=1.2
+            "l|l|" + "c|" * (len(self.results) - 1) + "c", row_height=1.2
         )
 
         # table head
         table.append(NoEscape("\\toprule"))
         table.add_row(
+            MultiColumn(size=1, data="Defect type", align="c|"),
             MultiColumn(size=1, data="File", align="c|"),
             *[Command("rotate", ar) for ar in self.results.keys()],
         )
@@ -284,11 +285,20 @@ class ReportGenerator:
                 )
             results[analyzer] = [result_paths, expts]
 
+        # Get all errors types
+        temp_path = os.path.join("tests", "errors.txt")
+        with open(temp_path, "r") as e:
+            errors = e.read().splitlines()
+
         for test in test_paths:
             url = os.path.join(repo_url, test.replace("\\", "/"))
             label = os.path.basename(test)
+            error_type = next(filter(lambda x: label.startswith(x), errors))
+            label = label.replace(error_type + "-", "")
+            error_type = error_type.replace("-", " ")
 
             table.add_row(
+                error_type,
                 hyperlink(url, label),
                 *[
                     self.get_test_case_result(test, *results[ar])
