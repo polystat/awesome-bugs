@@ -98,7 +98,7 @@ contains a program with a bug, while the `good` one has a similar program
 but without a bug.
 
 ### Analizers 
-The following static analyzers are participating in the comparison::
+The following static analyzers are participating in the comparison:
 
    * [Polystat](https://github.com/polystat/polystat)
    * [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/)
