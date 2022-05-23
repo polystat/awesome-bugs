@@ -36,6 +36,13 @@ bad:
             sub.
               100
               x
+  test.py: |
+    def test(x):
+        return 100 / (100 * (100 + (100 - x)))
+
+
+    if __name__ == "__main__":
+        print(test(200))
 good:
   source.cpp: |
     #include <iostream>
@@ -68,3 +75,10 @@ good:
               100
               x
         100
+  test.py: |
+    def test(x):
+        return (100 * (100 + (100 - x))) / 100
+    
+    
+    if __name__ == "__main__":
+        print(test(200))

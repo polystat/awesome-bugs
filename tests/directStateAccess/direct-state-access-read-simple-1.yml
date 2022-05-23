@@ -51,6 +51,18 @@ bad:
         a > @
         [self x] > n
           self.state.add x > @
+  test.py: |
+    class A:
+        _state = 0
+
+
+    class B(A):
+        def n(self, x):
+            return self._state + x
+
+
+    if __name__ == "__main__":
+        B().n(3)
 good:
   source.cpp: |
     #include <memory>
@@ -102,3 +114,18 @@ good:
         [self x] > n
           self.get_state self > s
           s.add x > @
+  test.py: |
+    class A:
+        _state = 0
+        
+        def get_state(self):
+            return self._state
+    
+    
+    class B(A):
+        def n(self, x):
+            return self.get_state() + x
+    
+    
+    if __name__ == "__main__":
+        B().n(3)

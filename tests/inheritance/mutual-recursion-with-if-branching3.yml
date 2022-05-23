@@ -97,6 +97,34 @@ bad:
             x.less v
             self.m self
             x.write (x.add 1)
+  test.py: |
+    class Base:
+        __x = 0
+
+        def n(self, v):
+            self.__x = v
+
+        def m(self, v):
+            self.n(v)
+
+        def incr_x(self):
+            self.__x += 1
+
+        def get_x(self):
+            return self.__x
+
+
+    class Derived(Base):
+        def n(self, v):
+            if self.get_x() < v:
+                self.m(v)
+            else:
+                self.incr_x()
+
+
+    if __name__ == "__main__":
+        derivedInstance = Derived()
+        derivedInstance.n(100)
 good:
   source.cpp: |
     #include <memory>
@@ -191,3 +219,32 @@ good:
             x.less v
             self.m self
             x.write (x.add 1)
+  test.py: |
+    class Base:
+        __x = 0
+    
+        def n(self, v):
+            self.__x = v
+    
+        def m(self, v):
+            self.__x += 1
+            self.n(v)
+    
+        def incr_x(self):
+            self.__x += 1
+    
+        def get_x(self):
+            return self.__x
+    
+    
+    class Derived(Base):
+        def n(self, v):
+            if self.get_x() < v:
+                self.m(v)
+            else:
+                self.incr_x()
+    
+    
+    if __name__ == "__main__":
+        derivedInstance = Derived()
+        derivedInstance.n(100)

@@ -93,6 +93,30 @@ bad:
             TRUE
             self.m self
             x.write (x.add 1)
+  test.py: |
+    class Base:
+        __x = 0
+
+        def n(self):
+            self.__x = 0
+
+        def m(self):
+            self.n()
+
+        def incr_x(self):
+            self.__x += 1
+
+
+    class Derived(Base):
+        def n(self):
+            if True:
+                self.m()
+            else:
+                self.incr_x()
+
+
+    if __name__ == "__main__":
+        print(Derived().n())
 good:
   source.cpp: |
     #include <memory>
@@ -180,3 +204,27 @@ good:
             FALSE
             self.m self
             x.write (x.add 1)
+  test.py: |
+    class Base:
+        __x = 0
+
+        def n(self):
+            self.__x = 0
+
+        def m(self):
+            self.n()
+
+        def incr_x(self):
+            self.__x += 1
+
+
+    class Derived(Base):
+        def n(self):
+            if False:
+                self.m()
+            else:
+                self.incr_x()
+
+
+    if __name__ == "__main__":
+        print(Derived().n())

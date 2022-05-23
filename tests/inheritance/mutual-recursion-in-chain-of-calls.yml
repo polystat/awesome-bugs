@@ -85,6 +85,30 @@ bad:
           self.m self v > @
         [self v] > l
           self.n self v > @
+  test.py: |
+    class Base:
+        __x = 0
+
+        def n(self, v):
+            self.__x = v
+
+        def o(self, v):
+            self.n(v)
+
+        def m(self, v):
+            self.o(v)
+
+
+    class Derived(Base):
+        def n(self, v):
+            self.m(v)
+
+        def k(self, v):
+            self.n(v)
+
+
+    if __name__ == "__main__":
+        print(Derived().k(12))
 good:
   source.cpp: |
     class Base {
@@ -165,3 +189,27 @@ good:
           self.m self v > @
         [self v] > l
           self.n self v > @
+  test.py: |
+    class Base:
+        __x = 0
+
+        def n(self, v):
+            self.__x = v
+
+        def o(self, v):
+            self.n(v)
+
+        def m(self, v):
+            self.o(v)
+
+
+    class Derived(Base):
+        def n1(self, v):
+            self.m(v)
+
+        def k(self, v):
+            self.n(v)
+
+
+    if __name__ == "__main__":
+        print(Derived().k(12))

@@ -52,6 +52,18 @@ bad:
         [self x] > n
           x.add 2 > tmp
           self.state.write tmp > @
+  test.py: |
+    class A:
+        _state = 0
+    
+    
+    class B(A):
+        def n(self, x):
+            self._state = x + 2
+    
+    
+    if __name__ == "__main__":
+        B().n(3)
 good:
   source.cpp: |
     #include <memory>
@@ -105,3 +117,19 @@ good:
         [self x] > n
           x.add 2 > tmp
           self.set_state self tmp > @
+  test.py: |
+    class A:
+        _state = 0
+    
+        def set_state(self, x):
+            self._state = x
+    
+    
+    class B(A):
+        def n(self, x):
+            tmp = x + 2
+            self.set_state(tmp)
+    
+    
+    if __name__ == "__main__":
+        B().n(3)

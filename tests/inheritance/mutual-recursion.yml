@@ -74,6 +74,24 @@ bad:
         base > @
         [self v] > n
           self.m self v > @
+  test.py: |
+    class Base:
+        __x = 0
+    
+        def n(self, v):
+            self.__x = v
+    
+        def m(self, v):
+            self.n(v)
+    
+    
+    class Derived(Base):
+        def n(self, v):
+            self.m(v)
+    
+    
+    if __name__ == "__main__":
+        print(Derived().m(12))
 good:
   source.cpp: |
     #include <memory>
@@ -140,3 +158,21 @@ good:
         base > @
         [self v] > n1
           self.m self v > @
+  test.py: |
+    class Base:
+        __x = 0
+
+        def n(self, v):
+            self.__x = v
+
+        def m(self, v):
+            self.n(v)
+
+
+    class Derived(Base):
+        def n1(self, v):
+            self.m(v)
+
+
+    if __name__ == "__main__":
+        print(Derived().m(12))

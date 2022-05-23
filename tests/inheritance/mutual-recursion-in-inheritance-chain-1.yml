@@ -82,6 +82,28 @@ bad:
 
       [] > derived_again
         derived > @
+  test.py: |
+    class Base:
+        __x = 0
+
+        def n(self, v):
+            self.__x = v
+
+        def m(self, v):
+            self.n(v)
+
+
+    class Derived(Base):
+        def n(self, v):
+            self.m(v)
+
+
+    class DerivedAgain(Derived):
+        pass
+
+
+    if __name__ == "__main__":
+        print(DerivedAgain().m(12))
 good:
   source.cpp: |
     #include <memory>
@@ -154,3 +176,25 @@ good:
           self.m self v > @
       [] > derived_again
         derived > @
+  test.py: |
+    class Base:
+        __x = 0
+
+        def n(self, v):
+            self.__x = v
+
+        def m(self, v):
+            self.n(v)
+
+
+    class Derived(Base):
+        def n1(self, v):
+            self.m(v)
+
+
+    class DerivedAgain(Derived):
+        pass
+
+
+    if __name__ == "__main__":
+        print(DerivedAgain().m(12))
