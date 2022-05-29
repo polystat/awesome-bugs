@@ -1,0 +1,66 @@
+title: Unjustified assumption in an inheritance chain with two not referentially transparent methods.
+description: >
+ Here methods g and g2 of the object parent have unjustified assumptions about method f.
+ As a result, the redefinition of method f in object child causes the properties of these methods to change. 
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x.sub 5 > y1
+          seq > @
+            assert (0.less y1)
+            x
+        [self y] > g
+          self.f self y > @
+        [self y] > g2
+          self.f self y > @
+        [self z] > h
+          z > @
+      [] > child
+        parent > @
+        [self y] > f
+          y > @
+        [self z] > h
+          self.g self z > @
+  test.py: |
+    ???
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x.sub 5 > y1
+          seq > @
+            assert (0.less y1)
+            x
+        [self y] > g
+          self.f self y > @
+        [self y] > g2
+          self.f self y > @
+        [self z] > h
+          z > @
+      [] > child
+        parent > @
+        [self x] > f
+          x.sub 5 > y1
+          seq > @
+            assert (0.less y1)
+            x
+        [self z] > h
+          self.g self z > @
+  test.py: |
+    ???

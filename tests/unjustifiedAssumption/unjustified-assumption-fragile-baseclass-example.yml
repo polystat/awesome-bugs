@@ -1,0 +1,52 @@
+title: Unjustified assumption in fragile class paper
+description: >
+ Example of the problem from the original paper.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > c
+      [self v] > l
+        assert (v.less 5) > @
+      [self v] > m
+        self.l self v > @
+      [self v] > n
+        v > @
+
+    [] > m
+      c > @
+      [self v] > l
+        v > @
+      [self v] > n
+        self.m self v > @
+  test.py: |
+    ???
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > c
+      [self v] > l
+        v > @
+      [self v] > m
+        self.l self v > @
+      [self v] > n
+        v > @
+
+    [] > m
+      c > @
+      [self v] > l
+        v > @
+      [self v] > n
+        self.m self v > @
+  test.py: |
+    ???
