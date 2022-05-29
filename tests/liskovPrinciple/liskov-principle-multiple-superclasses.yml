@@ -1,0 +1,62 @@
+title: Liskov principle violation in methods from multiple super classes
+description: >
+ Here the defect in the redefined method a affects inherited methods a and b.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    ???
+  test.py: |
+    [] > test
+      [] > grandparent
+        [self x] > a
+          10 > @
+        [self x] > b
+          self.a self x > @
+
+      [] > parent
+        test.grandparent > @
+        [self x] > f
+          x > @
+        [self x] > g
+          self.f self x > @
+
+      [] > child
+        test.parent > @
+        [self x] > a
+          seq > @
+            assert (x.less 100)
+            x
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > grandparent
+        [self x] > a
+          10 > @
+        [self x] > b
+          self.a self x > @
+
+      [] > parent
+        test.grandparent > @
+        [self x] > b
+          x > @
+
+      [] > child
+        test.parent > @
+        [self x] > a
+          seq > @
+            assert (x.less 100)
+            x
+  test.py: |
+    ???

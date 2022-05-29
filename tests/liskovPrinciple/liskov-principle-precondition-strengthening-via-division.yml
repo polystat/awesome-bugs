@@ -1,0 +1,41 @@
+title: Liskov principle violation via division
+description: >
+ Here the defect manifests in method f of object child.
+ The division imposed on the argument removes 0 from the input domain.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x > @
+      [] > child
+        test.parent > @
+        [self y] > f
+          10.div y > @
+  test.py: |
+    ???
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          10.div x > @
+      [] > child
+        test.parent > @
+        [self y] > f
+          10.div y > @
+  test.py: |
+    ???

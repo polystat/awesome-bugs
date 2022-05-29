@@ -1,0 +1,48 @@
+title: Liskov principle violation via Liskov principle violation via complete domain change
+description: >
+ Redefinition of method f in object derived causes complete change of the function input domain.
+ The domain changes from (-inf, 9) to (9, inf). 
+ The defects manifests as the domain did not just decrease in size but became non-overlapping with the original one.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    ???
+  test.py: |
+    [] > base
+      [self x] > f
+        seq > @
+          assert (x.less 9)
+          x.add 1
+    [] > derived
+      base > @
+      [self x] > f
+        seq > @
+          assert (x.greater 9)
+          x.sub 1
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > base
+      [self x] > f
+        seq > @
+          assert (x.less 9)
+          x.add 1
+    [] > derived
+      base > @
+      [self x] > f
+        seq > @
+          assert (x.less 20)
+          x.sub 1
+  test.py: |
+    ???

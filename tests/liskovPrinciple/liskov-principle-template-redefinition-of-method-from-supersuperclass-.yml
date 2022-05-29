@@ -1,0 +1,62 @@
+title: indirect Liskov principle violation in multiple methods via redefinition of one method
+description: >
+ Here the redefinition of method a in child causes accumulated methods b, f, and g to manifest the defect.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    ???
+  test.py: |
+    [] > test
+      [] > grandparent
+        [self x] > a
+          10 > @
+        [self x] > b
+          self.a self x > @
+
+      [] > parent
+        test.grandparent > @
+        [self x] > f
+          self.a self x > @
+        [self x] > g
+          self.a self x > @
+
+      [] > child
+        test.parent > @
+        [self x] > a
+          seq > @
+            assert (x.less 100)
+            x
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > grandparent
+        [self x] > a
+          10 > @
+        [self x] > b
+          self.a self x > @
+
+      [] > parent
+        test.grandparent > @
+        [self x] > b
+          x > @
+
+      [] > child
+        test.parent > @
+        [self x] > a
+          seq > @
+            assert (x.less 100)
+            x
+  test.py: |
+    ???
