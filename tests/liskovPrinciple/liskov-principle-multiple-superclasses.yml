@@ -1,4 +1,4 @@
-title: Liskov principle violation via in multiple super classes
+title: Liskov principle violation in methods from multiple super classes
 description: >
  Here the defect in the redefined method a affects inherited methods a and b.
 features:
