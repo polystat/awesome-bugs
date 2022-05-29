@@ -1,0 +1,50 @@
+title: Liskov principle violation via complete domain change
+description: >
+ Here the defect manifests in method g of object child that redefines method g of object parent.
+ The method strengthens the preconditions of the original method. 
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self y] > g
+          y > @
+        [self z] > h
+          z > @
+      [] > child
+        parent > @
+        [self x] > g
+          x.sub 5 > y1
+          seq > @
+            assert (0.less y1)
+            y1
+  test.py: |
+    ???
+
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self y] > g
+          y > @
+        [self z] > h
+          z > @
+      [] > child
+        parent > @
+        [self x] > g
+          x.sub 5 > @
+            
+  test.py: |
+    ???

@@ -1,0 +1,58 @@
+title: Liskov principle violation via redefinition in multiple methods
+description: >
+ Here, the defect manifests in changes of preconditions for two methods. 
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x.sub 5 > y1
+          seq > @
+            assert ((y1.add 5).greater 0)
+            x
+        [self z] > h
+          z > @
+      [] > child
+        parent > @
+        [self y] > f
+          seq > @
+            assert (y.less 0)
+            y
+        [self z] > h
+          10.div z > @
+  test.py: |
+    ???
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > a
+          x.sub 5 > y1
+          seq > @
+            assert ((y1.add 5).greater 0)
+            x
+        [self z] > b
+          z > @
+      [] > child
+        parent > @
+        [self y] > f
+          seq > @
+            assert (y.less 0)
+            y
+        [self z] > h
+          10.div z > @
+  test.py: |
+    ???

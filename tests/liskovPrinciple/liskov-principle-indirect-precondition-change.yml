@@ -1,0 +1,46 @@
+title: Liskov principle violation via change in another method
+description: >
+ Here, the defect manifests not only in method f, but also in the inherited method g.
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x > @
+        [self x] > g
+          self.f self x > @
+
+      [] > child
+        test.parent > @
+        [self y] > f
+          10.div y > @
+  test.py: |
+    ???
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > test
+      [] > parent
+        [self x] > f
+          x > @
+        [self x] > g
+          self.f self x > @
+
+      [] > child
+        test.parent > @
+        [self y] > f
+          y > @
+  test.py: |
+    ???
