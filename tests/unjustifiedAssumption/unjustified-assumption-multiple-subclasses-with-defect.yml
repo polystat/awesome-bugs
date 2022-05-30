@@ -1,0 +1,59 @@
+title: Unjustified assumption in two participants of the inheritance chain
+description: >
+ Here, two members of the inheritance chain have an unjustified assumption about method m.
+ As a result, methods k and m of the osnova class contain a defect. 
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+bad:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+    [] > base
+      [self v] > n
+        seq > @
+          assert (v.less 10)
+          2
+      [self v] > m
+        self.n self v > @
+
+    [] > osnova
+      base > @
+      [self x] > k
+        self.n self x > @
+
+    [] > derived
+      osnova > @
+      [self v] > n
+        33 > @
+  test.py: |
+    ???
+good:
+  source.cpp: |
+    ???
+  Test.java: |
+    ???
+  test.eo: |
+   [] > base
+      [self v] > n
+        seq > @
+          assert (v.less 10)
+          2
+      [self v] > m
+        self.n self 2 > @
+
+    [] > osnova
+      base > @
+      [self x] > k
+        self.n self 2 > @
+
+    [] > derived
+      osnova > @
+      [self v] > n
+        33 > @
+  test.py: |
+    ???
