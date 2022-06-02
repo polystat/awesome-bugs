@@ -76,7 +76,7 @@ bad:
 
     public class Test {
         public static void main(String[] args) {
-            Base d = ((new VeryOuter()).new Outer()).new DerivedAgain();
+            VeryOuter.Outer.Base d = ((new VeryOuter()).new Outer()).new DerivedAgain();
             d.m(12);
         }
     }
@@ -163,7 +163,7 @@ good:
 
     public class Test {
         public static void main(String[] args) {
-            Base d = ((new VeryOuter()).new Outer()).new DerivedAgain();
+            VeryOuter.Outer.Base d = ((new VeryOuter()).new Outer()).new DerivedAgain();
             d.m(12);
         }
     }

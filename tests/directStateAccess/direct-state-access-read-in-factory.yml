@@ -54,7 +54,7 @@ bad:
       [] > b
         a_factory.get_a > @
         [self x] > n
-          a_factory.get_a.state.add x > @
+          self.state.add x > @
 good:
   source.cpp: |
     class AFactory {

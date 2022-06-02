@@ -39,7 +39,7 @@ bad:
         public static void main(String[] args) {
             A a = new A();
             Vector<String> v_s = new Vector<>();
-            cout << a.doSomething(v_s);
+            a.doSomething(v_s);
         }
     }
   test.eo: |

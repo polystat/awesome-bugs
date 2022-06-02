@@ -54,7 +54,6 @@ bad:
     }
 
     class Derived extends Base {
-        @Override
         public void n(int v) {
             m(v);
         }
@@ -157,11 +156,9 @@ good:
     }
 
     class Derived extends Base {
-        @Override
         public void n1(int v) {
             m(v);
         }
-        @Override
         public void l(int v) {
             n(v);
         }

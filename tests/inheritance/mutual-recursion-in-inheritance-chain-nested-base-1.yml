@@ -164,6 +164,7 @@ good:
             VeryOuter.Outer.Base d = new DerivedAgain();
             d.m(12);
         }
+    }
   test.eo: |
     [] > test
       [] > very_outer

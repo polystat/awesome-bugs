@@ -69,10 +69,10 @@ bad:
     }
 
     class Derived extends Base {
+        private static final Random RANDOM = new Random();
         @Override
         public void n() {
-            Random rand = new Random();
-            int randomNumber = rand.nextInt();
+            int randomNumber = RANDOM.nextInt();
             if (randomNumber == 0) {
                 m();
             }
@@ -171,10 +171,10 @@ good:
     }
 
     class Derived extends Base {
+        private static final Random RANDOM = new Random();
         @Override
         public void n() {
-            Random rand = new Random();
-            int randomNumber = rand.nextInt();
+            int randomNumber = RANDOM.nextInt();
             if (randomNumber % 3 == 10) {
                 m();
             }

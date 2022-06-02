@@ -57,7 +57,7 @@ bad:
       [] > c
         b > @
         [self x] > n
-          b.state.add x > @
+          self.state.add x > @
 good:
   source.cpp: |
     #include <memory>

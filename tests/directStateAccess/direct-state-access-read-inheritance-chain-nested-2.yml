@@ -75,7 +75,7 @@ bad:
       [] > d
         c > @
         [self x] > n
-          a.self.inner_a.very_inner_a.state.add x > @
+          self.inner_a.very_inner_a.state.add x > @
 good:
   source.cpp: |
     class A {

@@ -110,7 +110,7 @@ good:
       [] > a
         memory > state
         [self x] > set_state
-            self.state.write x > @
+          self.state.write x > @
       [] > b
         a > @
       [] > c

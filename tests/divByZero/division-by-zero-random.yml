@@ -44,10 +44,10 @@ bad:
     }
 
     public class Test {
+        private static final Random RANDOM = new Random();
         public static void main(String[] args) {
             A a = new A();
-            Random rand = new Random();
-            int randomNumber = rand.nextInt();
+            int randomNumber = RANDOM.nextInt();
             a.setValue(randomNumber);
             System.out.println(a.doSomething(10));
         }
@@ -108,10 +108,10 @@ good:
     }
 
     public class Test {
+        private static final Random RANDOM = new Random();
         public static void main(String[] args) {
             A a = new A();
-            Random rand = new Random();
-            int randomNumber = rand.nextInt();
+            int randomNumber = RANDOM.nextInt();
             if (randomNumber % 3 == 10) {
                 a.setValue(randomNumber);
                 System.out.println(a.doSomething(10));
