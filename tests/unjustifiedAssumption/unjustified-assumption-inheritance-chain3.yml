@@ -9,9 +9,96 @@ features:
   - polymorphism
 bad:
   source.cpp: |
-    ???
+    #include <iostream>
+    #include <cassert>
+  
+    class parent {
+    public:
+        virtual int f(int x) {
+            int t = x - 5;
+            assert(0 < t);
+            return x;
+        }
+        virtual int g(int y) {
+            return f(y);
+        }
+        virtual int g2(int y) {
+            return f(y);
+        }
+        virtual int h(int z) {
+            return z;
+        }
+  
+        virtual ~parent() = default;
+    };
+  
+    class child : public parent {
+    public:
+        virtual int f(int y) override {
+            return y;
+        }
+        virtual int h(int z) override {
+            return g(z);
+        }
+    };
+  
+    auto main() -> int {
+        int x = 10;
+  
+        auto* p = new parent();
+        p->g(x);
+        x -= 5;
+        p->h(x);
+        delete p;
+  
+        p = new child();
+        p->g(x);
+        p->h(x);
+        delete p;
+    }
   Test.java: |
-    ???
+    class Parent {
+        public int f(int x) {
+            int t = x - 5;
+            assert(0 < t);
+            return x;
+        }
+        public int g(int y) {
+            return this.f(y);
+        }
+        public int g2(int y) {
+            return this.f(y);
+        }
+        public int h(int z) {
+            return z;
+        }
+    }
+
+    class Child extends Parent {
+        @Override
+        public int f(int y) {
+            return y;
+        }
+        @Override
+        public int h(int z) {
+            return this.g(z);
+        }
+    };
+
+    public class Test {
+        public static void main(String[] args) {
+            int x = 10;
+
+            Parent p = new Parent();
+            p.g(x);
+            x -= 5;
+            p.h(x);
+
+            p = new Child();
+            p.g(x);
+            p.h(x);
+        }
+    }
   test.eo: |
     [] > test
       [] > parent
@@ -33,12 +120,137 @@ bad:
         [self z] > h
           self.g self z > @
   test.py: |
-    ???
+    class Parent:
+        def f(self, x):
+            t = x - 5
+            assert 0 < t
+            return x
+
+        def g(self, y):
+            return self.f(y)
+
+        def g2(self, y):
+            return self.f(y)
+
+        def h(self, z):
+            return z
+
+
+    class Child(Parent):
+        def f(self, y):
+            return y
+
+        def h(self, z):
+            return self.g(z)
+
+
+    if __name__ == "__main__":
+        a = 10
+
+        p = Parent()
+        p.g(a)
+        a -= 5
+        p.h(a)
+
+        p = Child()
+        p.g(a)
+        p.h(a)
 good:
   source.cpp: |
-    ???
+    #include <iostream>
+    #include <cassert>
+
+    class parent {
+    public:
+        virtual int f(int x) {
+            int t = x - 5;
+            assert(0 < t);
+            return x;
+        }
+        virtual int g(int y) {
+            return f(y);
+        }
+        virtual int g2(int y) {
+            return f(y);
+        }
+        virtual int h(int z) {
+            return z;
+        }
+
+        virtual ~parent() = default;
+    };
+
+    class child : public parent {
+    public:
+        virtual int f(int x) override {
+            int t = x - 5;
+            assert(0 < t);
+            return x;
+        }
+        virtual int h(int z) override {
+            return g(z);
+        }
+    };
+
+    auto main() -> int {
+        int x = 10;
+
+        auto* p = new parent();
+        p->g(x);
+        x -= 5;
+        p->h(x);
+        delete p;
+
+        p = new child();
+        p->g(x);
+        p->h(x);
+        delete p;
+    }
   Test.java: |
-    ???
+    class Parent {
+        public int f(int x) {
+            int t = x - 5;
+            assert(0 < t);
+            return x;
+        }
+        public int g(int y) {
+            return this.f(y);
+        }
+        public int g2(int y) {
+            return this.f(y);
+        }
+        public int h(int z) {
+            return z;
+        }
+    }
+
+    class Child extends Parent {
+        @Override
+        public int f(int x) {
+            int t = x - 5;
+            assert(0 < t);
+            return x;
+        }
+        @Override
+        public int h(int z) {
+            return this.g(z);
+        }
+    };
+
+    public class Test {
+        public static void main(String[] args) {
+            int x = 10;
+
+            Parent p = new Parent();
+            p.g(x);
+            x -= 5;
+            p.h(x);
+
+            p = new Child();
+            p.g(x);
+            p.h(x);
+        }
+    }
   test.eo: |
     [] > test
       [] > parent
@@ -63,4 +275,41 @@ good:
         [self z] > h
           self.g self z > @
   test.py: |
-    ???
+    class Parent:
+        def f(self, x):
+            t = x - 5
+            assert 0 < t
+            return x
+    
+        def g(self, y):
+            return self.f(y)
+    
+        def g2(self, y):
+            return self.f(y)
+    
+        def h(self, z):
+            return z
+    
+    
+    class Child(Parent):
+        def f(self, x):
+            t = x - 5
+            assert 0 < t
+            return x
+    
+        def h(self, z):
+            return self.g(z)
+    
+    
+    if __name__ == "__main__":
+        a = 10
+    
+        p = Parent()
+        p.g(a)
+        a -= 5
+        p.h(a)
+    
+        p = Child()
+        p.g(a)
+        p.h(a)
+

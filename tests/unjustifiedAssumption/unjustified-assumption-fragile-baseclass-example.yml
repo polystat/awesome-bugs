@@ -8,13 +8,94 @@ features:
   - polymorphism
 bad:
   source.cpp: |
-    ???
+    #include <iostream>
+    #include <cassert>
+    
+    class C {
+    public:
+        virtual int l(int v) {
+            assert(v > 5);
+            return v;
+        }
+        virtual int m(int v) {
+            return l(v);
+        }
+        virtual int n(int v) {
+            return v;
+        }
+    
+        virtual ~C() = default;
+    };
+    
+    class M : public C {
+    public:
+        virtual int l(int v) override {
+            return v;
+        }
+        virtual int n(int v) override {
+            return m(v);
+        }
+    };
+    
+    auto main() -> int {
+        int x = 10;
+    
+        auto* p = new C();
+        p->m(x);
+        x -= 5;
+        p->n(x);
+        delete p;
+    
+        p = new M();
+        p->m(x);
+        p->n(x);
+        delete p;
+    }
   Test.java: |
-    ???
+    class C {
+        public int l(int v) {
+            assert(v > 5);
+            return v;
+        }
+        public int m(int v) {
+            return l(v);
+        }
+        public int n(int v) {
+            return v;
+        }
+    };
+    
+    class M extends C {
+        @Override
+        public int l(int v) {
+            return v;
+        }
+        @Override
+        public int n(int v) {
+            return m(v);
+        }
+    };
+    
+    public class Test {
+        public static void main(String[] args) {
+            int x = 10;
+    
+            C p = new C();
+            p.m(x);
+            x -= 5;
+            p.n(x);
+    
+            p = new M();
+            p.m(x);
+            p.n(x);
+        }
+    }
   test.eo: |
     [] > c
       [self v] > l
-        assert (v.less 5) > @
+        seq > @
+          assert (v.less 5)
+          x
       [self v] > m
         self.l self v > @
       [self v] > n
@@ -27,12 +108,119 @@ bad:
       [self v] > n
         self.m self v > @
   test.py: |
-    ???
+    class C:
+        def l(self, v):
+            assert v > 0
+            return v
+
+        def m(self, v):
+            return self.l(v)
+
+        def n(self, v):
+            return v
+
+
+    class M(C):
+        def l(self, v):
+            return v
+
+        def n(self, v):
+            return self.m(v)
+
+
+    if __name__ == "__main__":
+        a = 10
+
+        p = C()
+        p.m(a)
+        a -= 5
+        p.n(a)
+
+        p = M()
+        p.m(a)
+        p.n(a)
 good:
   source.cpp: |
-    ???
+    #include <iostream>
+    #include <cassert>
+
+    class C {
+    public:
+        virtual int l(int v) {
+            return v;
+        }
+        virtual int m(int v) {
+            return l(v);
+        }
+        virtual int n(int v) {
+            return v;
+        }
+
+        virtual ~C() = default;
+    };
+
+    class M : public C {
+    public:
+        virtual int l(int v) override {
+            return v;
+        }
+        virtual int n(int v) override {
+            return m(v);
+        }
+    };
+
+    auto main() -> int {
+        int x = 10;
+
+        auto* p = new C();
+        p->m(x);
+        x -= 5;
+        p->n(x);
+        delete p;
+
+        p = new M();
+        p->m(x);
+        p->n(x);
+        delete p;
+    }
   Test.java: |
-    ???
+    class C {
+        public int l(int v) {
+            return v;
+        }
+        public int m(int v) {
+            return l(v);
+        }
+        public int n(int v) {
+            return v;
+        }
+    };
+
+    class M extends C {
+        @Override
+        public int l(int v) {
+            return v;
+        }
+        @Override
+        public int n(int v) {
+            return m(v);
+        }
+    };
+
+    public class Test {
+        public static void main(String[] args) {
+            int x = 10;
+
+            C p = new C();
+            p.m(x);
+            x -= 5;
+            p.n(x);
+
+            p = new M();
+            p.m(x);
+            p.n(x);
+        }
+    }
   test.eo: |
     [] > c
       [self v] > l
@@ -49,4 +237,33 @@ good:
       [self v] > n
         self.m self v > @
   test.py: |
-    ???
+    class C:
+        def l(self, v):
+            return v
+    
+        def m(self, v):
+            return self.l(v)
+    
+        def n(self, v):
+            return v
+    
+    
+    class M(C):
+        def l(self, v):
+            return v
+    
+        def n(self, v):
+            return self.m(v)
+    
+    
+    if __name__ == "__main__":
+        a = 10
+    
+        p = C()
+        p.m(a)
+        a -= 5
+        p.n(a)
+    
+        p = M()
+        p.m(a)
+        p.n(a)

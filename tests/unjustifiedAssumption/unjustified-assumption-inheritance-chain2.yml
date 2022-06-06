@@ -132,6 +132,44 @@ bad:
           y > @
         [self z] > h
           self.g self z > @
+  test.py: |
+    class Parent:
+        def f(self, x):
+            t = x - 5
+            assert 0 < t
+            return x
+
+        def g(self, y):
+            return y
+
+        def h(self, z):
+            return z
+
+
+    class Child(Parent):
+        def g(self, y):
+            return self.f(y)
+
+
+    class GrandChild(Child):
+        def f(self, y):
+            return y
+
+        def h(self, z):
+            return self.g(z)
+
+
+    if __name__ == "__main__":
+        a = 10
+
+        p = Parent()
+        p.g(a)
+        a -= 5
+        p.h(a)
+
+        p = GrandChild()
+        p.g(a)
+        p.h(a)
 good:
   source.cpp: |
     #include <iostream>
@@ -245,3 +283,38 @@ good:
         child > @
         [self z] > h
           self.g self z > @
+  test.py: |
+    class Parent:
+        def f(self, x):
+            t = x - 5
+            assert 0 < t
+            return x
+
+        def g(self, y):
+            return y
+
+        def h(self, z):
+            return z
+
+
+    class Child(Parent):
+        def g(self, y):
+            return self.f(y)
+
+
+    class GrandChild(Child):
+        def h(self, z):
+            return self.g(z)
+
+
+    if __name__ == "__main__":
+        a = 10
+
+        p = Parent()
+        p.g(a)
+        a -= 5
+        p.h(a)
+
+        p = GrandChild()
+        p.g(a)
+        p.h(a)

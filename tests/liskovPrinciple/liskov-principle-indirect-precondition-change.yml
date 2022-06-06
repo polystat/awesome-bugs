@@ -8,9 +8,54 @@ features:
   - polymorphism
 bad:
   source.cpp: |
-    ???
+    #include <iostream>
+
+    class Parent {
+    public:
+        virtual int f(int x) {
+            return x;
+        }
+        virtual int g(int x) {
+            return f(x);
+        }
+
+        virtual ~Parent() = default;
+    };
+
+    class Child : public Parent {
+    public:
+        virtual int f(int y) override {
+            return 10/y;
+        }
+    };
+
+    auto main() -> int {
+        Parent* p = new Child();
+        p->f(10);
+    }
   Test.java: |
-    ???
+    class Parent {
+        public int f(int x) {
+            return x;
+        }
+        public int g(int x) {
+            return this.f(x);
+        }
+    }
+
+    class Child extends Parent {
+        @Override
+        public int f(int y) {
+            return 10/y;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Parent childInstance = new Child();
+            childInstance.f(10);
+        }
+    }
   test.eo: |
     [] > test
       [] > parent
@@ -20,16 +65,76 @@ bad:
           self.f self x > @
 
       [] > child
-        test.parent > @
+        parent > @
         [self y] > f
           10.div y > @
   test.py: |
-    ???
+    class Parent:
+        def f(self, x):
+            return x
+
+        def g(self, y):
+            return self.f(y)
+
+
+    class Child(Parent):
+        def f(self, y):
+            return 10/y
+
+
+    if __name__ == "__main__":
+        p = Child()
+        p.f(10)
 good:
   source.cpp: |
-    ???
+    #include <iostream>
+
+    class Parent {
+    public:
+        virtual int f(int x) {
+            return x;
+        }
+        virtual int g(int x) {
+            return f(x);
+        }
+
+        virtual ~Parent() = default;
+    };
+
+    class Child : public Parent {
+    public:
+        virtual int f(int y) override {
+            return y;
+        }
+    };
+
+    auto main() -> int {
+        Parent* p = new Child();
+        p->f(10);
+    }
   Test.java: |
-    ???
+    class Parent {
+        public int f(int x) {
+            return x;
+        }
+        public int g(int x) {
+            return this.f(x);
+        }
+    }
+
+    class Child extends Parent {
+        @Override
+        public int f(int y) {
+            return y;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Parent childInstance = new Child();
+            childInstance.f(10);
+        }
+    }
   test.eo: |
     [] > test
       [] > parent
@@ -39,8 +144,23 @@ good:
           self.f self x > @
 
       [] > child
-        test.parent > @
+        parent > @
         [self y] > f
           y > @
   test.py: |
-    ???
+    class Parent:
+        def f(self, x):
+            return x
+    
+        def g(self, y):
+            return self.f(y)
+    
+    
+    class Child(Parent):
+        def f(self, y):
+            return y
+    
+    
+    if __name__ == "__main__":
+        p = Child()
+        p.f(10)

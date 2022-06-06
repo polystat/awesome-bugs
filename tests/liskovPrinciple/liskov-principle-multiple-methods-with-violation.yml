@@ -8,9 +8,70 @@ features:
   - polymorphism
 bad:
   source.cpp: |
-    ???
+    #include <iostream>
+    #include <cassert>
+
+    class Parent {
+    public:
+        virtual int f(int x) {
+            int t = x - 5;
+            assert(t + 5 > 0);
+            return x;
+        }
+        virtual int h(int z) {
+            return z;
+        }
+
+        virtual ~Parent() = default;
+    };
+
+    class Child : public Parent {
+    public:
+        int f(int y) override {
+            assert(y < 0);
+            return y;
+        }
+        int h (int z) override {
+            return 10/z;
+        }
+    };
+
+    auto main() -> int {
+        Parent* p = new Child();
+        p->f(10);
+        p->h(10);
+    }
   Test.java: |
-    ???
+    class Parent {
+        public int f(int x) {
+            int t = x - 5;
+            assert t + 5 > 0;
+            return x;
+        }
+        public int h(int z) {
+            return z;
+        }
+    }
+
+    class Child extends Parent {
+        @Override
+        public int f(int y) {
+            assert y < 0;
+            return y;
+        }
+        @Override
+        public int h(int z) {
+            return 10/z;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Parent childInstance = new Child();
+            childInstance.f(10);
+            childInstance.h(10);
+        }
+    }
   test.eo: |
     [] > test
       [] > parent
@@ -30,12 +91,92 @@ bad:
         [self z] > h
           10.div z > @
   test.py: |
-    ???
+    class Parent:
+        def f(self, x):
+            t = x - 5
+            assert t + 5 > 0
+            return x
+
+        def h(self, z):
+            return z
+
+
+    class Child(Parent):
+        def f(self, y):
+            assert y < 0
+            return y
+
+        def h(self, z):
+            return 10/z
+
+
+    if __name__ == "__main__":
+        p = Child()
+        p.f(10)
 good:
   source.cpp: |
-    ???
+    #include <iostream>
+    #include <cassert>
+
+    class Parent {
+    public:
+        virtual int a(int x) {
+            int t = x - 5;
+            assert(t + 5 > 0);
+            return x;
+        }
+        virtual int b(int z) {
+            return z;
+        }
+
+        virtual ~Parent() = default;
+    };
+
+    class Child : public Parent {
+    public:
+        int f(int y) {
+            assert(y < 0);
+            return y;
+        }
+        int h(int z) {
+            return 10/z;
+        }
+    };
+
+    auto main() -> int {
+        Child* p = new Child();
+        p->f(10);
+        p->h(10);
+    }
   Test.java: |
-    ???
+    class Parent {
+        public int a(int x) {
+            int t = x - 5;
+            assert t + 5 > 0;
+            return x;
+        }
+        public int b(int z) {
+            return z;
+        }
+    }
+
+    class Child extends Parent {
+        public int f(int y) {
+            assert y < 0;
+            return y;
+        }
+        public int h(int z) {
+            return 10/z;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Child childInstance = new Child();
+            childInstance.f(10);
+            childInstance.h(10);
+        }
+    }
   test.eo: |
     [] > test
       [] > parent
@@ -55,4 +196,25 @@ good:
         [self z] > h
           10.div z > @
   test.py: |
-    ???
+    class Parent:
+        def a(self, x):
+            t = x - 5
+            assert t + 5 > 0
+            return x
+    
+        def b(self, z):
+            return z
+    
+    
+    class Child(Parent):
+        def f(self, y):
+            assert y < 0
+            return y
+    
+        def h(self, z):
+            return 10/z
+    
+    
+    if __name__ == "__main__":
+        p = Child()
+        p.f(10)

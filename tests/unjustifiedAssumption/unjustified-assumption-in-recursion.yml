@@ -1,7 +1,8 @@
-title: Unjustified assumption in two participants of the inheritance chain
+title: Unjustified assumption in presence of recursion
 description: >
- Here, two members of the inheritance chain have an unjustified assumption about method m.
- As a result, methods k and m of the osnova class contain a defect. 
+  In this test case the problem manifests due to changes in preconditions
+  of method n after redefinition. The redefinition also causes the methods
+  to become mutually recursive.
 features:
   - inheritance
   - overriding
@@ -25,17 +26,10 @@ bad:
         virtual ~Base() = default;
     };
 
-    class Osnova : public Base {
-    public:
-        virtual int k(int v) {
-            return n(v);
-        }
-    };
-
-    class Derived : public Osnova {
+    class Derived : public Base {
     public:
         virtual int n(int v) override {
-            return 33;
+            return m(v);
         }
     };
 
@@ -62,20 +56,14 @@ bad:
         public int m(int v) {
             return n(v);
         }
-    }
+    };
 
-    class Osnova extends Base {
-        public int k(int v) {
-            return n(v);
-        }
-    }
-
-    class Derived extends Osnova {
+    class Derived extends Base {
         @Override
         public int n(int v) {
-            return 33;
+            return m(v);
         }
-    }
+    };
 
     public class Test {
         public static void main(String[] args) {
@@ -92,23 +80,18 @@ bad:
         }
     }
   test.eo: |
-    [] > base
-      [self v] > n
-        seq > @
-          assert (v.less 10)
-          2
-      [self v] > m
-        self.n self v > @
-
-    [] > osnova
-      base > @
-      [self x] > k
-        self.n self x > @
-
-    [] > derived
-      osnova > @
-      [self v] > n
-        33 > @
+    [] > test
+      [] > base
+        [self v] > n
+          seq > @
+            assert (v.less 10)
+            2
+        [self v] > m
+          self.n self v > @
+      [] > derived
+        base > @
+        [self v] > n
+          self.m self v > @
   test.py: |
     class Base:
         def n(self, v):
@@ -119,14 +102,9 @@ bad:
             return self.n(v)
 
 
-    class Osnova(Base):
-        def k(self, v):
-            return self.n(v)
-
-
-    class Derived(Osnova):
+    class Derived(Base):
         def n(self, v):
-            return 33
+            return self.m(v)
 
 
     if __name__ == "__main__":
@@ -152,23 +130,17 @@ good:
             return 2;
         }
         virtual int m(int v) {
-            return n(2);
+            return n(v);
         }
 
         virtual ~Base() = default;
     };
 
-    class Osnova : public Base {
-    public:
-        virtual int k(int v) {
-            return n(2);
-        }
-    };
-
-    class Derived : public Osnova {
+    class Derived : public Base {
     public:
         virtual int n(int v) override {
-            return 33;
+            assert (v < 10);
+            return v;
         }
     };
 
@@ -193,22 +165,17 @@ good:
             return 2;
         }
         public int m(int v) {
-            return n(2);
+            return n(v);
         }
-    }
+    };
 
-    class Osnova extends Base {
-        public int k(int v) {
-            return n(2);
-        }
-    }
-
-    class Derived extends Osnova {
+    class Derived extends Base {
         @Override
         public int n(int v) {
-            return 33;
+            assert v < 10;
+            return v;
         }
-    }
+    };
 
     public class Test {
         public static void main(String[] args) {
@@ -225,23 +192,20 @@ good:
         }
     }
   test.eo: |
-    [] > base
-      [self v] > n
-        seq > @
-          assert (v.less 10)
-          2
-      [self v] > m
-        self.n self 2 > @
-
-    [] > osnova
-      base > @
-      [self x] > k
-        self.n self 2 > @
-
-    [] > derived
-      osnova > @
-      [self v] > n
-        33 > @
+    [] > test
+      [] > base
+        [self v] > n
+          seq > @
+            assert (v.less 10)
+            2
+        [self v] > m
+          self.n self v > @
+      [] > derived
+        base > @
+        [self v] > n
+          seq > @
+            assert (v.less 10)
+            v
   test.py: |
     class Base:
         def n(self, v):
@@ -249,17 +213,13 @@ good:
             return 2
     
         def m(self, v):
-            return self.n(2)
+            return self.n(v)
 
 
-    class Osnova(Base):
-        def k(self, v):
-            return self.n(2)
-    
-    
-    class Derived(Osnova):
+    class Derived(Base):
         def n(self, v):
-            return 33
+            assert v < 10
+            return v
     
     
     if __name__ == "__main__":
