@@ -66,7 +66,7 @@ bad:
             }
 
             public int g(int y) {
-                return f(y);
+                return this.f(y);
             }
 
             public int h(int z) {
@@ -82,7 +82,7 @@ bad:
         }
         @Override
         public int h(int z) {
-            return g(z);
+            return this.g(z);
         }
     };
 
@@ -174,7 +174,7 @@ good:
             }
 
             public int g(int y) {
-                return f(y);
+                return this.f(y);
             }
 
             public int h(int z) {
@@ -186,7 +186,7 @@ good:
     class Child extends ParentFactory.GetParent {
         @Override
         public int h(int z) {
-            return g(z);
+            return this.g(z);
         }
     };
 

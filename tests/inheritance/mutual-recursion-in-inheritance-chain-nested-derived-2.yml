@@ -54,7 +54,7 @@ bad:
             x = v;
         }
         public void m(int v) {
-            n(v);
+            this.n(v);
         }
     }
     
@@ -65,7 +65,7 @@ bad:
             class DerivedAgain extends Derived {
                 @Override
                 public void n(int v) {
-                    m(v);
+                    this.m(v);
                 }
             }
         }
@@ -139,7 +139,7 @@ good:
             x = v;
         }
         public void m(int v) {
-            n(v);
+            this.n(v);
         }
     }
     
@@ -149,7 +149,7 @@ good:
 
             class DerivedAgain extends Derived {
                 public void n1(int v) {
-                    m(v);
+                    this.m(v);
                 }
             }
         }

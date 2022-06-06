@@ -91,7 +91,7 @@ good:
     class B extends AFactory.GetA {
         public void n(int x) {
             int tmp = x + 2;
-            setState(tmp);
+            this.setState(tmp);
         }
     }
 

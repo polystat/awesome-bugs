@@ -95,7 +95,7 @@ good:
     class B extends A {
         void n(int x) {
             int tmp = x + 2;
-            setState(tmp);
+            this.setState(tmp);
         }
     }
 

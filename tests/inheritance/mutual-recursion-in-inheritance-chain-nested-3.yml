@@ -63,14 +63,14 @@ bad:
 
             class Derived extends Base {
                 public void m(int v) {
-                    n(v);
+                    this.n(v);
                 }
             }
 
             class DerivedAgain extends Derived {
                 @Override
                 public void n(int v) {
-                    m(v);
+                    this.m(v);
                 }
             }
         }
@@ -152,13 +152,13 @@ good:
 
             class Derived extends Base {
                 public void m(int v) {
-                    n(v);
+                    this.n(v);
                 }
             }
 
             class DerivedAgain extends Derived {
                 public void n1(int v) {
-                    m(v);
+                    this.m(v);
                 }
             }
         }

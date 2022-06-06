@@ -124,7 +124,7 @@ good:
 
     class D extends C {
         public int n(int x) {
-            return getState() + x;
+            return this.getState() + x;
         }
     }
 

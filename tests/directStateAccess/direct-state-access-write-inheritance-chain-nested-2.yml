@@ -125,7 +125,7 @@ good:
     class D extends C {
         public void n(int x) {
             int tmp = x + 2;
-            setState(tmp);
+            this.setState(tmp);
         }
     }
 

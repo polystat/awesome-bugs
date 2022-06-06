@@ -102,7 +102,7 @@ good:
 
     class B extends A.Inner.VeryInner {
         public int n(int x) {
-            return getState() + x;
+            return this.getState() + x;
         }
     }
 

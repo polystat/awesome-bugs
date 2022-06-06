@@ -67,13 +67,13 @@ bad:
             return x;
         }
         public int g(int y) {
-            return f(y);
+            return this.f(y);
         }
         public int gg(int y2) {
-            return g(y2);
+            return this.g(y2);
         }
         public int ggg(int y3) {
-            return gg(y3);
+            return this.gg(y3);
         }
         public int h(int z) {
             return z;
@@ -87,7 +87,7 @@ bad:
         }
         @Override
         public int h(int z) {
-            return ggg(z);
+            return this.ggg(z);
         }
     };
 
@@ -184,13 +184,13 @@ good:
             return x;
         }
         public int g(int y) {
-            return f(y);
+            return this.f(y);
         }
         public int gg(int y2) {
-            return g(y2);
+            return this.g(y2);
         }
         public int ggg(int y3) {
-            return gg(y3);
+            return this.gg(y3);
         }
         public int h(int z) {
             return z;
@@ -200,7 +200,7 @@ good:
     class Child extends Parent {
         @Override
         public int h(int z) {
-            return ggg(z);
+            return this.ggg(z);
         }
     };
 

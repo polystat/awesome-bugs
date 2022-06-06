@@ -88,7 +88,7 @@ good:
 
     class B extends AFactory.GetA {
         public int n(int x) {
-            return getState() + x;
+            return this.getState() + x;
         }
     }
 

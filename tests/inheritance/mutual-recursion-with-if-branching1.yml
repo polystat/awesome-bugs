@@ -52,7 +52,7 @@ bad:
             x = 0;
         }
         public void m() {
-            n();
+            this.n();
         }
         public void incrX() {
             x++;
@@ -63,10 +63,10 @@ bad:
         @Override
         public void n() {
             if (true) {
-                m();
+                this.m();
             }
             else {
-                incrX();
+                this.incrX();
             }
         }
     }
@@ -163,7 +163,7 @@ good:
             x = 0;
         }
         public void m() {
-            n();
+            this.n();
         }
         public void incrX() {
             x++;
@@ -174,10 +174,10 @@ good:
         @Override
         public void n() {
             if (false) {
-                m();
+                this.m();
             }
             else {
-                incrX();
+                this.incrX();
             }
         }
     }

@@ -77,7 +77,7 @@ good:
 
     class B extends A {
         public int n() {
-            return getState();
+            return this.getState();
         }
     }
 

@@ -92,7 +92,7 @@ good:
 
     class C extends B {
         public int n(int x) {
-            return getState() + x;
+            return this.getState() + x;
         }
     }
 

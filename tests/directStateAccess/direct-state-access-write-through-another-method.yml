@@ -43,7 +43,7 @@ bad:
             x.value = y;
         }
         public void n(int y) {
-            m(state, y);
+            this.m(state, y);
         }
     }
 
@@ -100,13 +100,13 @@ good:
             x.value = y;
         }
         public void o(int y) {
-            m(state, y);
+            this.m(state, y);
         }
     }
 
     class B extends A {
         public void n(int y) {
-            o(y);
+            this.o(y);
         }
     }
 

@@ -64,7 +64,7 @@ bad:
             x++;
         }
         public void o() {
-            m();
+            this.m();
         }
     }
 
@@ -74,11 +74,11 @@ bad:
         public void n() {
             int randomNumber = RANDOM.nextInt();
             if (randomNumber == 0) {
-                m();
+                this.m();
             }
         }
         public void m() {
-            o();
+            this.o();
         }
     }
 
@@ -166,7 +166,7 @@ good:
             x++;
         }
         public void o() {
-            m();
+            this.m();
         }
     }
 
@@ -176,11 +176,11 @@ good:
         public void n() {
             int randomNumber = RANDOM.nextInt();
             if (randomNumber % 3 == 10) {
-                m();
+                this.m();
             }
         }
         public void m() {
-            o();
+            this.o();
         }
     }
 

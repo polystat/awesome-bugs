@@ -81,7 +81,7 @@ bad:
     class Child extends Parent {
         @Override
         public int g(int y) {
-            return f(y);
+            return this.f(y);
         }
     }
 
@@ -92,7 +92,7 @@ bad:
         }
         @Override
         public int h(int z) {
-            return g(z);
+            return this.g(z);
         }
     };
 
@@ -200,14 +200,14 @@ good:
     class Child extends Parent {
         @Override
         public int g(int y) {
-            return f(y);
+            return this.f(y);
         }
     }
 
     class GrandChild extends Child {
         @Override
         public int h(int z) {
-            return g(z);
+            return this.g(z);
         }
     };
 

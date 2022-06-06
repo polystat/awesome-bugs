@@ -63,7 +63,7 @@ bad:
                     x = v;
                 }
                 public void m(int v) {
-                    n(v);
+                    this.n(v);
                 }
             }
         }
@@ -71,14 +71,14 @@ bad:
 
     class Derived extends VeryOuter.Outer.Base {
         public void o(int v) {
-            m(v);
+            this.m(v);
         }
     }
 
     class DerivedAgain extends Derived {
         @Override
         public void n(int v) {
-            o(v);
+            this.o(v);
         }
     }
 
@@ -159,7 +159,7 @@ good:
                     x = v;
                 }
                 public void m(int v) {
-                    n(v);
+                    this.n(v);
                 }
             }
         }
@@ -167,13 +167,13 @@ good:
 
     class Derived extends VeryOuter.Outer.Base {
         public void o(int v) {
-            m(v);
+            this.m(v);
         }
     }
 
     class DerivedAgain extends Derived {
         public void n1(int v) {
-            o(v);
+            this.o(v);
         }
     }
 
