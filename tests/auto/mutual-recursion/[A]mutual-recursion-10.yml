@@ -1,0 +1,3750 @@
+title: Mutual recursion in a chain of inheritance
+description: >
+  The defect manifests in the form of call chain cycles.
+  The following cycles are present here:
+  o2050.m3 -> o2075.m6 -> o2050.m3
+  o2075.m6 -> o2050.m3 -> o2075.m6
+
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+
+bad:
+   
+  source.cpp: |
+    class O2046 {
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2048 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+        virtual void m2(){m0();};
+    };
+    
+    class O2057 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+    };
+    
+    class O2059 {
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2065 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+        virtual void m3(){};
+    };
+    
+    class O2066 {
+      public:
+        virtual void m0(){};
+    };
+    
+    class O2067 {
+      public:
+      
+    };
+    
+    class O2071 {
+      public:
+      
+    
+        class O2072 {
+        public:
+      
+        };
+    };
+    
+    class O2080 {
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2085 {
+      public:
+      
+    };
+    
+    class O2047 : public O2046{
+      public:
+        virtual void m2(){};
+        virtual void m3(){};
+        virtual void m5(){};
+        virtual void m0(){m5();};
+        virtual void m4(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2049 : public O2047{
+      public:
+        virtual void m1(){m4();};
+        virtual void m5(){};
+        virtual void m3(){m4();};
+        virtual void m2(){};
+        virtual void m6(){m4();};
+        virtual void m4(){};
+        virtual void m0(){};
+    };
+    
+    class O2050 : public O2049{
+      public:
+        virtual void m4(){};
+        virtual void m2(){};
+        virtual void m5(){};
+        virtual void m1(){m6();};
+        virtual void m0(){m3();};
+        virtual void m3(){m6();};
+    };
+    
+    class O2075 : public O2050{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m4(){};
+        virtual void m5(){m0();};
+        virtual void m6(){m3();};
+    
+        class O2076 {
+        public:
+          virtual void m0(){};
+          virtual void m1(){m0();};
+        };
+    
+        class O2077 {
+        public:
+          virtual void m0(){};
+        };
+    };
+    
+    class O2058 : public O2050{
+      public:
+        virtual void m2(){};
+        virtual void m6(){};
+        virtual void m1(){};
+        virtual void m5(){m3();};
+        virtual void m3(){};
+        virtual void m4(){m0();};
+        virtual void m0(){m5();};
+    };
+    
+    class O2110 : public O2066{
+      public:
+        virtual void m1(){};
+        virtual void m4(){};
+        virtual void m5(){};
+        virtual void m0(){};
+        virtual void m3(){m0();};
+        virtual void m2(){};
+    };
+    
+    class O2053 : public O2048{
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){m2();};
+        virtual void m2(){};
+    };
+    
+    class O2083 : public O2075::O2077{
+      public:
+        virtual void m0(){};
+    };
+    
+    class O2051 : public O2048{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+    };
+    
+    class O2100 : public O2075::O2077{
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+    };
+    
+    class O2088 : public O2080{
+      public:
+        virtual void m4(){};
+        virtual void m3(){m1();};
+        virtual void m9(){m0();};
+        virtual void m5(){m8();};
+        virtual void m7(){};
+        virtual void m2(){};
+        virtual void m6(){m7();};
+        virtual void m1(){};
+        virtual void m0(){};
+        virtual void m8(){m6();};
+    };
+    
+    class O2084 : public O2071{
+      public:
+        virtual void m7(){};
+        virtual void m2(){m7();};
+        virtual void m1(){m7();};
+        virtual void m4(){m7();};
+        virtual void m3(){};
+        virtual void m0(){m7();};
+        virtual void m5(){m7();};
+        virtual void m6(){};
+    };
+    
+    class O2078 : public O2075::O2076{
+      public:
+        virtual void m0(){};
+        virtual void m3(){m0();};
+        virtual void m1(){};
+        virtual void m2(){};
+        virtual void m4(){};
+    };
+    
+    class O2070 : public O2050{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+        virtual void m5(){};
+    };
+    
+    class O2054 : public O2050{
+      public:
+        virtual void m5(){};
+        virtual void m6(){m2();};
+        virtual void m3(){m2();};
+        virtual void m1(){};
+        virtual void m4(){m2();};
+        virtual void m0(){m2();};
+        virtual void m2(){};
+        virtual void m7(){m3();};
+        virtual void m9(){};
+        virtual void m8(){};
+    };
+    
+    class O2101 : public O2053{
+      public:
+        virtual void m7(){m6();};
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){m1();};
+        virtual void m6(){m2();};
+        virtual void m4(){};
+        virtual void m3(){};
+        virtual void m5(){};
+    };
+    
+    class O2081 : public O2066{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+    };
+    
+    class O2079 : public O2065{
+      public:
+        virtual void m8(){};
+        virtual void m7(){};
+        virtual void m6(){m7();};
+        virtual void m2(){};
+        virtual void m0(){};
+        virtual void m1(){m7();};
+        virtual void m3(){m7();};
+        virtual void m4(){m2();};
+        virtual void m5(){m2();};
+    };
+    
+    class O2087 : public O2075::O2077{
+      public:
+      
+    };
+    
+    class O2099 : public O2048{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){m1();};
+        virtual void m3(){};
+    };
+    
+    class O2106 : public O2067{
+      public:
+      
+    
+        class O2107 {
+        public:
+          virtual void m0(){m1();};
+          virtual void m1(){};
+        };
+    
+        class O2108 {
+        public:
+          virtual void m0(){};
+        };
+    
+        class O2109 {
+        public:
+          virtual void m0(){m2();};
+          virtual void m1(){};
+          virtual void m2(){m1();};
+        };
+    };
+    
+    class O2068 : public O2059{
+      public:
+        virtual void m3(){};
+        virtual void m1(){m0();};
+        virtual void m0(){};
+        virtual void m4(){m2();};
+        virtual void m2(){};
+    };
+    
+    class O2086 : public O2058{
+      public:
+        virtual void m5(){};
+        virtual void m2(){};
+        virtual void m3(){m4();};
+        virtual void m1(){m3();};
+        virtual void m0(){m5();};
+        virtual void m6(){};
+    };
+    
+    class O2082 : public O2075::O2076{
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+        virtual void m2(){};
+    };
+    
+    class O2090 : public O2083{
+      public:
+        virtual void m5(){};
+        virtual void m0(){};
+        virtual void m3(){m4();};
+        virtual void m4(){m5();};
+        virtual void m1(){};
+        virtual void m2(){m0();};
+    };
+    
+    class O2104 : public O2051{
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+    };
+    
+    class O2105 : public O2080{
+      public:
+        virtual void m0(){};
+        virtual void m2(){};
+        virtual void m4(){m1();};
+        virtual void m3(){};
+        virtual void m5(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2073 : public O2053{
+      public:
+        virtual void m1(){};
+    
+        class O2074 {
+        public:
+          virtual void m0(){};
+        };
+    };
+    
+    class O2056 : public O2048{
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2113 : public O2110{
+      public:
+        virtual void m4(){};
+        virtual void m3(){};
+        virtual void m2(){m1();};
+        virtual void m1(){};
+        virtual void m5(){};
+        virtual void m0(){};
+        virtual void m6(){};
+    };
+
+
+
+  Test.java: |
+    
+    public class Main{
+    static class O2046 {
+        public void m0(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2048 {
+        public void m0(){};
+        public void m1(){m0();};
+        public void m2(){m0();};
+    };
+    
+    static class O2057 {
+        public void m0(){};
+        public void m1(){m0();};
+    };
+    
+    static class O2059 {
+        public void m0(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2065 {
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+        public void m3(){};
+    };
+    
+    static class O2066 {
+        public void m0(){};
+    };
+    
+    static class O2067 {
+      
+    };
+    
+    static class O2071 {
+      
+    
+        static class O2072 {
+      
+        };
+    };
+    
+    static class O2080 {
+        public void m0(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2085 {
+      
+    };
+    
+    static class O2047  extends O2046{
+        public void m2(){};
+        public void m3(){};
+        public void m5(){};
+        public void m0(){m5();};
+        public void m4(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2049  extends O2047{
+        public void m1(){m4();};
+        public void m5(){};
+        public void m3(){m4();};
+        public void m2(){};
+        public void m6(){m4();};
+        public void m4(){};
+        public void m0(){};
+    };
+    
+    static class O2050  extends O2049{
+        public void m4(){};
+        public void m2(){};
+        public void m5(){};
+        public void m1(){m6();};
+        public void m0(){m3();};
+        public void m3(){m6();};
+    };
+    
+    static class O2075  extends O2050{
+        public void m0(){};
+        public void m1(){};
+        public void m4(){};
+        public void m5(){m0();};
+        public void m6(){m3();};
+    
+        static class O2076 {
+          public void m0(){};
+          public void m1(){m0();};
+        };
+    
+        static class O2077 {
+          public void m0(){};
+        };
+    };
+    
+    static class O2058  extends O2050{
+        public void m2(){};
+        public void m6(){};
+        public void m1(){};
+        public void m5(){m3();};
+        public void m3(){};
+        public void m4(){m0();};
+        public void m0(){m5();};
+    };
+    
+    static class O2110  extends O2066{
+        public void m1(){};
+        public void m4(){};
+        public void m5(){};
+        public void m0(){};
+        public void m3(){m0();};
+        public void m2(){};
+    };
+    
+    static class O2053  extends O2048{
+        public void m0(){m1();};
+        public void m1(){m2();};
+        public void m2(){};
+    };
+    
+    static class O2083  extends O2075.O2077{
+        public void m0(){};
+    };
+    
+    static class O2051  extends O2048{
+        public void m0(){};
+        public void m1(){};
+    };
+    
+    static class O2100  extends O2075.O2077{
+        public void m0(){};
+        public void m1(){m0();};
+    };
+    
+    static class O2088  extends O2080{
+        public void m4(){};
+        public void m3(){m1();};
+        public void m9(){m0();};
+        public void m5(){m8();};
+        public void m7(){};
+        public void m2(){};
+        public void m6(){m7();};
+        public void m1(){};
+        public void m0(){};
+        public void m8(){m6();};
+    };
+    
+    static class O2084  extends O2071{
+        public void m7(){};
+        public void m2(){m7();};
+        public void m1(){m7();};
+        public void m4(){m7();};
+        public void m3(){};
+        public void m0(){m7();};
+        public void m5(){m7();};
+        public void m6(){};
+    };
+    
+    static class O2078  extends O2075.O2076{
+        public void m0(){};
+        public void m3(){m0();};
+        public void m1(){};
+        public void m2(){};
+        public void m4(){};
+    };
+    
+    static class O2070  extends O2050{
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+        public void m5(){};
+    };
+    
+    static class O2054  extends O2050{
+        public void m5(){};
+        public void m6(){m2();};
+        public void m3(){m2();};
+        public void m1(){};
+        public void m4(){m2();};
+        public void m0(){m2();};
+        public void m2(){};
+        public void m7(){m3();};
+        public void m9(){};
+        public void m8(){};
+    };
+    
+    static class O2101  extends O2053{
+        public void m7(){m6();};
+        public void m0(){};
+        public void m1(){};
+        public void m2(){m1();};
+        public void m6(){m2();};
+        public void m4(){};
+        public void m3(){};
+        public void m5(){};
+    };
+    
+    static class O2081  extends O2066{
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+    };
+    
+    static class O2079  extends O2065{
+        public void m8(){};
+        public void m7(){};
+        public void m6(){m7();};
+        public void m2(){};
+        public void m0(){};
+        public void m1(){m7();};
+        public void m3(){m7();};
+        public void m4(){m2();};
+        public void m5(){m2();};
+    };
+    
+    static class O2087  extends O2075.O2077{
+      
+    };
+    
+    static class O2099  extends O2048{
+        public void m0(){};
+        public void m1(){};
+        public void m2(){m1();};
+        public void m3(){};
+    };
+    
+    static class O2106  extends O2067{
+      
+    
+        static class O2107 {
+          public void m0(){m1();};
+          public void m1(){};
+        };
+    
+        static class O2108 {
+          public void m0(){};
+        };
+    
+        static class O2109 {
+          public void m0(){m2();};
+          public void m1(){};
+          public void m2(){m1();};
+        };
+    };
+    
+    static class O2068  extends O2059{
+        public void m3(){};
+        public void m1(){m0();};
+        public void m0(){};
+        public void m4(){m2();};
+        public void m2(){};
+    };
+    
+    static class O2086  extends O2058{
+        public void m5(){};
+        public void m2(){};
+        public void m3(){m4();};
+        public void m1(){m3();};
+        public void m0(){m5();};
+        public void m6(){};
+    };
+    
+    static class O2082  extends O2075.O2076{
+        public void m0(){};
+        public void m1(){m0();};
+        public void m2(){};
+    };
+    
+    static class O2090  extends O2083{
+        public void m5(){};
+        public void m0(){};
+        public void m3(){m4();};
+        public void m4(){m5();};
+        public void m1(){};
+        public void m2(){m0();};
+    };
+    
+    static class O2104  extends O2051{
+        public void m0(){};
+        public void m1(){m0();};
+    };
+    
+    static class O2105  extends O2080{
+        public void m0(){};
+        public void m2(){};
+        public void m4(){m1();};
+        public void m3(){};
+        public void m5(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2073  extends O2053{
+        public void m1(){};
+    
+        static class O2074 {
+          public void m0(){};
+        };
+    };
+    
+    static class O2056  extends O2048{
+        public void m0(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2113  extends O2110{
+        public void m4(){};
+        public void m3(){};
+        public void m2(){m1();};
+        public void m1(){};
+        public void m5(){};
+        public void m0(){};
+        public void m6(){};
+    };
+    
+    
+    public static void main(String[] args){}
+    }
+
+
+
+
+  test.eo: |
+    [] > o2046
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2048
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+      [self] > m2
+        self.m0 self > @
+    
+    [] > o2057
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+    
+    [] > o2059
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2065
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self > @
+    
+    [] > o2066
+      [self] > m0
+        self > @
+    
+    [] > o2067
+    
+    [] > o2071
+    
+      [] > o2072
+    
+    [] > o2080
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2085
+    
+    [] > o2047
+      ^.o2046 > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self > @
+      [self] > m5
+        self > @
+      [self] > m0
+        self.m5 self > @
+      [self] > m4
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2049
+      ^.o2047 > @
+      [self] > m1
+        self.m4 self > @
+      [self] > m5
+        self > @
+      [self] > m3
+        self.m4 self > @
+      [self] > m2
+        self > @
+      [self] > m6
+        self.m4 self > @
+      [self] > m4
+        self > @
+      [self] > m0
+        self > @
+    
+    [] > o2050
+      ^.o2049 > @
+      [self] > m4
+        self > @
+      [self] > m2
+        self > @
+      [self] > m5
+        self > @
+      [self] > m1
+        self.m6 self > @
+      [self] > m0
+        self.m3 self > @
+      [self] > m3
+        self.m6 self > @
+    
+    [] > o2075
+      ^.o2050 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m4
+        self > @
+      [self] > m5
+        self.m0 self > @
+      [self] > m6
+        self.m3 self > @
+      [] > o2076
+        [self] > m0
+          self > @
+        [self] > m1
+          self.m0 self > @
+    
+      [] > o2077
+        [self] > m0
+          self > @
+    
+    [] > o2058
+      ^.o2050 > @
+      [self] > m2
+        self > @
+      [self] > m6
+        self > @
+      [self] > m1
+        self > @
+      [self] > m5
+        self.m3 self > @
+      [self] > m3
+        self > @
+      [self] > m4
+        self.m0 self > @
+      [self] > m0
+        self.m5 self > @
+    
+    [] > o2110
+      ^.o2066 > @
+      [self] > m1
+        self > @
+      [self] > m4
+        self > @
+      [self] > m5
+        self > @
+      [self] > m0
+        self > @
+      [self] > m3
+        self.m0 self > @
+      [self] > m2
+        self > @
+    
+    [] > o2053
+      ^.o2048 > @
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self.m2 self > @
+      [self] > m2
+        self > @
+    
+    [] > o2083
+      ^.o2075.o2077 > @
+      [self] > m0
+        self > @
+    
+    [] > o2051
+      ^.o2048 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+    
+    [] > o2100
+      ^.o2075.o2077 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+    
+    [] > o2088
+      ^.o2080 > @
+      [self] > m4
+        self > @
+      [self] > m3
+        self.m1 self > @
+      [self] > m9
+        self.m0 self > @
+      [self] > m5
+        self.m8 self > @
+      [self] > m7
+        self > @
+      [self] > m2
+        self > @
+      [self] > m6
+        self.m7 self > @
+      [self] > m1
+        self > @
+      [self] > m0
+        self > @
+      [self] > m8
+        self.m6 self > @
+    
+    [] > o2084
+      ^.o2071 > @
+      [self] > m7
+        self > @
+      [self] > m2
+        self.m7 self > @
+      [self] > m1
+        self.m7 self > @
+      [self] > m4
+        self.m7 self > @
+      [self] > m3
+        self > @
+      [self] > m0
+        self.m7 self > @
+      [self] > m5
+        self.m7 self > @
+      [self] > m6
+        self > @
+    
+    [] > o2078
+      ^.o2075.o2076 > @
+      [self] > m0
+        self > @
+      [self] > m3
+        self.m0 self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+      [self] > m4
+        self > @
+    
+    [] > o2070
+      ^.o2050 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+      [self] > m5
+        self > @
+    
+    [] > o2054
+      ^.o2050 > @
+      [self] > m5
+        self > @
+      [self] > m6
+        self.m2 self > @
+      [self] > m3
+        self.m2 self > @
+      [self] > m1
+        self > @
+      [self] > m4
+        self.m2 self > @
+      [self] > m0
+        self.m2 self > @
+      [self] > m2
+        self > @
+      [self] > m7
+        self.m3 self > @
+      [self] > m9
+        self > @
+      [self] > m8
+        self > @
+    
+    [] > o2101
+      ^.o2053 > @
+      [self] > m7
+        self.m6 self > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self.m1 self > @
+      [self] > m6
+        self.m2 self > @
+      [self] > m4
+        self > @
+      [self] > m3
+        self > @
+      [self] > m5
+        self > @
+    
+    [] > o2081
+      ^.o2066 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+    
+    [] > o2079
+      ^.o2065 > @
+      [self] > m8
+        self > @
+      [self] > m7
+        self > @
+      [self] > m6
+        self.m7 self > @
+      [self] > m2
+        self > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m7 self > @
+      [self] > m3
+        self.m7 self > @
+      [self] > m4
+        self.m2 self > @
+      [self] > m5
+        self.m2 self > @
+    
+    [] > o2087
+      ^.o2075.o2077 > @
+    
+    
+    [] > o2099
+      ^.o2048 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self.m1 self > @
+      [self] > m3
+        self > @
+    
+    [] > o2106
+      ^.o2067 > @
+    
+      [] > o2107
+        [self] > m0
+          self.m1 self > @
+        [self] > m1
+          self > @
+    
+      [] > o2108
+        [self] > m0
+          self > @
+    
+      [] > o2109
+        [self] > m0
+          self.m2 self > @
+        [self] > m1
+          self > @
+        [self] > m2
+          self.m1 self > @
+    
+    [] > o2068
+      ^.o2059 > @
+      [self] > m3
+        self > @
+      [self] > m1
+        self.m0 self > @
+      [self] > m0
+        self > @
+      [self] > m4
+        self.m2 self > @
+      [self] > m2
+        self > @
+    
+    [] > o2086
+      ^.o2058 > @
+      [self] > m5
+        self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self.m4 self > @
+      [self] > m1
+        self.m3 self > @
+      [self] > m0
+        self.m5 self > @
+      [self] > m6
+        self > @
+    
+    [] > o2082
+      ^.o2075.o2076 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+      [self] > m2
+        self > @
+    
+    [] > o2090
+      ^.o2083 > @
+      [self] > m5
+        self > @
+      [self] > m0
+        self > @
+      [self] > m3
+        self.m4 self > @
+      [self] > m4
+        self.m5 self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self.m0 self > @
+    
+    [] > o2104
+      ^.o2051 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+    
+    [] > o2105
+      ^.o2080 > @
+      [self] > m0
+        self > @
+      [self] > m2
+        self > @
+      [self] > m4
+        self.m1 self > @
+      [self] > m3
+        self > @
+      [self] > m5
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2073
+      ^.o2053 > @
+      [self] > m1
+        self > @
+      [] > o2074
+        [self] > m0
+          self > @
+    
+    [] > o2056
+      ^.o2048 > @
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2113
+      ^.o2110 > @
+      [self] > m4
+        self > @
+      [self] > m3
+        self > @
+      [self] > m2
+        self.m1 self > @
+      [self] > m1
+        self > @
+      [self] > m5
+        self > @
+      [self] > m0
+        self > @
+      [self] > m6
+        self > @
+
+
+
+  test.py: |
+    class O2046:
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2048:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+        def m2():
+          pass
+          self.m0()
+    
+    
+    class O2057:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+    
+    
+    class O2059:
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2065:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          
+    
+    
+    class O2066:
+        pass
+        def m0():
+          pass
+          
+    
+    
+    class O2067:
+        pass
+      
+    
+    
+    class O2071:
+        pass
+      
+    
+        class O2072:
+          pass
+      
+        
+    
+    
+    class O2080:
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2085:
+        pass
+      
+    
+    
+    class O2047(O2046):
+        pass
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          
+        def m5():
+          pass
+          
+        def m0():
+          pass
+          self.m5()
+        def m4():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2049(O2047):
+        pass
+        def m1():
+          pass
+          self.m4()
+        def m5():
+          pass
+          
+        def m3():
+          pass
+          self.m4()
+        def m2():
+          pass
+          
+        def m6():
+          pass
+          self.m4()
+        def m4():
+          pass
+          
+        def m0():
+          pass
+          
+    
+    
+    class O2050(O2049):
+        pass
+        def m4():
+          pass
+          
+        def m2():
+          pass
+          
+        def m5():
+          pass
+          
+        def m1():
+          pass
+          self.m6()
+        def m0():
+          pass
+          self.m3()
+        def m3():
+          pass
+          self.m6()
+    
+    
+    class O2075(O2050):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m4():
+          pass
+          
+        def m5():
+          pass
+          self.m0()
+        def m6():
+          pass
+          self.m3()
+    
+        class O2076:
+          pass
+          def m0():
+            pass
+            
+          def m1():
+            pass
+            self.m0()
+        
+    
+        class O2077:
+          pass
+          def m0():
+            pass
+            
+        
+    
+    
+    class O2058(O2050):
+        pass
+        def m2():
+          pass
+          
+        def m6():
+          pass
+          
+        def m1():
+          pass
+          
+        def m5():
+          pass
+          self.m3()
+        def m3():
+          pass
+          
+        def m4():
+          pass
+          self.m0()
+        def m0():
+          pass
+          self.m5()
+    
+    
+    class O2110(O2066):
+        pass
+        def m1():
+          pass
+          
+        def m4():
+          pass
+          
+        def m5():
+          pass
+          
+        def m0():
+          pass
+          
+        def m3():
+          pass
+          self.m0()
+        def m2():
+          pass
+          
+    
+    
+    class O2053(O2048):
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          self.m2()
+        def m2():
+          pass
+          
+    
+    
+    class O2083(O2075.O2077):
+        pass
+        def m0():
+          pass
+          
+    
+    
+    class O2051(O2048):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+    
+    
+    class O2100(O2075.O2077):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+    
+    
+    class O2088(O2080):
+        pass
+        def m4():
+          pass
+          
+        def m3():
+          pass
+          self.m1()
+        def m9():
+          pass
+          self.m0()
+        def m5():
+          pass
+          self.m8()
+        def m7():
+          pass
+          
+        def m2():
+          pass
+          
+        def m6():
+          pass
+          self.m7()
+        def m1():
+          pass
+          
+        def m0():
+          pass
+          
+        def m8():
+          pass
+          self.m6()
+    
+    
+    class O2084(O2071):
+        pass
+        def m7():
+          pass
+          
+        def m2():
+          pass
+          self.m7()
+        def m1():
+          pass
+          self.m7()
+        def m4():
+          pass
+          self.m7()
+        def m3():
+          pass
+          
+        def m0():
+          pass
+          self.m7()
+        def m5():
+          pass
+          self.m7()
+        def m6():
+          pass
+          
+    
+    
+    class O2078(O2075.O2076):
+        pass
+        def m0():
+          pass
+          
+        def m3():
+          pass
+          self.m0()
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+        def m4():
+          pass
+          
+    
+    
+    class O2070(O2050):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+        def m5():
+          pass
+          
+    
+    
+    class O2054(O2050):
+        pass
+        def m5():
+          pass
+          
+        def m6():
+          pass
+          self.m2()
+        def m3():
+          pass
+          self.m2()
+        def m1():
+          pass
+          
+        def m4():
+          pass
+          self.m2()
+        def m0():
+          pass
+          self.m2()
+        def m2():
+          pass
+          
+        def m7():
+          pass
+          self.m3()
+        def m9():
+          pass
+          
+        def m8():
+          pass
+          
+    
+    
+    class O2101(O2053):
+        pass
+        def m7():
+          pass
+          self.m6()
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          self.m1()
+        def m6():
+          pass
+          self.m2()
+        def m4():
+          pass
+          
+        def m3():
+          pass
+          
+        def m5():
+          pass
+          
+    
+    
+    class O2081(O2066):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+    
+    
+    class O2079(O2065):
+        pass
+        def m8():
+          pass
+          
+        def m7():
+          pass
+          
+        def m6():
+          pass
+          self.m7()
+        def m2():
+          pass
+          
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m7()
+        def m3():
+          pass
+          self.m7()
+        def m4():
+          pass
+          self.m2()
+        def m5():
+          pass
+          self.m2()
+    
+    
+    class O2087(O2075.O2077):
+        pass
+      
+    
+    
+    class O2099(O2048):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          self.m1()
+        def m3():
+          pass
+          
+    
+    
+    class O2106(O2067):
+        pass
+      
+    
+        class O2107:
+          pass
+          def m0():
+            pass
+            self.m1()
+          def m1():
+            pass
+            
+        
+    
+        class O2108:
+          pass
+          def m0():
+            pass
+            
+        
+    
+        class O2109:
+          pass
+          def m0():
+            pass
+            self.m2()
+          def m1():
+            pass
+            
+          def m2():
+            pass
+            self.m1()
+        
+    
+    
+    class O2068(O2059):
+        pass
+        def m3():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+        def m0():
+          pass
+          
+        def m4():
+          pass
+          self.m2()
+        def m2():
+          pass
+          
+    
+    
+    class O2086(O2058):
+        pass
+        def m5():
+          pass
+          
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          self.m4()
+        def m1():
+          pass
+          self.m3()
+        def m0():
+          pass
+          self.m5()
+        def m6():
+          pass
+          
+    
+    
+    class O2082(O2075.O2076):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+        def m2():
+          pass
+          
+    
+    
+    class O2090(O2083):
+        pass
+        def m5():
+          pass
+          
+        def m0():
+          pass
+          
+        def m3():
+          pass
+          self.m4()
+        def m4():
+          pass
+          self.m5()
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          self.m0()
+    
+    
+    class O2104(O2051):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+    
+    
+    class O2105(O2080):
+        pass
+        def m0():
+          pass
+          
+        def m2():
+          pass
+          
+        def m4():
+          pass
+          self.m1()
+        def m3():
+          pass
+          
+        def m5():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2073(O2053):
+        pass
+        def m1():
+          pass
+          
+    
+        class O2074:
+          pass
+          def m0():
+            pass
+            
+        
+    
+    
+    class O2056(O2048):
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2113(O2110):
+        pass
+        def m4():
+          pass
+          
+        def m3():
+          pass
+          
+        def m2():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+        def m5():
+          pass
+          
+        def m0():
+          pass
+          
+        def m6():
+          pass
+          
+
+
+
+   
+good:
+   
+  source.cpp: |
+    class O2046 {
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2048 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+        virtual void m2(){m0();};
+    };
+    
+    class O2057 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+    };
+    
+    class O2059 {
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2065 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+        virtual void m3(){};
+    };
+    
+    class O2066 {
+      public:
+        virtual void m0(){};
+    };
+    
+    class O2067 {
+      public:
+      
+    };
+    
+    class O2071 {
+      public:
+      
+    
+        class O2072 {
+        public:
+      
+        };
+    };
+    
+    class O2080 {
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2085 {
+      public:
+      
+    };
+    
+    class O2047 : public O2046{
+      public:
+        virtual void m2(){};
+        virtual void m3(){};
+        virtual void m5(){};
+        virtual void m0(){m5();};
+        virtual void m4(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2049 : public O2047{
+      public:
+        virtual void m1(){m4();};
+        virtual void m5(){};
+        virtual void m3(){m4();};
+        virtual void m2(){};
+        virtual void m6(){m4();};
+        virtual void m4(){};
+        virtual void m0(){};
+    };
+    
+    class O2050 : public O2049{
+      public:
+        virtual void m4(){};
+        virtual void m2(){};
+        virtual void m5(){};
+        virtual void m1(){m6();};
+        virtual void m0(){m3();};
+        virtual void m3(){};
+    };
+    
+    class O2075 : public O2050{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m4(){};
+        virtual void m5(){m0();};
+        virtual void m6(){};
+    
+        class O2076 {
+        public:
+          virtual void m0(){};
+          virtual void m1(){m0();};
+        };
+    
+        class O2077 {
+        public:
+          virtual void m0(){};
+        };
+    };
+    
+    class O2058 : public O2050{
+      public:
+        virtual void m2(){};
+        virtual void m6(){};
+        virtual void m1(){};
+        virtual void m5(){m3();};
+        virtual void m3(){};
+        virtual void m4(){m0();};
+        virtual void m0(){m5();};
+    };
+    
+    class O2110 : public O2066{
+      public:
+        virtual void m1(){};
+        virtual void m4(){};
+        virtual void m5(){};
+        virtual void m0(){};
+        virtual void m3(){m0();};
+        virtual void m2(){};
+    };
+    
+    class O2053 : public O2048{
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){m2();};
+        virtual void m2(){};
+    };
+    
+    class O2083 : public O2075::O2077{
+      public:
+        virtual void m0(){};
+    };
+    
+    class O2051 : public O2048{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+    };
+    
+    class O2100 : public O2075::O2077{
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+    };
+    
+    class O2088 : public O2080{
+      public:
+        virtual void m4(){};
+        virtual void m3(){m1();};
+        virtual void m9(){m0();};
+        virtual void m5(){m8();};
+        virtual void m7(){};
+        virtual void m2(){};
+        virtual void m6(){m7();};
+        virtual void m1(){};
+        virtual void m0(){};
+        virtual void m8(){m6();};
+    };
+    
+    class O2084 : public O2071{
+      public:
+        virtual void m7(){};
+        virtual void m2(){m7();};
+        virtual void m1(){m7();};
+        virtual void m4(){m7();};
+        virtual void m3(){};
+        virtual void m0(){m7();};
+        virtual void m5(){m7();};
+        virtual void m6(){};
+    };
+    
+    class O2078 : public O2075::O2076{
+      public:
+        virtual void m0(){};
+        virtual void m3(){m0();};
+        virtual void m1(){};
+        virtual void m2(){};
+        virtual void m4(){};
+    };
+    
+    class O2070 : public O2050{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+        virtual void m5(){};
+    };
+    
+    class O2054 : public O2050{
+      public:
+        virtual void m5(){};
+        virtual void m6(){m2();};
+        virtual void m3(){m2();};
+        virtual void m1(){};
+        virtual void m4(){m2();};
+        virtual void m0(){m2();};
+        virtual void m2(){};
+        virtual void m7(){m3();};
+        virtual void m9(){};
+        virtual void m8(){};
+    };
+    
+    class O2101 : public O2053{
+      public:
+        virtual void m7(){m6();};
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){m1();};
+        virtual void m6(){m2();};
+        virtual void m4(){};
+        virtual void m3(){};
+        virtual void m5(){};
+    };
+    
+    class O2081 : public O2066{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+    };
+    
+    class O2079 : public O2065{
+      public:
+        virtual void m8(){};
+        virtual void m7(){};
+        virtual void m6(){m7();};
+        virtual void m2(){};
+        virtual void m0(){};
+        virtual void m1(){m7();};
+        virtual void m3(){m7();};
+        virtual void m4(){m2();};
+        virtual void m5(){m2();};
+    };
+    
+    class O2087 : public O2075::O2077{
+      public:
+      
+    };
+    
+    class O2099 : public O2048{
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){m1();};
+        virtual void m3(){};
+    };
+    
+    class O2106 : public O2067{
+      public:
+      
+    
+        class O2107 {
+        public:
+          virtual void m0(){m1();};
+          virtual void m1(){};
+        };
+    
+        class O2108 {
+        public:
+          virtual void m0(){};
+        };
+    
+        class O2109 {
+        public:
+          virtual void m0(){m2();};
+          virtual void m1(){};
+          virtual void m2(){m1();};
+        };
+    };
+    
+    class O2068 : public O2059{
+      public:
+        virtual void m3(){};
+        virtual void m1(){m0();};
+        virtual void m0(){};
+        virtual void m4(){m2();};
+        virtual void m2(){};
+    };
+    
+    class O2086 : public O2058{
+      public:
+        virtual void m5(){};
+        virtual void m2(){};
+        virtual void m3(){m4();};
+        virtual void m1(){m3();};
+        virtual void m0(){m5();};
+        virtual void m6(){};
+    };
+    
+    class O2082 : public O2075::O2076{
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+        virtual void m2(){};
+    };
+    
+    class O2090 : public O2083{
+      public:
+        virtual void m5(){};
+        virtual void m0(){};
+        virtual void m3(){m4();};
+        virtual void m4(){m5();};
+        virtual void m1(){};
+        virtual void m2(){m0();};
+    };
+    
+    class O2104 : public O2051{
+      public:
+        virtual void m0(){};
+        virtual void m1(){m0();};
+    };
+    
+    class O2105 : public O2080{
+      public:
+        virtual void m0(){};
+        virtual void m2(){};
+        virtual void m4(){m1();};
+        virtual void m3(){};
+        virtual void m5(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2073 : public O2053{
+      public:
+        virtual void m1(){};
+    
+        class O2074 {
+        public:
+          virtual void m0(){};
+        };
+    };
+    
+    class O2056 : public O2048{
+      public:
+        virtual void m0(){m1();};
+        virtual void m1(){};
+    };
+    
+    class O2113 : public O2110{
+      public:
+        virtual void m4(){};
+        virtual void m3(){};
+        virtual void m2(){m1();};
+        virtual void m1(){};
+        virtual void m5(){};
+        virtual void m0(){};
+        virtual void m6(){};
+    };
+
+
+
+  Test.java: |
+    
+    public class Main{
+    static class O2046 {
+        public void m0(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2048 {
+        public void m0(){};
+        public void m1(){m0();};
+        public void m2(){m0();};
+    };
+    
+    static class O2057 {
+        public void m0(){};
+        public void m1(){m0();};
+    };
+    
+    static class O2059 {
+        public void m0(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2065 {
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+        public void m3(){};
+    };
+    
+    static class O2066 {
+        public void m0(){};
+    };
+    
+    static class O2067 {
+      
+    };
+    
+    static class O2071 {
+      
+    
+        static class O2072 {
+      
+        };
+    };
+    
+    static class O2080 {
+        public void m0(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2085 {
+      
+    };
+    
+    static class O2047  extends O2046{
+        public void m2(){};
+        public void m3(){};
+        public void m5(){};
+        public void m0(){m5();};
+        public void m4(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2049  extends O2047{
+        public void m1(){m4();};
+        public void m5(){};
+        public void m3(){m4();};
+        public void m2(){};
+        public void m6(){m4();};
+        public void m4(){};
+        public void m0(){};
+    };
+    
+    static class O2050  extends O2049{
+        public void m4(){};
+        public void m2(){};
+        public void m5(){};
+        public void m1(){m6();};
+        public void m0(){m3();};
+        public void m3(){m6();};
+    };
+    
+    static class O2075  extends O2050{
+        public void m0(){};
+        public void m1(){};
+        public void m4(){};
+        public void m5(){m0();};
+        public void m6(){};
+    
+        static class O2076 {
+          public void m0(){};
+          public void m1(){m0();};
+        };
+    
+        static class O2077 {
+          public void m0(){};
+        };
+    };
+    
+    static class O2058  extends O2050{
+        public void m2(){};
+        public void m6(){};
+        public void m1(){};
+        public void m5(){m3();};
+        public void m3(){};
+        public void m4(){m0();};
+        public void m0(){m5();};
+    };
+    
+    static class O2110  extends O2066{
+        public void m1(){};
+        public void m4(){};
+        public void m5(){};
+        public void m0(){};
+        public void m3(){m0();};
+        public void m2(){};
+    };
+    
+    static class O2053  extends O2048{
+        public void m0(){m1();};
+        public void m1(){m2();};
+        public void m2(){};
+    };
+    
+    static class O2083  extends O2075.O2077{
+        public void m0(){};
+    };
+    
+    static class O2051  extends O2048{
+        public void m0(){};
+        public void m1(){};
+    };
+    
+    static class O2100  extends O2075.O2077{
+        public void m0(){};
+        public void m1(){m0();};
+    };
+    
+    static class O2088  extends O2080{
+        public void m4(){};
+        public void m3(){m1();};
+        public void m9(){m0();};
+        public void m5(){m8();};
+        public void m7(){};
+        public void m2(){};
+        public void m6(){m7();};
+        public void m1(){};
+        public void m0(){};
+        public void m8(){m6();};
+    };
+    
+    static class O2084  extends O2071{
+        public void m7(){};
+        public void m2(){m7();};
+        public void m1(){m7();};
+        public void m4(){m7();};
+        public void m3(){};
+        public void m0(){m7();};
+        public void m5(){m7();};
+        public void m6(){};
+    };
+    
+    static class O2078  extends O2075.O2076{
+        public void m0(){};
+        public void m3(){m0();};
+        public void m1(){};
+        public void m2(){};
+        public void m4(){};
+    };
+    
+    static class O2070  extends O2050{
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+        public void m5(){};
+    };
+    
+    static class O2054  extends O2050{
+        public void m5(){};
+        public void m6(){m2();};
+        public void m3(){m2();};
+        public void m1(){};
+        public void m4(){m2();};
+        public void m0(){m2();};
+        public void m2(){};
+        public void m7(){m3();};
+        public void m9(){};
+        public void m8(){};
+    };
+    
+    static class O2101  extends O2053{
+        public void m7(){m6();};
+        public void m0(){};
+        public void m1(){};
+        public void m2(){m1();};
+        public void m6(){m2();};
+        public void m4(){};
+        public void m3(){};
+        public void m5(){};
+    };
+    
+    static class O2081  extends O2066{
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+    };
+    
+    static class O2079  extends O2065{
+        public void m8(){};
+        public void m7(){};
+        public void m6(){m7();};
+        public void m2(){};
+        public void m0(){};
+        public void m1(){m7();};
+        public void m3(){m7();};
+        public void m4(){m2();};
+        public void m5(){m2();};
+    };
+    
+    static class O2087  extends O2075.O2077{
+      
+    };
+    
+    static class O2099  extends O2048{
+        public void m0(){};
+        public void m1(){};
+        public void m2(){m1();};
+        public void m3(){};
+    };
+    
+    static class O2106  extends O2067{
+      
+    
+        static class O2107 {
+          public void m0(){m1();};
+          public void m1(){};
+        };
+    
+        static class O2108 {
+          public void m0(){};
+        };
+    
+        static class O2109 {
+          public void m0(){m2();};
+          public void m1(){};
+          public void m2(){m1();};
+        };
+    };
+    
+    static class O2068  extends O2059{
+        public void m3(){};
+        public void m1(){m0();};
+        public void m0(){};
+        public void m4(){m2();};
+        public void m2(){};
+    };
+    
+    static class O2086  extends O2058{
+        public void m5(){};
+        public void m2(){};
+        public void m3(){m4();};
+        public void m1(){m3();};
+        public void m0(){m5();};
+        public void m6(){};
+    };
+    
+    static class O2082  extends O2075.O2076{
+        public void m0(){};
+        public void m1(){m0();};
+        public void m2(){};
+    };
+    
+    static class O2090  extends O2083{
+        public void m5(){};
+        public void m0(){};
+        public void m3(){m4();};
+        public void m4(){m5();};
+        public void m1(){};
+        public void m2(){m0();};
+    };
+    
+    static class O2104  extends O2051{
+        public void m0(){};
+        public void m1(){m0();};
+    };
+    
+    static class O2105  extends O2080{
+        public void m0(){};
+        public void m2(){};
+        public void m4(){m1();};
+        public void m3(){};
+        public void m5(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2073  extends O2053{
+        public void m1(){};
+    
+        static class O2074 {
+          public void m0(){};
+        };
+    };
+    
+    static class O2056  extends O2048{
+        public void m0(){m1();};
+        public void m1(){};
+    };
+    
+    static class O2113  extends O2110{
+        public void m4(){};
+        public void m3(){};
+        public void m2(){m1();};
+        public void m1(){};
+        public void m5(){};
+        public void m0(){};
+        public void m6(){};
+    };
+    
+    
+    public static void main(String[] args){}
+    }
+
+
+
+
+  test.eo: |
+    [] > o2046
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2048
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+      [self] > m2
+        self.m0 self > @
+    
+    [] > o2057
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+    
+    [] > o2059
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2065
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self > @
+    
+    [] > o2066
+      [self] > m0
+        self > @
+    
+    [] > o2067
+    
+    [] > o2071
+    
+      [] > o2072
+    
+    [] > o2080
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2085
+    
+    [] > o2047
+      ^.o2046 > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self > @
+      [self] > m5
+        self > @
+      [self] > m0
+        self.m5 self > @
+      [self] > m4
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2049
+      ^.o2047 > @
+      [self] > m1
+        self.m4 self > @
+      [self] > m5
+        self > @
+      [self] > m3
+        self.m4 self > @
+      [self] > m2
+        self > @
+      [self] > m6
+        self.m4 self > @
+      [self] > m4
+        self > @
+      [self] > m0
+        self > @
+    
+    [] > o2050
+      ^.o2049 > @
+      [self] > m4
+        self > @
+      [self] > m2
+        self > @
+      [self] > m5
+        self > @
+      [self] > m1
+        self.m6 self > @
+      [self] > m0
+        self.m3 self > @
+      [self] > m3
+        self > @
+    
+    [] > o2075
+      ^.o2050 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m4
+        self > @
+      [self] > m5
+        self.m0 self > @
+      [self] > m6
+        self > @
+      [] > o2076
+        [self] > m0
+          self > @
+        [self] > m1
+          self.m0 self > @
+    
+      [] > o2077
+        [self] > m0
+          self > @
+    
+    [] > o2058
+      ^.o2050 > @
+      [self] > m2
+        self > @
+      [self] > m6
+        self > @
+      [self] > m1
+        self > @
+      [self] > m5
+        self.m3 self > @
+      [self] > m3
+        self > @
+      [self] > m4
+        self.m0 self > @
+      [self] > m0
+        self.m5 self > @
+    
+    [] > o2110
+      ^.o2066 > @
+      [self] > m1
+        self > @
+      [self] > m4
+        self > @
+      [self] > m5
+        self > @
+      [self] > m0
+        self > @
+      [self] > m3
+        self.m0 self > @
+      [self] > m2
+        self > @
+    
+    [] > o2053
+      ^.o2048 > @
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self.m2 self > @
+      [self] > m2
+        self > @
+    
+    [] > o2083
+      ^.o2075.o2077 > @
+      [self] > m0
+        self > @
+    
+    [] > o2051
+      ^.o2048 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+    
+    [] > o2100
+      ^.o2075.o2077 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+    
+    [] > o2088
+      ^.o2080 > @
+      [self] > m4
+        self > @
+      [self] > m3
+        self.m1 self > @
+      [self] > m9
+        self.m0 self > @
+      [self] > m5
+        self.m8 self > @
+      [self] > m7
+        self > @
+      [self] > m2
+        self > @
+      [self] > m6
+        self.m7 self > @
+      [self] > m1
+        self > @
+      [self] > m0
+        self > @
+      [self] > m8
+        self.m6 self > @
+    
+    [] > o2084
+      ^.o2071 > @
+      [self] > m7
+        self > @
+      [self] > m2
+        self.m7 self > @
+      [self] > m1
+        self.m7 self > @
+      [self] > m4
+        self.m7 self > @
+      [self] > m3
+        self > @
+      [self] > m0
+        self.m7 self > @
+      [self] > m5
+        self.m7 self > @
+      [self] > m6
+        self > @
+    
+    [] > o2078
+      ^.o2075.o2076 > @
+      [self] > m0
+        self > @
+      [self] > m3
+        self.m0 self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+      [self] > m4
+        self > @
+    
+    [] > o2070
+      ^.o2050 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+      [self] > m5
+        self > @
+    
+    [] > o2054
+      ^.o2050 > @
+      [self] > m5
+        self > @
+      [self] > m6
+        self.m2 self > @
+      [self] > m3
+        self.m2 self > @
+      [self] > m1
+        self > @
+      [self] > m4
+        self.m2 self > @
+      [self] > m0
+        self.m2 self > @
+      [self] > m2
+        self > @
+      [self] > m7
+        self.m3 self > @
+      [self] > m9
+        self > @
+      [self] > m8
+        self > @
+    
+    [] > o2101
+      ^.o2053 > @
+      [self] > m7
+        self.m6 self > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self.m1 self > @
+      [self] > m6
+        self.m2 self > @
+      [self] > m4
+        self > @
+      [self] > m3
+        self > @
+      [self] > m5
+        self > @
+    
+    [] > o2081
+      ^.o2066 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+    
+    [] > o2079
+      ^.o2065 > @
+      [self] > m8
+        self > @
+      [self] > m7
+        self > @
+      [self] > m6
+        self.m7 self > @
+      [self] > m2
+        self > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m7 self > @
+      [self] > m3
+        self.m7 self > @
+      [self] > m4
+        self.m2 self > @
+      [self] > m5
+        self.m2 self > @
+    
+    [] > o2087
+      ^.o2075.o2077 > @
+    
+    
+    [] > o2099
+      ^.o2048 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self.m1 self > @
+      [self] > m3
+        self > @
+    
+    [] > o2106
+      ^.o2067 > @
+    
+      [] > o2107
+        [self] > m0
+          self.m1 self > @
+        [self] > m1
+          self > @
+    
+      [] > o2108
+        [self] > m0
+          self > @
+    
+      [] > o2109
+        [self] > m0
+          self.m2 self > @
+        [self] > m1
+          self > @
+        [self] > m2
+          self.m1 self > @
+    
+    [] > o2068
+      ^.o2059 > @
+      [self] > m3
+        self > @
+      [self] > m1
+        self.m0 self > @
+      [self] > m0
+        self > @
+      [self] > m4
+        self.m2 self > @
+      [self] > m2
+        self > @
+    
+    [] > o2086
+      ^.o2058 > @
+      [self] > m5
+        self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self.m4 self > @
+      [self] > m1
+        self.m3 self > @
+      [self] > m0
+        self.m5 self > @
+      [self] > m6
+        self > @
+    
+    [] > o2082
+      ^.o2075.o2076 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+      [self] > m2
+        self > @
+    
+    [] > o2090
+      ^.o2083 > @
+      [self] > m5
+        self > @
+      [self] > m0
+        self > @
+      [self] > m3
+        self.m4 self > @
+      [self] > m4
+        self.m5 self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self.m0 self > @
+    
+    [] > o2104
+      ^.o2051 > @
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m0 self > @
+    
+    [] > o2105
+      ^.o2080 > @
+      [self] > m0
+        self > @
+      [self] > m2
+        self > @
+      [self] > m4
+        self.m1 self > @
+      [self] > m3
+        self > @
+      [self] > m5
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2073
+      ^.o2053 > @
+      [self] > m1
+        self > @
+      [] > o2074
+        [self] > m0
+          self > @
+    
+    [] > o2056
+      ^.o2048 > @
+      [self] > m0
+        self.m1 self > @
+      [self] > m1
+        self > @
+    
+    [] > o2113
+      ^.o2110 > @
+      [self] > m4
+        self > @
+      [self] > m3
+        self > @
+      [self] > m2
+        self.m1 self > @
+      [self] > m1
+        self > @
+      [self] > m5
+        self > @
+      [self] > m0
+        self > @
+      [self] > m6
+        self > @
+
+
+
+  test.py: |
+    class O2046:
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2048:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+        def m2():
+          pass
+          self.m0()
+    
+    
+    class O2057:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+    
+    
+    class O2059:
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2065:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          
+    
+    
+    class O2066:
+        pass
+        def m0():
+          pass
+          
+    
+    
+    class O2067:
+        pass
+      
+    
+    
+    class O2071:
+        pass
+      
+    
+        class O2072:
+          pass
+      
+        
+    
+    
+    class O2080:
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2085:
+        pass
+      
+    
+    
+    class O2047(O2046):
+        pass
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          
+        def m5():
+          pass
+          
+        def m0():
+          pass
+          self.m5()
+        def m4():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2049(O2047):
+        pass
+        def m1():
+          pass
+          self.m4()
+        def m5():
+          pass
+          
+        def m3():
+          pass
+          self.m4()
+        def m2():
+          pass
+          
+        def m6():
+          pass
+          self.m4()
+        def m4():
+          pass
+          
+        def m0():
+          pass
+          
+    
+    
+    class O2050(O2049):
+        pass
+        def m4():
+          pass
+          
+        def m2():
+          pass
+          
+        def m5():
+          pass
+          
+        def m1():
+          pass
+          self.m6()
+        def m0():
+          pass
+          self.m3()
+        def m3():
+          pass
+          self.m6()
+    
+    
+    class O2075(O2050):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m4():
+          pass
+          
+        def m5():
+          pass
+          self.m0()
+        def m6():
+          pass
+          
+    
+        class O2076:
+          pass
+          def m0():
+            pass
+            
+          def m1():
+            pass
+            self.m0()
+        
+    
+        class O2077:
+          pass
+          def m0():
+            pass
+            
+        
+    
+    
+    class O2058(O2050):
+        pass
+        def m2():
+          pass
+          
+        def m6():
+          pass
+          
+        def m1():
+          pass
+          
+        def m5():
+          pass
+          self.m3()
+        def m3():
+          pass
+          
+        def m4():
+          pass
+          self.m0()
+        def m0():
+          pass
+          self.m5()
+    
+    
+    class O2110(O2066):
+        pass
+        def m1():
+          pass
+          
+        def m4():
+          pass
+          
+        def m5():
+          pass
+          
+        def m0():
+          pass
+          
+        def m3():
+          pass
+          self.m0()
+        def m2():
+          pass
+          
+    
+    
+    class O2053(O2048):
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          self.m2()
+        def m2():
+          pass
+          
+    
+    
+    class O2083(O2075.O2077):
+        pass
+        def m0():
+          pass
+          
+    
+    
+    class O2051(O2048):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+    
+    
+    class O2100(O2075.O2077):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+    
+    
+    class O2088(O2080):
+        pass
+        def m4():
+          pass
+          
+        def m3():
+          pass
+          self.m1()
+        def m9():
+          pass
+          self.m0()
+        def m5():
+          pass
+          self.m8()
+        def m7():
+          pass
+          
+        def m2():
+          pass
+          
+        def m6():
+          pass
+          self.m7()
+        def m1():
+          pass
+          
+        def m0():
+          pass
+          
+        def m8():
+          pass
+          self.m6()
+    
+    
+    class O2084(O2071):
+        pass
+        def m7():
+          pass
+          
+        def m2():
+          pass
+          self.m7()
+        def m1():
+          pass
+          self.m7()
+        def m4():
+          pass
+          self.m7()
+        def m3():
+          pass
+          
+        def m0():
+          pass
+          self.m7()
+        def m5():
+          pass
+          self.m7()
+        def m6():
+          pass
+          
+    
+    
+    class O2078(O2075.O2076):
+        pass
+        def m0():
+          pass
+          
+        def m3():
+          pass
+          self.m0()
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+        def m4():
+          pass
+          
+    
+    
+    class O2070(O2050):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+        def m5():
+          pass
+          
+    
+    
+    class O2054(O2050):
+        pass
+        def m5():
+          pass
+          
+        def m6():
+          pass
+          self.m2()
+        def m3():
+          pass
+          self.m2()
+        def m1():
+          pass
+          
+        def m4():
+          pass
+          self.m2()
+        def m0():
+          pass
+          self.m2()
+        def m2():
+          pass
+          
+        def m7():
+          pass
+          self.m3()
+        def m9():
+          pass
+          
+        def m8():
+          pass
+          
+    
+    
+    class O2101(O2053):
+        pass
+        def m7():
+          pass
+          self.m6()
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          self.m1()
+        def m6():
+          pass
+          self.m2()
+        def m4():
+          pass
+          
+        def m3():
+          pass
+          
+        def m5():
+          pass
+          
+    
+    
+    class O2081(O2066):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+    
+    
+    class O2079(O2065):
+        pass
+        def m8():
+          pass
+          
+        def m7():
+          pass
+          
+        def m6():
+          pass
+          self.m7()
+        def m2():
+          pass
+          
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m7()
+        def m3():
+          pass
+          self.m7()
+        def m4():
+          pass
+          self.m2()
+        def m5():
+          pass
+          self.m2()
+    
+    
+    class O2087(O2075.O2077):
+        pass
+      
+    
+    
+    class O2099(O2048):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          self.m1()
+        def m3():
+          pass
+          
+    
+    
+    class O2106(O2067):
+        pass
+      
+    
+        class O2107:
+          pass
+          def m0():
+            pass
+            self.m1()
+          def m1():
+            pass
+            
+        
+    
+        class O2108:
+          pass
+          def m0():
+            pass
+            
+        
+    
+        class O2109:
+          pass
+          def m0():
+            pass
+            self.m2()
+          def m1():
+            pass
+            
+          def m2():
+            pass
+            self.m1()
+        
+    
+    
+    class O2068(O2059):
+        pass
+        def m3():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+        def m0():
+          pass
+          
+        def m4():
+          pass
+          self.m2()
+        def m2():
+          pass
+          
+    
+    
+    class O2086(O2058):
+        pass
+        def m5():
+          pass
+          
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          self.m4()
+        def m1():
+          pass
+          self.m3()
+        def m0():
+          pass
+          self.m5()
+        def m6():
+          pass
+          
+    
+    
+    class O2082(O2075.O2076):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+        def m2():
+          pass
+          
+    
+    
+    class O2090(O2083):
+        pass
+        def m5():
+          pass
+          
+        def m0():
+          pass
+          
+        def m3():
+          pass
+          self.m4()
+        def m4():
+          pass
+          self.m5()
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          self.m0()
+    
+    
+    class O2104(O2051):
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m0()
+    
+    
+    class O2105(O2080):
+        pass
+        def m0():
+          pass
+          
+        def m2():
+          pass
+          
+        def m4():
+          pass
+          self.m1()
+        def m3():
+          pass
+          
+        def m5():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2073(O2053):
+        pass
+        def m1():
+          pass
+          
+    
+        class O2074:
+          pass
+          def m0():
+            pass
+            
+        
+    
+    
+    class O2056(O2048):
+        pass
+        def m0():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+    
+    
+    class O2113(O2110):
+        pass
+        def m4():
+          pass
+          
+        def m3():
+          pass
+          
+        def m2():
+          pass
+          self.m1()
+        def m1():
+          pass
+          
+        def m5():
+          pass
+          
+        def m0():
+          pass
+          
+        def m6():
+          pass
+          
+
+
+

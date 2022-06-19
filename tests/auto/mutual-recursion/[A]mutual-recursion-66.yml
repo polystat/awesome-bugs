@@ -1,0 +1,2325 @@
+title: Mutual recursion in a chain of inheritance
+description: >
+  The defect manifests in the form of call chain cycles.
+  The following cycles are present here:
+  o15053.m23 -> o15053.m22 -> o15056.m1 -> o15053.m23
+  o15053.m22 -> o15056.m1 -> o15053.m23 -> o15053.m22
+  o15056.m1 -> o15053.m23 -> o15053.m22 -> o15056.m1
+
+features:
+  - inheritance
+  - overriding
+  - method
+  - polymorphism
+
+bad:
+   
+  source.cpp: |
+    class O15051 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+    };
+    
+    class O15052 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){m3();};
+        virtual void m2(){};
+        virtual void m3(){m0();};
+    };
+    
+    class O15066 {
+      public:
+        virtual void m0(){};
+    
+        class O15067 {
+        public:
+      
+        };
+    };
+    
+    class O15069 {
+      public:
+        virtual void m0(){};
+    };
+    
+    class O15072 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+        virtual void m3(){};
+    
+        class O15073 {
+        public:
+          virtual void m0(){};
+          virtual void m1(){m0();};
+          virtual void m2(){m0();};
+          virtual void m3(){};
+        };
+    
+        class O15074 {
+        public:
+      
+        };
+    };
+    
+    class O15053 : public O15052{
+      public:
+        virtual void m15(){m1();};
+        virtual void m20(){};
+        virtual void m4(){m25();};
+        virtual void m1(){};
+        virtual void m25(){};
+        virtual void m26(){m0();};
+        virtual void m23(){m22();};
+        virtual void m12(){m23();};
+        virtual void m3(){};
+        virtual void m0(){};
+        virtual void m10(){m3();};
+        virtual void m9(){};
+        virtual void m24(){m22();};
+        virtual void m8(){m18();};
+        virtual void m16(){};
+        virtual void m19(){};
+        virtual void m5(){m9();};
+        virtual void m21(){};
+        virtual void m14(){};
+        virtual void m13(){m3();};
+        virtual void m17(){};
+        virtual void m2(){m23();};
+        virtual void m11(){};
+        virtual void m7(){m26();};
+        virtual void m22(){m1();};
+        virtual void m6(){m26();};
+        virtual void m18(){};
+    };
+    
+    class O15071 : public O15053{
+      public:
+        virtual void m17(){};
+        virtual void m22(){m11();};
+        virtual void m6(){m5();};
+        virtual void m0(){m13();};
+        virtual void m23(){};
+        virtual void m18(){};
+        virtual void m21(){m8();};
+        virtual void m2(){};
+        virtual void m7(){};
+        virtual void m26(){};
+        virtual void m14(){};
+        virtual void m1(){m24();};
+        virtual void m20(){m13();};
+        virtual void m15(){};
+        virtual void m16(){m8();};
+    };
+    
+    class O15056 : public O15053{
+      public:
+        virtual void m20(){m19();};
+        virtual void m9(){m2();};
+        virtual void m10(){m26();};
+        virtual void m11(){};
+        virtual void m24(){m18();};
+        virtual void m15(){};
+        virtual void m12(){m19();};
+        virtual void m6(){};
+        virtual void m26(){};
+        virtual void m19(){m13();};
+        virtual void m14(){};
+        virtual void m2(){m18();};
+        virtual void m1(){m23();};
+        virtual void m3(){};
+        virtual void m4(){m21();};
+        virtual void m17(){};
+        virtual void m13(){m7();};
+        virtual void m5(){};
+        virtual void m7(){m13();};
+        virtual void m18(){m6();};
+        virtual void m16(){};
+        virtual void m0(){};
+        virtual void m8(){};
+    };
+    
+    class O15062 : public O15053{
+      public:
+        virtual void m11(){};
+        virtual void m8(){m18();};
+        virtual void m2(){};
+        virtual void m3(){m6();};
+        virtual void m20(){};
+        virtual void m6(){};
+        virtual void m5(){m18();};
+        virtual void m1(){m7();};
+        virtual void m7(){};
+        virtual void m13(){m17();};
+        virtual void m4(){};
+        virtual void m0(){};
+        virtual void m9(){m22();};
+    
+        class O15063 {
+        public:
+          virtual void m0(){m1();};
+          virtual void m1(){};
+        };
+    };
+    
+    class O15065 : public O15052{
+      public:
+        virtual void m6(){m3();};
+        virtual void m21(){};
+        virtual void m28(){};
+        virtual void m19(){m2();};
+        virtual void m9(){};
+        virtual void m31(){m2();};
+        virtual void m11(){};
+        virtual void m4(){};
+        virtual void m5(){};
+        virtual void m18(){};
+        virtual void m14(){};
+        virtual void m34(){m35();};
+        virtual void m10(){};
+        virtual void m1(){m2();};
+        virtual void m22(){};
+        virtual void m12(){};
+        virtual void m25(){m1();};
+        virtual void m30(){};
+        virtual void m26(){m1();};
+        virtual void m35(){m0();};
+        virtual void m8(){m1();};
+        virtual void m0(){m37();};
+        virtual void m17(){m26();};
+        virtual void m7(){m2();};
+        virtual void m3(){};
+        virtual void m27(){};
+        virtual void m29(){};
+        virtual void m24(){m3();};
+        virtual void m36(){};
+        virtual void m32(){m30();};
+        virtual void m33(){m0();};
+        virtual void m2(){};
+        virtual void m23(){m37();};
+        virtual void m15(){m0();};
+        virtual void m37(){};
+        virtual void m16(){m25();};
+        virtual void m13(){m37();};
+        virtual void m20(){};
+    };
+
+
+
+  Test.java: |
+    
+    public class Main{
+    static class O15051 {
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+    };
+    
+    static class O15052 {
+        public void m0(){};
+        public void m1(){m3();};
+        public void m2(){};
+        public void m3(){m0();};
+    };
+    
+    static class O15066 {
+        public void m0(){};
+    
+        static class O15067 {
+      
+        };
+    };
+    
+    static class O15069 {
+        public void m0(){};
+    };
+    
+    static class O15072 {
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+        public void m3(){};
+    
+        static class O15073 {
+          public void m0(){};
+          public void m1(){m0();};
+          public void m2(){m0();};
+          public void m3(){};
+        };
+    
+        static class O15074 {
+      
+        };
+    };
+    
+    static class O15053  extends O15052{
+        public void m15(){m1();};
+        public void m20(){};
+        public void m4(){m25();};
+        public void m1(){};
+        public void m25(){};
+        public void m26(){m0();};
+        public void m23(){m22();};
+        public void m12(){m23();};
+        public void m3(){};
+        public void m0(){};
+        public void m10(){m3();};
+        public void m9(){};
+        public void m24(){m22();};
+        public void m8(){m18();};
+        public void m16(){};
+        public void m19(){};
+        public void m5(){m9();};
+        public void m21(){};
+        public void m14(){};
+        public void m13(){m3();};
+        public void m17(){};
+        public void m2(){m23();};
+        public void m11(){};
+        public void m7(){m26();};
+        public void m22(){m1();};
+        public void m6(){m26();};
+        public void m18(){};
+    };
+    
+    static class O15071  extends O15053{
+        public void m17(){};
+        public void m22(){m11();};
+        public void m6(){m5();};
+        public void m0(){m13();};
+        public void m23(){};
+        public void m18(){};
+        public void m21(){m8();};
+        public void m2(){};
+        public void m7(){};
+        public void m26(){};
+        public void m14(){};
+        public void m1(){m24();};
+        public void m20(){m13();};
+        public void m15(){};
+        public void m16(){m8();};
+    };
+    
+    static class O15056  extends O15053{
+        public void m20(){m19();};
+        public void m9(){m2();};
+        public void m10(){m26();};
+        public void m11(){};
+        public void m24(){m18();};
+        public void m15(){};
+        public void m12(){m19();};
+        public void m6(){};
+        public void m26(){};
+        public void m19(){m13();};
+        public void m14(){};
+        public void m2(){m18();};
+        public void m1(){m23();};
+        public void m3(){};
+        public void m4(){m21();};
+        public void m17(){};
+        public void m13(){m7();};
+        public void m5(){};
+        public void m7(){m13();};
+        public void m18(){m6();};
+        public void m16(){};
+        public void m0(){};
+        public void m8(){};
+    };
+    
+    static class O15062  extends O15053{
+        public void m11(){};
+        public void m8(){m18();};
+        public void m2(){};
+        public void m3(){m6();};
+        public void m20(){};
+        public void m6(){};
+        public void m5(){m18();};
+        public void m1(){m7();};
+        public void m7(){};
+        public void m13(){m17();};
+        public void m4(){};
+        public void m0(){};
+        public void m9(){m22();};
+    
+        static class O15063 {
+          public void m0(){m1();};
+          public void m1(){};
+        };
+    };
+    
+    static class O15065  extends O15052{
+        public void m6(){m3();};
+        public void m21(){};
+        public void m28(){};
+        public void m19(){m2();};
+        public void m9(){};
+        public void m31(){m2();};
+        public void m11(){};
+        public void m4(){};
+        public void m5(){};
+        public void m18(){};
+        public void m14(){};
+        public void m34(){m35();};
+        public void m10(){};
+        public void m1(){m2();};
+        public void m22(){};
+        public void m12(){};
+        public void m25(){m1();};
+        public void m30(){};
+        public void m26(){m1();};
+        public void m35(){m0();};
+        public void m8(){m1();};
+        public void m0(){m37();};
+        public void m17(){m26();};
+        public void m7(){m2();};
+        public void m3(){};
+        public void m27(){};
+        public void m29(){};
+        public void m24(){m3();};
+        public void m36(){};
+        public void m32(){m30();};
+        public void m33(){m0();};
+        public void m2(){};
+        public void m23(){m37();};
+        public void m15(){m0();};
+        public void m37(){};
+        public void m16(){m25();};
+        public void m13(){m37();};
+        public void m20(){};
+    };
+    
+    
+    public static void main(String[] args){}
+    }
+
+
+
+
+  test.eo: |
+    [] > o15051
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+    
+    [] > o15052
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m3 self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self.m0 self > @
+    
+    [] > o15066
+      [self] > m0
+        self > @
+      [] > o15067
+    
+    [] > o15069
+      [self] > m0
+        self > @
+    
+    [] > o15072
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self > @
+      [] > o15073
+        [self] > m0
+          self > @
+        [self] > m1
+          self.m0 self > @
+        [self] > m2
+          self.m0 self > @
+        [self] > m3
+          self > @
+    
+      [] > o15074
+    
+    [] > o15053
+      ^.o15052 > @
+      [self] > m15
+        self.m1 self > @
+      [self] > m20
+        self > @
+      [self] > m4
+        self.m25 self > @
+      [self] > m1
+        self > @
+      [self] > m25
+        self > @
+      [self] > m26
+        self.m0 self > @
+      [self] > m23
+        self.m22 self > @
+      [self] > m12
+        self.m23 self > @
+      [self] > m3
+        self > @
+      [self] > m0
+        self > @
+      [self] > m10
+        self.m3 self > @
+      [self] > m9
+        self > @
+      [self] > m24
+        self.m22 self > @
+      [self] > m8
+        self.m18 self > @
+      [self] > m16
+        self > @
+      [self] > m19
+        self > @
+      [self] > m5
+        self.m9 self > @
+      [self] > m21
+        self > @
+      [self] > m14
+        self > @
+      [self] > m13
+        self.m3 self > @
+      [self] > m17
+        self > @
+      [self] > m2
+        self.m23 self > @
+      [self] > m11
+        self > @
+      [self] > m7
+        self.m26 self > @
+      [self] > m22
+        self.m1 self > @
+      [self] > m6
+        self.m26 self > @
+      [self] > m18
+        self > @
+    
+    [] > o15071
+      ^.o15053 > @
+      [self] > m17
+        self > @
+      [self] > m22
+        self.m11 self > @
+      [self] > m6
+        self.m5 self > @
+      [self] > m0
+        self.m13 self > @
+      [self] > m23
+        self > @
+      [self] > m18
+        self > @
+      [self] > m21
+        self.m8 self > @
+      [self] > m2
+        self > @
+      [self] > m7
+        self > @
+      [self] > m26
+        self > @
+      [self] > m14
+        self > @
+      [self] > m1
+        self.m24 self > @
+      [self] > m20
+        self.m13 self > @
+      [self] > m15
+        self > @
+      [self] > m16
+        self.m8 self > @
+    
+    [] > o15056
+      ^.o15053 > @
+      [self] > m20
+        self.m19 self > @
+      [self] > m9
+        self.m2 self > @
+      [self] > m10
+        self.m26 self > @
+      [self] > m11
+        self > @
+      [self] > m24
+        self.m18 self > @
+      [self] > m15
+        self > @
+      [self] > m12
+        self.m19 self > @
+      [self] > m6
+        self > @
+      [self] > m26
+        self > @
+      [self] > m19
+        self.m13 self > @
+      [self] > m14
+        self > @
+      [self] > m2
+        self.m18 self > @
+      [self] > m1
+        self.m23 self > @
+      [self] > m3
+        self > @
+      [self] > m4
+        self.m21 self > @
+      [self] > m17
+        self > @
+      [self] > m13
+        self.m7 self > @
+      [self] > m5
+        self > @
+      [self] > m7
+        self.m13 self > @
+      [self] > m18
+        self.m6 self > @
+      [self] > m16
+        self > @
+      [self] > m0
+        self > @
+      [self] > m8
+        self > @
+    
+    [] > o15062
+      ^.o15053 > @
+      [self] > m11
+        self > @
+      [self] > m8
+        self.m18 self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self.m6 self > @
+      [self] > m20
+        self > @
+      [self] > m6
+        self > @
+      [self] > m5
+        self.m18 self > @
+      [self] > m1
+        self.m7 self > @
+      [self] > m7
+        self > @
+      [self] > m13
+        self.m17 self > @
+      [self] > m4
+        self > @
+      [self] > m0
+        self > @
+      [self] > m9
+        self.m22 self > @
+      [] > o15063
+        [self] > m0
+          self.m1 self > @
+        [self] > m1
+          self > @
+    
+    [] > o15065
+      ^.o15052 > @
+      [self] > m6
+        self.m3 self > @
+      [self] > m21
+        self > @
+      [self] > m28
+        self > @
+      [self] > m19
+        self.m2 self > @
+      [self] > m9
+        self > @
+      [self] > m31
+        self.m2 self > @
+      [self] > m11
+        self > @
+      [self] > m4
+        self > @
+      [self] > m5
+        self > @
+      [self] > m18
+        self > @
+      [self] > m14
+        self > @
+      [self] > m34
+        self.m35 self > @
+      [self] > m10
+        self > @
+      [self] > m1
+        self.m2 self > @
+      [self] > m22
+        self > @
+      [self] > m12
+        self > @
+      [self] > m25
+        self.m1 self > @
+      [self] > m30
+        self > @
+      [self] > m26
+        self.m1 self > @
+      [self] > m35
+        self.m0 self > @
+      [self] > m8
+        self.m1 self > @
+      [self] > m0
+        self.m37 self > @
+      [self] > m17
+        self.m26 self > @
+      [self] > m7
+        self.m2 self > @
+      [self] > m3
+        self > @
+      [self] > m27
+        self > @
+      [self] > m29
+        self > @
+      [self] > m24
+        self.m3 self > @
+      [self] > m36
+        self > @
+      [self] > m32
+        self.m30 self > @
+      [self] > m33
+        self.m0 self > @
+      [self] > m2
+        self > @
+      [self] > m23
+        self.m37 self > @
+      [self] > m15
+        self.m0 self > @
+      [self] > m37
+        self > @
+      [self] > m16
+        self.m25 self > @
+      [self] > m13
+        self.m37 self > @
+      [self] > m20
+        self > @
+
+
+
+  test.py: |
+    class O15051:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+    
+    
+    class O15052:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m3()
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          self.m0()
+    
+    
+    class O15066:
+        pass
+        def m0():
+          pass
+          
+    
+        class O15067:
+          pass
+      
+        
+    
+    
+    class O15069:
+        pass
+        def m0():
+          pass
+          
+    
+    
+    class O15072:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          
+    
+        class O15073:
+          pass
+          def m0():
+            pass
+            
+          def m1():
+            pass
+            self.m0()
+          def m2():
+            pass
+            self.m0()
+          def m3():
+            pass
+            
+        
+    
+        class O15074:
+          pass
+      
+        
+    
+    
+    class O15053(O15052):
+        pass
+        def m15():
+          pass
+          self.m1()
+        def m20():
+          pass
+          
+        def m4():
+          pass
+          self.m25()
+        def m1():
+          pass
+          
+        def m25():
+          pass
+          
+        def m26():
+          pass
+          self.m0()
+        def m23():
+          pass
+          self.m22()
+        def m12():
+          pass
+          self.m23()
+        def m3():
+          pass
+          
+        def m0():
+          pass
+          
+        def m10():
+          pass
+          self.m3()
+        def m9():
+          pass
+          
+        def m24():
+          pass
+          self.m22()
+        def m8():
+          pass
+          self.m18()
+        def m16():
+          pass
+          
+        def m19():
+          pass
+          
+        def m5():
+          pass
+          self.m9()
+        def m21():
+          pass
+          
+        def m14():
+          pass
+          
+        def m13():
+          pass
+          self.m3()
+        def m17():
+          pass
+          
+        def m2():
+          pass
+          self.m23()
+        def m11():
+          pass
+          
+        def m7():
+          pass
+          self.m26()
+        def m22():
+          pass
+          self.m1()
+        def m6():
+          pass
+          self.m26()
+        def m18():
+          pass
+          
+    
+    
+    class O15071(O15053):
+        pass
+        def m17():
+          pass
+          
+        def m22():
+          pass
+          self.m11()
+        def m6():
+          pass
+          self.m5()
+        def m0():
+          pass
+          self.m13()
+        def m23():
+          pass
+          
+        def m18():
+          pass
+          
+        def m21():
+          pass
+          self.m8()
+        def m2():
+          pass
+          
+        def m7():
+          pass
+          
+        def m26():
+          pass
+          
+        def m14():
+          pass
+          
+        def m1():
+          pass
+          self.m24()
+        def m20():
+          pass
+          self.m13()
+        def m15():
+          pass
+          
+        def m16():
+          pass
+          self.m8()
+    
+    
+    class O15056(O15053):
+        pass
+        def m20():
+          pass
+          self.m19()
+        def m9():
+          pass
+          self.m2()
+        def m10():
+          pass
+          self.m26()
+        def m11():
+          pass
+          
+        def m24():
+          pass
+          self.m18()
+        def m15():
+          pass
+          
+        def m12():
+          pass
+          self.m19()
+        def m6():
+          pass
+          
+        def m26():
+          pass
+          
+        def m19():
+          pass
+          self.m13()
+        def m14():
+          pass
+          
+        def m2():
+          pass
+          self.m18()
+        def m1():
+          pass
+          self.m23()
+        def m3():
+          pass
+          
+        def m4():
+          pass
+          self.m21()
+        def m17():
+          pass
+          
+        def m13():
+          pass
+          self.m7()
+        def m5():
+          pass
+          
+        def m7():
+          pass
+          self.m13()
+        def m18():
+          pass
+          self.m6()
+        def m16():
+          pass
+          
+        def m0():
+          pass
+          
+        def m8():
+          pass
+          
+    
+    
+    class O15062(O15053):
+        pass
+        def m11():
+          pass
+          
+        def m8():
+          pass
+          self.m18()
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          self.m6()
+        def m20():
+          pass
+          
+        def m6():
+          pass
+          
+        def m5():
+          pass
+          self.m18()
+        def m1():
+          pass
+          self.m7()
+        def m7():
+          pass
+          
+        def m13():
+          pass
+          self.m17()
+        def m4():
+          pass
+          
+        def m0():
+          pass
+          
+        def m9():
+          pass
+          self.m22()
+    
+        class O15063:
+          pass
+          def m0():
+            pass
+            self.m1()
+          def m1():
+            pass
+            
+        
+    
+    
+    class O15065(O15052):
+        pass
+        def m6():
+          pass
+          self.m3()
+        def m21():
+          pass
+          
+        def m28():
+          pass
+          
+        def m19():
+          pass
+          self.m2()
+        def m9():
+          pass
+          
+        def m31():
+          pass
+          self.m2()
+        def m11():
+          pass
+          
+        def m4():
+          pass
+          
+        def m5():
+          pass
+          
+        def m18():
+          pass
+          
+        def m14():
+          pass
+          
+        def m34():
+          pass
+          self.m35()
+        def m10():
+          pass
+          
+        def m1():
+          pass
+          self.m2()
+        def m22():
+          pass
+          
+        def m12():
+          pass
+          
+        def m25():
+          pass
+          self.m1()
+        def m30():
+          pass
+          
+        def m26():
+          pass
+          self.m1()
+        def m35():
+          pass
+          self.m0()
+        def m8():
+          pass
+          self.m1()
+        def m0():
+          pass
+          self.m37()
+        def m17():
+          pass
+          self.m26()
+        def m7():
+          pass
+          self.m2()
+        def m3():
+          pass
+          
+        def m27():
+          pass
+          
+        def m29():
+          pass
+          
+        def m24():
+          pass
+          self.m3()
+        def m36():
+          pass
+          
+        def m32():
+          pass
+          self.m30()
+        def m33():
+          pass
+          self.m0()
+        def m2():
+          pass
+          
+        def m23():
+          pass
+          self.m37()
+        def m15():
+          pass
+          self.m0()
+        def m37():
+          pass
+          
+        def m16():
+          pass
+          self.m25()
+        def m13():
+          pass
+          self.m37()
+        def m20():
+          pass
+          
+
+
+
+   
+good:
+   
+  source.cpp: |
+    class O15051 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+    };
+    
+    class O15052 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){m3();};
+        virtual void m2(){};
+        virtual void m3(){m0();};
+    };
+    
+    class O15066 {
+      public:
+        virtual void m0(){};
+    
+        class O15067 {
+        public:
+      
+        };
+    };
+    
+    class O15069 {
+      public:
+        virtual void m0(){};
+    };
+    
+    class O15072 {
+      public:
+        virtual void m0(){};
+        virtual void m1(){};
+        virtual void m2(){};
+        virtual void m3(){};
+    
+        class O15073 {
+        public:
+          virtual void m0(){};
+          virtual void m1(){m0();};
+          virtual void m2(){m0();};
+          virtual void m3(){};
+        };
+    
+        class O15074 {
+        public:
+      
+        };
+    };
+    
+    class O15053 : public O15052{
+      public:
+        virtual void m15(){m1();};
+        virtual void m20(){};
+        virtual void m4(){m25();};
+        virtual void m1(){};
+        virtual void m25(){};
+        virtual void m26(){m0();};
+        virtual void m23(){m22();};
+        virtual void m12(){m23();};
+        virtual void m3(){};
+        virtual void m0(){};
+        virtual void m10(){m3();};
+        virtual void m9(){};
+        virtual void m24(){m22();};
+        virtual void m8(){m18();};
+        virtual void m16(){};
+        virtual void m19(){};
+        virtual void m5(){m9();};
+        virtual void m21(){};
+        virtual void m14(){};
+        virtual void m13(){m3();};
+        virtual void m17(){};
+        virtual void m2(){m23();};
+        virtual void m11(){};
+        virtual void m7(){m26();};
+        virtual void m22(){};
+        virtual void m6(){m26();};
+        virtual void m18(){};
+    };
+    
+    class O15071 : public O15053{
+      public:
+        virtual void m17(){};
+        virtual void m22(){m11();};
+        virtual void m6(){m5();};
+        virtual void m0(){m13();};
+        virtual void m23(){};
+        virtual void m18(){};
+        virtual void m21(){m8();};
+        virtual void m2(){};
+        virtual void m7(){};
+        virtual void m26(){};
+        virtual void m14(){};
+        virtual void m1(){m24();};
+        virtual void m20(){m13();};
+        virtual void m15(){};
+        virtual void m16(){m8();};
+    };
+    
+    class O15056 : public O15053{
+      public:
+        virtual void m20(){m19();};
+        virtual void m9(){m2();};
+        virtual void m10(){m26();};
+        virtual void m11(){};
+        virtual void m24(){m18();};
+        virtual void m15(){};
+        virtual void m12(){m19();};
+        virtual void m6(){};
+        virtual void m26(){};
+        virtual void m19(){m13();};
+        virtual void m14(){};
+        virtual void m2(){m18();};
+        virtual void m1(){};
+        virtual void m3(){};
+        virtual void m4(){m21();};
+        virtual void m17(){};
+        virtual void m13(){m7();};
+        virtual void m5(){};
+        virtual void m7(){m13();};
+        virtual void m18(){m6();};
+        virtual void m16(){};
+        virtual void m0(){};
+        virtual void m8(){};
+    };
+    
+    class O15062 : public O15053{
+      public:
+        virtual void m11(){};
+        virtual void m8(){m18();};
+        virtual void m2(){};
+        virtual void m3(){m6();};
+        virtual void m20(){};
+        virtual void m6(){};
+        virtual void m5(){m18();};
+        virtual void m1(){m7();};
+        virtual void m7(){};
+        virtual void m13(){m17();};
+        virtual void m4(){};
+        virtual void m0(){};
+        virtual void m9(){m22();};
+    
+        class O15063 {
+        public:
+          virtual void m0(){m1();};
+          virtual void m1(){};
+        };
+    };
+    
+    class O15065 : public O15052{
+      public:
+        virtual void m6(){m3();};
+        virtual void m21(){};
+        virtual void m28(){};
+        virtual void m19(){m2();};
+        virtual void m9(){};
+        virtual void m31(){m2();};
+        virtual void m11(){};
+        virtual void m4(){};
+        virtual void m5(){};
+        virtual void m18(){};
+        virtual void m14(){};
+        virtual void m34(){m35();};
+        virtual void m10(){};
+        virtual void m1(){m2();};
+        virtual void m22(){};
+        virtual void m12(){};
+        virtual void m25(){m1();};
+        virtual void m30(){};
+        virtual void m26(){m1();};
+        virtual void m35(){m0();};
+        virtual void m8(){m1();};
+        virtual void m0(){m37();};
+        virtual void m17(){m26();};
+        virtual void m7(){m2();};
+        virtual void m3(){};
+        virtual void m27(){};
+        virtual void m29(){};
+        virtual void m24(){m3();};
+        virtual void m36(){};
+        virtual void m32(){m30();};
+        virtual void m33(){m0();};
+        virtual void m2(){};
+        virtual void m23(){m37();};
+        virtual void m15(){m0();};
+        virtual void m37(){};
+        virtual void m16(){m25();};
+        virtual void m13(){m37();};
+        virtual void m20(){};
+    };
+
+
+
+  Test.java: |
+    
+    public class Main{
+    static class O15051 {
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+    };
+    
+    static class O15052 {
+        public void m0(){};
+        public void m1(){m3();};
+        public void m2(){};
+        public void m3(){m0();};
+    };
+    
+    static class O15066 {
+        public void m0(){};
+    
+        static class O15067 {
+      
+        };
+    };
+    
+    static class O15069 {
+        public void m0(){};
+    };
+    
+    static class O15072 {
+        public void m0(){};
+        public void m1(){};
+        public void m2(){};
+        public void m3(){};
+    
+        static class O15073 {
+          public void m0(){};
+          public void m1(){m0();};
+          public void m2(){m0();};
+          public void m3(){};
+        };
+    
+        static class O15074 {
+      
+        };
+    };
+    
+    static class O15053  extends O15052{
+        public void m15(){m1();};
+        public void m20(){};
+        public void m4(){m25();};
+        public void m1(){};
+        public void m25(){};
+        public void m26(){m0();};
+        public void m23(){m22();};
+        public void m12(){m23();};
+        public void m3(){};
+        public void m0(){};
+        public void m10(){m3();};
+        public void m9(){};
+        public void m24(){m22();};
+        public void m8(){m18();};
+        public void m16(){};
+        public void m19(){};
+        public void m5(){m9();};
+        public void m21(){};
+        public void m14(){};
+        public void m13(){m3();};
+        public void m17(){};
+        public void m2(){m23();};
+        public void m11(){};
+        public void m7(){m26();};
+        public void m22(){};
+        public void m6(){m26();};
+        public void m18(){};
+    };
+    
+    static class O15071  extends O15053{
+        public void m17(){};
+        public void m22(){m11();};
+        public void m6(){m5();};
+        public void m0(){m13();};
+        public void m23(){};
+        public void m18(){};
+        public void m21(){m8();};
+        public void m2(){};
+        public void m7(){};
+        public void m26(){};
+        public void m14(){};
+        public void m1(){m24();};
+        public void m20(){m13();};
+        public void m15(){};
+        public void m16(){m8();};
+    };
+    
+    static class O15056  extends O15053{
+        public void m20(){m19();};
+        public void m9(){m2();};
+        public void m10(){m26();};
+        public void m11(){};
+        public void m24(){m18();};
+        public void m15(){};
+        public void m12(){m19();};
+        public void m6(){};
+        public void m26(){};
+        public void m19(){m13();};
+        public void m14(){};
+        public void m2(){m18();};
+        public void m1(){};
+        public void m3(){};
+        public void m4(){m21();};
+        public void m17(){};
+        public void m13(){m7();};
+        public void m5(){};
+        public void m7(){m13();};
+        public void m18(){m6();};
+        public void m16(){};
+        public void m0(){};
+        public void m8(){};
+    };
+    
+    static class O15062  extends O15053{
+        public void m11(){};
+        public void m8(){m18();};
+        public void m2(){};
+        public void m3(){m6();};
+        public void m20(){};
+        public void m6(){};
+        public void m5(){m18();};
+        public void m1(){m7();};
+        public void m7(){};
+        public void m13(){m17();};
+        public void m4(){};
+        public void m0(){};
+        public void m9(){m22();};
+    
+        static class O15063 {
+          public void m0(){m1();};
+          public void m1(){};
+        };
+    };
+    
+    static class O15065  extends O15052{
+        public void m6(){m3();};
+        public void m21(){};
+        public void m28(){};
+        public void m19(){m2();};
+        public void m9(){};
+        public void m31(){m2();};
+        public void m11(){};
+        public void m4(){};
+        public void m5(){};
+        public void m18(){};
+        public void m14(){};
+        public void m34(){m35();};
+        public void m10(){};
+        public void m1(){m2();};
+        public void m22(){};
+        public void m12(){};
+        public void m25(){m1();};
+        public void m30(){};
+        public void m26(){m1();};
+        public void m35(){m0();};
+        public void m8(){m1();};
+        public void m0(){m37();};
+        public void m17(){m26();};
+        public void m7(){m2();};
+        public void m3(){};
+        public void m27(){};
+        public void m29(){};
+        public void m24(){m3();};
+        public void m36(){};
+        public void m32(){m30();};
+        public void m33(){m0();};
+        public void m2(){};
+        public void m23(){m37();};
+        public void m15(){m0();};
+        public void m37(){};
+        public void m16(){m25();};
+        public void m13(){m37();};
+        public void m20(){};
+    };
+    
+    
+    public static void main(String[] args){}
+    }
+
+
+
+
+  test.eo: |
+    [] > o15051
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+    
+    [] > o15052
+      [self] > m0
+        self > @
+      [self] > m1
+        self.m3 self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self.m0 self > @
+    
+    [] > o15066
+      [self] > m0
+        self > @
+      [] > o15067
+    
+    [] > o15069
+      [self] > m0
+        self > @
+    
+    [] > o15072
+      [self] > m0
+        self > @
+      [self] > m1
+        self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self > @
+      [] > o15073
+        [self] > m0
+          self > @
+        [self] > m1
+          self.m0 self > @
+        [self] > m2
+          self.m0 self > @
+        [self] > m3
+          self > @
+    
+      [] > o15074
+    
+    [] > o15053
+      ^.o15052 > @
+      [self] > m15
+        self.m1 self > @
+      [self] > m20
+        self > @
+      [self] > m4
+        self.m25 self > @
+      [self] > m1
+        self > @
+      [self] > m25
+        self > @
+      [self] > m26
+        self.m0 self > @
+      [self] > m23
+        self > @
+      [self] > m12
+        self.m23 self > @
+      [self] > m3
+        self > @
+      [self] > m0
+        self > @
+      [self] > m10
+        self.m3 self > @
+      [self] > m9
+        self > @
+      [self] > m24
+        self.m22 self > @
+      [self] > m8
+        self.m18 self > @
+      [self] > m16
+        self > @
+      [self] > m19
+        self > @
+      [self] > m5
+        self.m9 self > @
+      [self] > m21
+        self > @
+      [self] > m14
+        self > @
+      [self] > m13
+        self.m3 self > @
+      [self] > m17
+        self > @
+      [self] > m2
+        self.m23 self > @
+      [self] > m11
+        self > @
+      [self] > m7
+        self.m26 self > @
+      [self] > m22
+        self.m1 self > @
+      [self] > m6
+        self.m26 self > @
+      [self] > m18
+        self > @
+    
+    [] > o15071
+      ^.o15053 > @
+      [self] > m17
+        self > @
+      [self] > m22
+        self.m11 self > @
+      [self] > m6
+        self.m5 self > @
+      [self] > m0
+        self.m13 self > @
+      [self] > m23
+        self > @
+      [self] > m18
+        self > @
+      [self] > m21
+        self.m8 self > @
+      [self] > m2
+        self > @
+      [self] > m7
+        self > @
+      [self] > m26
+        self > @
+      [self] > m14
+        self > @
+      [self] > m1
+        self.m24 self > @
+      [self] > m20
+        self.m13 self > @
+      [self] > m15
+        self > @
+      [self] > m16
+        self.m8 self > @
+    
+    [] > o15056
+      ^.o15053 > @
+      [self] > m20
+        self.m19 self > @
+      [self] > m9
+        self.m2 self > @
+      [self] > m10
+        self.m26 self > @
+      [self] > m11
+        self > @
+      [self] > m24
+        self.m18 self > @
+      [self] > m15
+        self > @
+      [self] > m12
+        self.m19 self > @
+      [self] > m6
+        self > @
+      [self] > m26
+        self > @
+      [self] > m19
+        self.m13 self > @
+      [self] > m14
+        self > @
+      [self] > m2
+        self.m18 self > @
+      [self] > m1
+        self > @
+      [self] > m3
+        self > @
+      [self] > m4
+        self.m21 self > @
+      [self] > m17
+        self > @
+      [self] > m13
+        self.m7 self > @
+      [self] > m5
+        self > @
+      [self] > m7
+        self.m13 self > @
+      [self] > m18
+        self.m6 self > @
+      [self] > m16
+        self > @
+      [self] > m0
+        self > @
+      [self] > m8
+        self > @
+    
+    [] > o15062
+      ^.o15053 > @
+      [self] > m11
+        self > @
+      [self] > m8
+        self.m18 self > @
+      [self] > m2
+        self > @
+      [self] > m3
+        self.m6 self > @
+      [self] > m20
+        self > @
+      [self] > m6
+        self > @
+      [self] > m5
+        self.m18 self > @
+      [self] > m1
+        self.m7 self > @
+      [self] > m7
+        self > @
+      [self] > m13
+        self.m17 self > @
+      [self] > m4
+        self > @
+      [self] > m0
+        self > @
+      [self] > m9
+        self.m22 self > @
+      [] > o15063
+        [self] > m0
+          self.m1 self > @
+        [self] > m1
+          self > @
+    
+    [] > o15065
+      ^.o15052 > @
+      [self] > m6
+        self.m3 self > @
+      [self] > m21
+        self > @
+      [self] > m28
+        self > @
+      [self] > m19
+        self.m2 self > @
+      [self] > m9
+        self > @
+      [self] > m31
+        self.m2 self > @
+      [self] > m11
+        self > @
+      [self] > m4
+        self > @
+      [self] > m5
+        self > @
+      [self] > m18
+        self > @
+      [self] > m14
+        self > @
+      [self] > m34
+        self.m35 self > @
+      [self] > m10
+        self > @
+      [self] > m1
+        self.m2 self > @
+      [self] > m22
+        self > @
+      [self] > m12
+        self > @
+      [self] > m25
+        self.m1 self > @
+      [self] > m30
+        self > @
+      [self] > m26
+        self.m1 self > @
+      [self] > m35
+        self.m0 self > @
+      [self] > m8
+        self.m1 self > @
+      [self] > m0
+        self.m37 self > @
+      [self] > m17
+        self.m26 self > @
+      [self] > m7
+        self.m2 self > @
+      [self] > m3
+        self > @
+      [self] > m27
+        self > @
+      [self] > m29
+        self > @
+      [self] > m24
+        self.m3 self > @
+      [self] > m36
+        self > @
+      [self] > m32
+        self.m30 self > @
+      [self] > m33
+        self.m0 self > @
+      [self] > m2
+        self > @
+      [self] > m23
+        self.m37 self > @
+      [self] > m15
+        self.m0 self > @
+      [self] > m37
+        self > @
+      [self] > m16
+        self.m25 self > @
+      [self] > m13
+        self.m37 self > @
+      [self] > m20
+        self > @
+
+
+
+  test.py: |
+    class O15051:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+    
+    
+    class O15052:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          self.m3()
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          self.m0()
+    
+    
+    class O15066:
+        pass
+        def m0():
+          pass
+          
+    
+        class O15067:
+          pass
+      
+        
+    
+    
+    class O15069:
+        pass
+        def m0():
+          pass
+          
+    
+    
+    class O15072:
+        pass
+        def m0():
+          pass
+          
+        def m1():
+          pass
+          
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          
+    
+        class O15073:
+          pass
+          def m0():
+            pass
+            
+          def m1():
+            pass
+            self.m0()
+          def m2():
+            pass
+            self.m0()
+          def m3():
+            pass
+            
+        
+    
+        class O15074:
+          pass
+      
+        
+    
+    
+    class O15053(O15052):
+        pass
+        def m15():
+          pass
+          self.m1()
+        def m20():
+          pass
+          
+        def m4():
+          pass
+          self.m25()
+        def m1():
+          pass
+          
+        def m25():
+          pass
+          
+        def m26():
+          pass
+          self.m0()
+        def m23():
+          pass
+          
+        def m12():
+          pass
+          self.m23()
+        def m3():
+          pass
+          
+        def m0():
+          pass
+          
+        def m10():
+          pass
+          self.m3()
+        def m9():
+          pass
+          
+        def m24():
+          pass
+          self.m22()
+        def m8():
+          pass
+          self.m18()
+        def m16():
+          pass
+          
+        def m19():
+          pass
+          
+        def m5():
+          pass
+          self.m9()
+        def m21():
+          pass
+          
+        def m14():
+          pass
+          
+        def m13():
+          pass
+          self.m3()
+        def m17():
+          pass
+          
+        def m2():
+          pass
+          self.m23()
+        def m11():
+          pass
+          
+        def m7():
+          pass
+          self.m26()
+        def m22():
+          pass
+          
+        def m6():
+          pass
+          self.m26()
+        def m18():
+          pass
+          
+    
+    
+    class O15071(O15053):
+        pass
+        def m17():
+          pass
+          
+        def m22():
+          pass
+          self.m11()
+        def m6():
+          pass
+          self.m5()
+        def m0():
+          pass
+          self.m13()
+        def m23():
+          pass
+          
+        def m18():
+          pass
+          
+        def m21():
+          pass
+          self.m8()
+        def m2():
+          pass
+          
+        def m7():
+          pass
+          
+        def m26():
+          pass
+          
+        def m14():
+          pass
+          
+        def m1():
+          pass
+          self.m24()
+        def m20():
+          pass
+          self.m13()
+        def m15():
+          pass
+          
+        def m16():
+          pass
+          self.m8()
+    
+    
+    class O15056(O15053):
+        pass
+        def m20():
+          pass
+          self.m19()
+        def m9():
+          pass
+          self.m2()
+        def m10():
+          pass
+          self.m26()
+        def m11():
+          pass
+          
+        def m24():
+          pass
+          self.m18()
+        def m15():
+          pass
+          
+        def m12():
+          pass
+          self.m19()
+        def m6():
+          pass
+          
+        def m26():
+          pass
+          
+        def m19():
+          pass
+          self.m13()
+        def m14():
+          pass
+          
+        def m2():
+          pass
+          self.m18()
+        def m1():
+          pass
+          
+        def m3():
+          pass
+          
+        def m4():
+          pass
+          self.m21()
+        def m17():
+          pass
+          
+        def m13():
+          pass
+          self.m7()
+        def m5():
+          pass
+          
+        def m7():
+          pass
+          self.m13()
+        def m18():
+          pass
+          self.m6()
+        def m16():
+          pass
+          
+        def m0():
+          pass
+          
+        def m8():
+          pass
+          
+    
+    
+    class O15062(O15053):
+        pass
+        def m11():
+          pass
+          
+        def m8():
+          pass
+          self.m18()
+        def m2():
+          pass
+          
+        def m3():
+          pass
+          self.m6()
+        def m20():
+          pass
+          
+        def m6():
+          pass
+          
+        def m5():
+          pass
+          self.m18()
+        def m1():
+          pass
+          self.m7()
+        def m7():
+          pass
+          
+        def m13():
+          pass
+          self.m17()
+        def m4():
+          pass
+          
+        def m0():
+          pass
+          
+        def m9():
+          pass
+          self.m22()
+    
+        class O15063:
+          pass
+          def m0():
+            pass
+            self.m1()
+          def m1():
+            pass
+            
+        
+    
+    
+    class O15065(O15052):
+        pass
+        def m6():
+          pass
+          self.m3()
+        def m21():
+          pass
+          
+        def m28():
+          pass
+          
+        def m19():
+          pass
+          self.m2()
+        def m9():
+          pass
+          
+        def m31():
+          pass
+          self.m2()
+        def m11():
+          pass
+          
+        def m4():
+          pass
+          
+        def m5():
+          pass
+          
+        def m18():
+          pass
+          
+        def m14():
+          pass
+          
+        def m34():
+          pass
+          self.m35()
+        def m10():
+          pass
+          
+        def m1():
+          pass
+          self.m2()
+        def m22():
+          pass
+          
+        def m12():
+          pass
+          
+        def m25():
+          pass
+          self.m1()
+        def m30():
+          pass
+          
+        def m26():
+          pass
+          self.m1()
+        def m35():
+          pass
+          self.m0()
+        def m8():
+          pass
+          self.m1()
+        def m0():
+          pass
+          self.m37()
+        def m17():
+          pass
+          self.m26()
+        def m7():
+          pass
+          self.m2()
+        def m3():
+          pass
+          
+        def m27():
+          pass
+          
+        def m29():
+          pass
+          
+        def m24():
+          pass
+          self.m3()
+        def m36():
+          pass
+          
+        def m32():
+          pass
+          self.m30()
+        def m33():
+          pass
+          self.m0()
+        def m2():
+          pass
+          
+        def m23():
+          pass
+          self.m37()
+        def m15():
+          pass
+          self.m0()
+        def m37():
+          pass
+          
+        def m16():
+          pass
+          self.m25()
+        def m13():
+          pass
+          self.m37()
+        def m20():
+          pass
+          
+
+
+

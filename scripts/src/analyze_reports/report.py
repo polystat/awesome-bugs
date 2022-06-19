@@ -134,9 +134,10 @@ class AnalyzerReport:
 
         # Calculation statistic per errors
         for error in errs:
-            e_result_paths = [x for x in result_paths if error in x]
-            e_source_paths = [x for x in source_paths if error in x]
-            e_exceptions = [x for x in exceptions if error in x]
+            e = os.path.sep + error
+            e_result_paths = [x for x in result_paths if e in x]
+            e_source_paths = [x for x in source_paths if e in x]
+            e_exceptions = [x for x in exceptions if e in x]
             stat = self.calculate_statistic(
                 e_source_paths, e_result_paths, e_exceptions
             )
