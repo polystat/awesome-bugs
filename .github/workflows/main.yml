@@ -113,3 +113,13 @@ jobs:
             results/*.txt
             results/report/report.tex
             results/report/*.pdf
+
+      - name: Save the report to gh-pages branch
+        run: | 
+          mkdir report
+          cp results/report/report.pdf report
+      - uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: report
+          clean: false

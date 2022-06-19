@@ -21,7 +21,7 @@ class ClangTidyParser(Parser):
         check = indent >> check_value << newline
         checks = string("Enabled checks:") >> newline >> check.at_least(1)
 
-        filename = regex(r"[a-zA-Z0-9_\+\-\.]+")
+        filename = regex(r"[a-zA-Z0-9_\+\-\.\[\]]+")
         rel_path = filename.sep_by(sep=string("/"), min=1)
         abs_path = (string("/") >> rel_path).map(
             lambda parsed: "/".join(parsed[parsed.index("temp"):])
