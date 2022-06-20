@@ -10,12 +10,54 @@ features:
   - polymorphism
 bad:
   source.cpp: |
-    ???
+    #include <cassert>
+    
+    class Parent {
+    public:
+        virtual int f(int x) {
+            assert(x < 9);
+            return x + 1;
+        }
+    
+        virtual ~Parent() = default;
+    };
+    
+    class Child : public Parent {
+    public:
+        int f(int x) override {
+            assert(x > 9);
+            return x - 1;
+        }
+    };
+    
+    auto main() -> int {
+        Child* p = new Child();
+        p->f(10);
+        delete p;
+    }
   Test.java: |
-    ???
+    class Parent {
+        public int f(int x) {
+            assert x < 9;
+            return x + 1;
+        }
+    }
+    
+    class Child extends Parent {
+        @Override
+        public int f(int x) {
+            assert x > 9;
+            return x - 1;
+        }
+    }
+    
+    public class Test {
+        public static void main(String[] args) {
+            Parent childInstance = new Child();
+            childInstance.f(10);
+        }
+    }
   test.eo: |
-    ???
-  test.py: |
     [] > base
       [self x] > f
         seq > @
@@ -27,11 +69,71 @@ bad:
         seq > @
           assert (x.greater 9)
           x.sub 1
+  test.py: |
+    class Parent:
+        def f(self, x):
+            assert x < 9
+            return x + 1
+
+
+    class Child(Parent):
+        def f(self, x):
+            assert x > 9
+            return x - 1
+
+
+    if __name__ == "__main__":
+        p = Child()
+        p.f(10)
 good:
   source.cpp: |
-    ???
+    #include <cassert>
+    
+    class Parent {
+    public:
+        virtual int f(int x) {
+            assert(x < 9);
+            return x + 1;
+        }
+    
+        virtual ~Parent() = default;
+    };
+    
+    class Child : public Parent {
+    public:
+        int f(int x) override {
+            assert(x < 20);
+            return x - 1;
+        }
+    };
+    
+    auto main() -> int {
+        Child* p = new Child();
+        p->f(10);
+        delete p;
+    }
   Test.java: |
-    ???
+    class Parent {
+        public int f(int x) {
+            assert x < 9;
+            return x + 1;
+        }
+    }
+
+    class Child extends Parent {
+        @Override
+        public int f(int x) {
+            assert x < 20;
+            return x - 1;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Parent childInstance = new Child();
+            childInstance.f(10);
+        }
+    }
   test.eo: |
     [] > base
       [self x] > f
@@ -45,4 +147,19 @@ good:
           assert (x.less 20)
           x.sub 1
   test.py: |
-    ???
+    class Parent:
+    def f(self, x):
+        assert x < 9
+        return x + 1
+
+    
+    class Child(Parent):
+        def f(self, x):
+            assert x < 20
+            return x - 1
+    
+    
+    if __name__ == "__main__":
+        p = Child()
+        p.f(10)
+    

@@ -3,3 +3,4 @@ mutual-recursion
 [A]mutual-recursion
 unjustified-assumption
 direct-state-access
+liskov-principle

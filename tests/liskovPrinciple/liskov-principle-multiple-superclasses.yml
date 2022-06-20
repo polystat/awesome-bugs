@@ -8,12 +8,76 @@ features:
   - polymorphism
 bad:
   source.cpp: |
-    ???
+    #include <cassert>
+    
+    class Grandparent {
+    public:
+        virtual int a(int x) {
+            return 10;
+        }
+        int b(int x) {
+            return a(x);
+        }
+    
+        virtual ~Grandparent() = default;
+    };
+    
+    class Parent : public Grandparent {
+    public:
+        int f(int x) {
+            return x;
+        }
+        int g(int x) {
+            return f(x);
+        }
+    };
+    
+    class Child : public Parent {
+    public:
+        int a(int x) {
+            assert(x < 100);
+            return x;
+        }
+    };
+    
+    auto main() -> int {
+        Child* p = new Child();
+        p->b(10);
+        delete p;
+    }
   Test.java: |
-    ???
+    class Grandparent {
+        public int a(int x) {
+            return 10;
+        }
+        public int b(int x) {
+            return a(x);
+        }
+    }
+    class Parent extends Grandparent{
+        public int f(int x) {
+            return x;
+        }
+        public int g(int x) {
+            return this.f(x);
+        }
+    }
+
+    class Child extends Parent {
+        @Override
+        public int a(int x) {
+            assert x < 100;
+            return x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Parent childInstance = new Child();
+            childInstance.b(10);
+        }
+    }
   test.eo: |
-    ???
-  test.py: |
     [] > test
       [] > grandparent
         [self x] > a
@@ -34,11 +98,98 @@ bad:
           seq > @
             assert (x.less 100)
             x
+  test.py: |
+    class Grandparent:
+        def a(self, x):
+            return 10
+
+        def b(self, x):
+            return self.a(x)
+
+
+    class Parent(Grandparent):
+        def f(self, x):
+            return x
+
+        def g(self, x):
+            return self.f(x)
+
+
+    class Child(Parent):
+        def a(self, x):
+            assert x < 100
+            return x
+
+
+    if __name__ == "__main__":
+        p = Child()
+        p.b(10)
 good:
   source.cpp: |
-    ???
+    #include <cassert>
+
+    class Grandparent {
+    public:
+        virtual int a(int x) {
+            return 10;
+        }
+        virtual int b(int x) {
+            return a(x);
+        }
+
+        virtual ~Grandparent() = default;
+    };
+
+    class Parent : public Grandparent {
+    public:
+        int b(int x) override {
+            return x;
+        }
+    };
+
+    class Child : public Parent {
+    public:
+        int a(int x) override {
+            assert(x < 100);
+            return x;
+        }
+    };
+
+    auto main() -> int {
+        Child* p = new Child();
+        p->b(10);
+        delete p;
+    }
   Test.java: |
-    ???
+    class Grandparent {
+        public int a(int x) {
+            return 10;
+        }
+        public int b(int x) {
+            return this.a(x);
+        }
+    }
+    class Parent extends Grandparent{
+        @Override
+        public int b(int x) {
+            return x;
+        }
+    }
+
+    class Child extends Parent {
+        @Override
+        public int a(int x) {
+            assert x < 100;
+            return x;
+        }
+    }
+
+    public class Test {
+        public static void main(String[] args) {
+            Parent childInstance = new Child();
+            childInstance.b(10);
+        }
+    }
   test.eo: |
     [] > test
       [] > grandparent
@@ -59,4 +210,25 @@ good:
             assert (x.less 100)
             x
   test.py: |
-    ???
+    class Grandparent:
+        def a(self, x):
+            return 10
+    
+        def b(self, x):
+            return self.a(x)
+    
+    
+    class Parent(Grandparent):
+        def b(self, x):
+            return x
+    
+    
+    class Child(Parent):
+        def a(self, x):
+            assert x < 100
+            return x
+    
+    
+    if __name__ == "__main__":
+        p = Child()
+        p.b(10)

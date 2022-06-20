@@ -31,7 +31,7 @@ bad:
             assert(y < 0);
             return y;
         }
-        int h (int z) override {
+        int h(int z) override {
             return 10/z;
         }
     };
@@ -40,6 +40,7 @@ bad:
         Parent* p = new Child();
         p->f(10);
         p->h(10);
+        delete p;
     }
   Test.java: |
     class Parent {
@@ -147,6 +148,7 @@ good:
         Child* p = new Child();
         p->f(10);
         p->h(10);
+        delete p;
     }
   Test.java: |
     class Parent {

@@ -120,7 +120,7 @@ bad:
             return x
 
         def g(self, y):
-            self.f(y)
+            return self.f(y)
 
         def h(self, z):
             return z
@@ -248,7 +248,7 @@ good:
             return x
 
         def g(self, y):
-            self.f(y)
+            return self.f(y)
 
         def h(self, z):
             return z

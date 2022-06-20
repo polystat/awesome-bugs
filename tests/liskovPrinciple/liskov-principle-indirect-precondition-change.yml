@@ -32,6 +32,7 @@ bad:
     auto main() -> int {
         Parent* p = new Child();
         p->f(10);
+        delete p;
     }
   Test.java: |
     class Parent {
@@ -111,6 +112,7 @@ good:
     auto main() -> int {
         Parent* p = new Child();
         p->f(10);
+        delete p;
     }
   Test.java: |
     class Parent {
