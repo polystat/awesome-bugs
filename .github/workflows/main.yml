@@ -91,6 +91,12 @@ jobs:
           sudo apt-get install -y cppcheck
           python3 -m cppcheck temp/sources/cpp results
 
+      - name: Spotbugs
+        run: |
+          curl -L -o spotbugs-4.7.0.tgz "https://github.com/spotbugs/spotbugs/releases/download/4.7.0/spotbugs-4.7.0.tgz"
+          gunzip -c spotbugs-4.7.0.tgz | tar xvf -
+          python3 -m spotbugs spotbugs-4.7.0/lib/spotbugs.jar temp/sources/java results
+
       - name: Analyze reports
         run: python3 -m analyze_reports true
 
