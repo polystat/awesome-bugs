@@ -61,8 +61,8 @@ jobs:
 
       - name: Run Polystat (EO) and save reports to "results" folder
         run: |
-          curl -L -o polystat.jar "https://search.maven.org/remotecontent?filepath=org/polystat/polystat/0.6.0/polystat-0.6.0-jar-with-dependencies.jar"
-          python3 -m polystat polystat.jar temp/sources/eo results "eo"
+          curl -L -o polystat.jar "https://github.com/polystat/polystat-cli/releases/download/v0.1.11/polystat.jar"
+          java -jar  polystat.jar eo --in temp/sources/eo --to file=results/polystat-eo-out.txt --sarif
           cat results/polystat-eo-out.txt
 
       - name: set up JDK 17
@@ -74,7 +74,7 @@ jobs:
       - name: Run Polystat (Java via J2EO) and save reports to "results" folder
         run: |
           curl -L -o j2eo.jar "https://search.maven.org/remotecontent?filepath=org/polystat/j2eo/0.4.0/j2eo-0.4.0.jar"
-          java -jar j2eo.jar -o temp/sources/j2eo temp/sources/java
+          java -jar j2eo.jar temp/sources/java -o temp/sources/j2eo
           python3 -m polystat polystat.jar temp/sources/j2eo results "j2eo"
           cat results/polystat-j2eo-out.txt
 
@@ -86,7 +86,7 @@ jobs:
           cd ../
           python3 -m SVF temp/sources/cpp temp/bc results SVF/Release-build/bin
 
-      - name: cppcheck
+      - name: Cppcheck
         run: |
           sudo apt-get install -y cppcheck
           python3 -m cppcheck temp/sources/cpp results

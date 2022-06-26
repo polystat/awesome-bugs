@@ -1,7 +1,7 @@
 import os
 from functools import reduce
+import urllib.parse
 
-from parsy import string, regex, seq
 from scripts.src.analyze_reports import (
     AnalyzerReport,
     AnalyzerReportRow,
@@ -12,10 +12,11 @@ import json
 
 
 def get_analyze_report_rows(row) -> list[AnalyzerReportRow]:
-    path, results_json = row
-    results = json.loads(results_json)["runs"][0]
+    path = urllib.parse.unquote(row["artifacts"][0]["location"]["uri"])
+    path = path.split("file://")[1].replace(os.path.abspath(os.curdir)+"/", "")
 
-    for result in results["results"]:
+    for result in row["results"]:
+        # Need to add ruleId
         if result["kind"] != "pass":
             return [
                 AnalyzerReportRow(
@@ -26,12 +27,12 @@ def get_analyze_report_rows(row) -> list[AnalyzerReportRow]:
             ]
 
     exceptions = []
-    for invocation in results["invocations"]:
+    for invocation in row["invocations"]:
         if not invocation["executionSuccessful"]:
             notification = invocation["toolExecutionNotifications"][0]
             message = notification["message"]["text"]
             rule = notification["associatedRule"]["id"]
-            defect = rule.split("/")[1].lower().replace(" ", "-")
+            defect = rule.lower().replace(" ", "-")
             if defect in path:
                 exceptions.append(
                     AnalyzerReportExceptionRow(
@@ -56,34 +57,23 @@ class PolystatParser(Parser):
         self.ANALYZER_NAME = f"Polystat ({language})"
 
     def parse(self) -> AnalyzerReport:
-        newline = string("\n")
-        error_message = regex(".*")
-        left_brace = string("{")
-
-        filename = regex(r"[a-zA-Z0-9_\+\-\.]+")
-        rel_path = filename.sep_by(sep=string("/"), min=1)
-        abs_path = rel_path.map(
-            lambda parsed: "/".join(parsed[parsed.index("temp"):])
-        )
-
-        json_row = left_brace + error_message << newline.at_least(1)
-        polystat_error = seq(abs_path << newline, json_row.optional()).many()
 
         with open(self.REPORT_PATH) as report:
-            file_content = report.read().strip() + "\n"
-            parsed_output = polystat_error.parse(file_content)
+            file_content = report.read()
+            results = json.loads(file_content)["runs"]
 
-            # join error info and path
-            analyzer_results = reduce(
-                lambda x, y: x + get_analyze_report_rows(y), parsed_output, []
-            )
+        analyzer_results = reduce(
+            lambda x, y: x + get_analyze_report_rows(y),
+            results,
+            [],
+        )
 
-            return AnalyzerReport(
-                analyzer_results,
-                self.ANALYZER_NAME,
-                self.SOURCE_PATH,
-                self.REPORT_PATH,
-            )
+        return AnalyzerReport(
+            analyzer_results,
+            self.ANALYZER_NAME,
+            self.SOURCE_PATH,
+            self.REPORT_PATH,
+        )
 
 
 if __name__ == "__main__":

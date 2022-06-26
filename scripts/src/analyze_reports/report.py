@@ -111,7 +111,7 @@ class AnalyzerReport:
         source_paths = []
         for root, dirs, files in os.walk(self.source_path):
             if len(dirs) == 0:
-                source_paths.append(root.replace("\\", "/"))
+                source_paths.append(root)
 
         # Split exceptions and results (analyzers messages)
         exceptions, result_paths = [], []
