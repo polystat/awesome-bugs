@@ -63,7 +63,7 @@ class ClangTidyParser(Parser):
                 regex(r"\s+").optional()
                 << code_snippet
                 << newline
-                << string(" " * 2)
+                << string(" " * 2).optional()
                 << highlighting
                 << newline
             ).optional()

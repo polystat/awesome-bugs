@@ -44,6 +44,9 @@ class ReportGenerator:
         self.doc.packages.append(Package(NoEscape("href-ul")))
         self.doc.packages.append(Package(NoEscape("longtable")))
         self.doc.packages.append(Package(NoEscape("graphicx")))
+        self.doc.packages.append(
+            Package(NoEscape("cleveref"), options=["capitalize"])
+        )
         self.doc.preamble.append(
             NoEscape(r"\newcommand{\rotate}{\rotatebox[origin=c]{90}}")
         )
@@ -101,9 +104,7 @@ class ReportGenerator:
         d.packages.clear()
         d.packages.append(Package(NoEscape("paralist")))
         d.packages.append(Package(NoEscape("tabularx")))
-        d.packages.append(
-            Package(NoEscape("cleveref"), options=["capitalize"])
-        )
+
         d.packages.append(Package(NoEscape("ffcode")))
         d.packages.append(
             Package(
