@@ -62,7 +62,8 @@ jobs:
       - name: Run Polystat (EO) and save reports to "results" folder
         run: |
           curl -L -o polystat.jar "https://github.com/polystat/polystat-cli/releases/download/v0.1.11/polystat.jar"
-          java -jar  polystat.jar eo --in temp/sources/eo --to file=results/polystat-eo-out.txt --sarif
+          touch results/polystat-eo-out.txt
+          java -jar polystat.jar eo --in temp/sources/eo --to file=results/polystat-eo-out.txt --sarif
           cat results/polystat-eo-out.txt
 
       - name: set up JDK 17
@@ -75,7 +76,8 @@ jobs:
         run: |
           curl -L -o j2eo.jar "https://search.maven.org/remotecontent?filepath=org/polystat/j2eo/0.4.0/j2eo-0.4.0.jar"
           java -jar j2eo.jar temp/sources/java -o temp/sources/j2eo
-          python3 -m polystat polystat.jar temp/sources/j2eo results "j2eo"
+          touch results/polystat-j2eo-out.txt
+          java -jar polystat.jar eo --in temp/sources/j2eo --to file=results/polystat-j2eo-out.txt --sarif
           cat results/polystat-j2eo-out.txt
 
       - name: SVF analysis
