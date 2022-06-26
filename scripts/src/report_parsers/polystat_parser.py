@@ -13,7 +13,8 @@ import json
 
 def get_analyze_report_rows(row) -> list[AnalyzerReportRow]:
     path = urllib.parse.unquote(row["artifacts"][0]["location"]["uri"])
-    path = path.split("file://")[1].replace(os.path.abspath(os.curdir)+"/", "")
+    base_path = os.path.abspath(os.curdir) + "/"
+    path = path.split("file://")[1].replace(base_path, "")
 
     for result in row["results"]:
         # Need to add ruleId
@@ -63,9 +64,7 @@ class PolystatParser(Parser):
             results = json.loads(file_content)["runs"]
 
         analyzer_results = reduce(
-            lambda x, y: x + get_analyze_report_rows(y),
-            results,
-            [],
+            lambda x, y: x + get_analyze_report_rows(y), results, []
         )
 
         return AnalyzerReport(
