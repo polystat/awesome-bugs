@@ -34,7 +34,7 @@ class SpotbugsParser(Parser):
         error_message = regex(".*")
         left_brace = string("{")
 
-        filename = regex(r"[a-zA-Z0-9_\+\-\.]+")
+        filename = regex(r"[a-zA-Z0-9_\+\-\.\[\]]+")
         rel_path = filename.sep_by(sep=string("/"), min=1)
         abs_path = rel_path.map(
             lambda parsed: "/".join(parsed[parsed.index("temp"):])
