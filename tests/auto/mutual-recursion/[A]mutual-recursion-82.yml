@@ -491,7 +491,7 @@ bad:
 
 
 
-  Test.java: |
+  Main.java: |
     
     public class Main{
     static class O15745 {
@@ -2831,7 +2831,7 @@ good:
 
 
 
-  Test.java: |
+  Main.java: |
     
     public class Main{
     static class O15745 {

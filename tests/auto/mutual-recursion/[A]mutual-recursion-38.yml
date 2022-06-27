@@ -948,7 +948,7 @@ bad:
 
 
 
-  Test.java: |
+  Main.java: |
     
     public class Main{
     static class O8465 {
@@ -6340,7 +6340,7 @@ good:
 
 
 
-  Test.java: |
+  Main.java: |
     
     public class Main{
     static class O8465 {

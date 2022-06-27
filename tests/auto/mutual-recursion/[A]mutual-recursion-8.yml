@@ -174,7 +174,7 @@ bad:
 
 
 
-  Test.java: |
+  Main.java: |
     
     public class Main{
     static class O1837 {
@@ -965,7 +965,7 @@ good:
 
 
 
-  Test.java: |
+  Main.java: |
     
     public class Main{
     static class O1837 {

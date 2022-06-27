@@ -1092,7 +1092,7 @@ bad:
 
 
 
-  Test.java: |
+  Main.java: |
     
     public class Main{
     static class O10104 {
@@ -7560,7 +7560,7 @@ good:
 
 
 
-  Test.java: |
+  Main.java: |
     
     public class Main{
     static class O10104 {
