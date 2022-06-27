@@ -104,3 +104,14 @@ The following static analyzers are participating in the comparison:
    * [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/)
    * [CppCheck](https://cppcheck.sourceforge.io/)
    * [SVF](https://github.com/SVF-tools/SVF)
+
+### How to run
+Before starting, make sure the following is installed:
+- **Python 3.10+**
+- **Java 16+**
+- **TexLive 2022**
+
+To run benchmarking tool on Linux you need to execute a script:
+```
+sudo ./run.sh
+```

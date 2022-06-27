@@ -51,7 +51,7 @@ jobs:
         run: |
           python3 -m source_files_extractor tests temp/sources
 
-      - name: Run clang-tidy and save reports to "results" folder
+      - name: Run Clang-Tidy and save reports to "results" folder
         run: |
           sudo apt-get update -y
           sudo apt-get install -y clang-tidy cmake
