@@ -202,11 +202,10 @@ class ReportGenerator:
         return table
 
     def generate_statistic_table(self):
-        table = Table(position="ht")
-        tabular = Tabularx("X|l|" + "r|" * 8 + "r", row_height=1.25)
-        tabular.append(NoEscape("\\toprule"))
+        table = LongTable("l|l|" + "r|" * 8 + "r", row_height=1.2)
+        table.append(NoEscape("\\toprule"))
         # Head
-        tabular.add_row(
+        table.add_row(
             "Analyzer",
             "Defect title",
             "TP",
@@ -237,22 +236,21 @@ class ReportGenerator:
             ]
 
         for analyzer, report in self.results.items():
-            tabular.append(NoEscape("\\midrule"))
+            table.append(NoEscape("\\midrule"))
             for error, stat in report.error_statistics.items():
-                tabular.add_row(get_row(analyzer, error, stat))
+                table.add_row(get_row(analyzer, error, stat))
             # total results for analyzer
             stat = report.statistic
-            tabular.add_row(get_row(analyzer, "All", stat))
-        tabular.append(NoEscape("\\bottomrule"))
-        table.append(tabular)
-        table.add_caption(
+            table.add_row(get_row(analyzer, "All", stat))
+        table.append(NoEscape("\\bottomrule"))
+        table.append(
             NoEscape(
-                "Each analyzer has received the same set of tests and then "
-                + r"its key metrics, which are explained in \cref{sec:metrics}"
-                + ", have been collected: the left column includes the name "
-                + "of the analyzer tested, the next one is the type of defect"
-                + r" as explained in \cref{sec:types}, then one column per "
-                + "each metric."
+                r"\caption{Each analyzer has received the same set of tests "
+                + "and then its key metrics, which are explained in "
+                + r"\cref{sec:metrics}, have been collected: the left column "
+                + "includes the name of the analyzer tested, the next one is "
+                + r"the type of defect as explained in \cref{sec:types}, "
+                + "then one column per each metric}"
             )
         )
         table.append(NoEscape(r"\label{tab:statistics}"))
