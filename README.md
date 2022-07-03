@@ -115,3 +115,5 @@ To run benchmarking tool on Linux you need to execute a script:
 ```
 sudo ./run.sh
 ```
+The current report obtained using this script can be viewed 
+[here](https://github.com/polystat/awesome-bugs/blob/gh-pages/report.pdf).
