@@ -17,7 +17,7 @@ def get_test_files_paths(code_path, glob_pattern=''):
     :return: absolute paths to found files
     """
     test_case_paths = []
-    pattern = glob_pattern if not glob_pattern == '' else '**/*.yml'
+    pattern = glob_pattern if not glob_pattern == '' else '**/*'
     for file in glob.glob(pattern, root_dir=code_path, recursive=True):
         if filter_defect(file) and file.endswith(".yml"):
             test_case_paths.append(os.path.join(code_path, file))
