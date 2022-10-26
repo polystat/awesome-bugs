@@ -1,3 +1,8 @@
+# This script is a modfied version of run.sh 
+# without apt-get installations. This may be
+# useful in some environments which uses other
+# ways to install packages.
+
 # Install dependencies
 python3.10 -m pip install --upgrade pip wheel
 python3.10 -m pip install -r scripts/requirements.txt
