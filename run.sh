@@ -7,7 +7,7 @@ python3.10 -m pip install -e ./scripts
 
 # Extracting source files from correct YAML files
 echo "Collecting sources"
-[[ -z $1 ]] && glob="**/*" || glob=$1
+[[ -z $1 ]] && glob="" || glob=$1
 echo "Using GLOB filter for sources: $glob"
 python3.10 -m source_files_extractor tests temp/sources "$glob"
 echo "Sources are collected"
