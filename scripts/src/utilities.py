@@ -1,6 +1,7 @@
 import os
 import glob
 
+
 def filter_defect(f):
     temp_path = os.path.join("tests", "errors.txt")
     with open(temp_path, "r") as r:
