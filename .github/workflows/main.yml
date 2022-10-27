@@ -49,7 +49,7 @@ jobs:
           python3 -m pip install -e ./scripts
       - name: Extracting source files from correct YAML files
         run: |
-          python3 -m source_files_extractor tests temp/sources
+          python3 -m source_files_extractor tests temp/sources ""
 
       - name: Run Clang-Tidy and save reports to "results" folder
         run: |

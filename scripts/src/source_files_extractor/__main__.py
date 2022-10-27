@@ -88,15 +88,16 @@ def write_sources(source_files, base_file_path, out_path):
 
 def run():
     # Read arguments
-    if len(sys.argv) == 3:
+    if len(sys.argv) == 4:
         tests_folder_path = sys.argv[1]
         result_folder_path = sys.argv[2]
+        glob_filter = sys.argv[3]
     else:
         print("Wrong number of arguments")
         return
 
     # Get file paths
-    test_files_paths = get_test_files_paths(tests_folder_path)
+    test_files_paths = get_test_files_paths(tests_folder_path, glob_filter)
     print(f"Detected files: {str(test_files_paths)}")
 
     # Free the result folder

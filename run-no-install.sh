@@ -1,6 +1,9 @@
+# This script is a modfied version of run.sh 
+# without apt-get installations. This may be
+# useful in some environments which uses other
+# ways to install packages.
+
 # Install dependencies
-apt-get update -y
-apt-get install -y clang-tidy cmake
 python3.10 -m pip install --upgrade pip wheel
 python3.10 -m pip install -r scripts/requirements.txt
 python3.10 -m pip install -e ./scripts
@@ -42,7 +45,6 @@ python3.10 -m SVF temp/sources/cpp temp/bc results SVF/Release-build/bin
 echo "SVF analysis has finished"
 
 # Cppcheck
-sudo apt-get install -y cppcheck
 echo "Cppcheck analysis has started"
 python3.10 -m cppcheck temp/sources/cpp results
 echo "Cppcheck analysis has finished"
