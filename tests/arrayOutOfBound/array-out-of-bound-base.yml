@@ -100,7 +100,7 @@ good:
 
     int main() {
         int arr[] = {1, 2, 5, 6};
-        int found = find_index(arr, 4, 3);)
+        int found = find_index(arr, 4, 3);
         if (found < 4) {
             arr[found] = 10;
         }
