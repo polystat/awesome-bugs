@@ -1,0 +1,42 @@
+docker:
+  image: yegor256/rultor-image:1.13.0
+architect:
+  - yegor256
+assets:
+  settings.xml: yegor256/polystat-secrets#settings.xml
+  pubring.gpg: yegor256/polystat-secrets#pubring.gpg
+  secring.gpg: yegor256/polystat-secrets#secring.gpg
+install: |
+  python3 -m pip install --upgrade pip wheel
+  python3 -m pip install -r scripts/requirements.txt
+  python3 -m pip install -e ./scripts
+  sudo apt-get update -y
+  sudo apt-get install -y clang-tidy cmake
+  curl -L -o polystat.jar "https://github.com/polystat/polystat-cli/releases/download/v0.1.11/polystat.jar"
+  curl -L -o j2eo.jar "https://search.maven.org/remotecontent?filepath=org/polystat/j2eo/0.5.3/j2eo-0.5.3.jar"
+  git clone https://github.com/SVF-tools/SVF.git
+  cd SVF
+  source ./build.sh
+  cd ../
+  sudo apt-get install -y cppcheck
+  curl -L -o spotbugs-4.7.0.tgz "https://github.com/spotbugs/spotbugs/releases/download/4.7.0/spotbugs-4.7.0.tgz"
+  gunzip -c spotbugs-4.7.0.tgz | tar xvf -
+  javac -version
+  pdd --file=/dev/null
+merge:
+  script: |
+    python3 -m source_files_extractor tests temp/sources ""
+    python3 -m build_sources temp/sources build
+    python3 -m clang_tidy -p ./build > results/clang-out.txt
+    cat results/clang-out.txt
+    touch results/polystat-eo-out.txt
+    java -jar polystat.jar eo --in temp/sources/eo --to file=results/polystat-eo-out.txt --sarif
+    cat results/polystat-eo-out.txt
+    java -jar j2eo.jar temp/sources/java -o temp/sources/j2eo
+    touch results/polystat-j2eo-out.txt
+    java -jar polystat.jar eo --in temp/sources/j2eo --to file=results/polystat-j2eo-out.txt --sarif
+    cat results/polystat-j2eo-out.txt
+    python3 -m SVF temp/sources/cpp temp/bc results SVF/Release-build/bin
+    python3 -m cppcheck temp/sources/cpp results
+    python3 -m spotbugs spotbugs-4.7.0/lib/spotbugs.jar temp/sources/java results
+    python3 -m analyze_reports true
