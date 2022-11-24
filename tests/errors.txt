@@ -4,3 +4,4 @@ mutual-recursion
 unjustified-assumption
 direct-state-access
 liskov-principle
+array-out-of-bound

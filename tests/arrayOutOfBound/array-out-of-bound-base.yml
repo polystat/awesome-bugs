@@ -1,0 +1,179 @@
+title: Array buffer overun
+description: >
+  In some cases the index of array goes beyond upper bound
+features:
+  - array
+bad:
+  source.cpp: |
+    int find_index(const int* arr, const int count, const int val) {
+        int index;
+        for (index = 0; index < count; ++index) {
+            if (arr[index] == val) {
+                break;
+            }
+        }
+        return index;
+    }
+
+    int main() {
+        int arr[] = {1, 2, 5, 6};
+        arr[find_index(arr, 4, 3)] = 10;
+        return 0;
+    }
+  Test.java: |
+    public class Test {
+        public static int findIndex(final int[]  arr, final int count, final int val) {
+            int index;
+            for (index = 0; index < count; ++index) {
+                if (arr[index] == val) {
+                    break;
+                }
+            }
+            return index;
+        }
+
+        public static void main(String[] args) {
+            int[] arr = new int[] {1, 2, 5, 6};
+            arr[findIndex(arr, 4, 3)] = 10;
+        }
+    }
+  test.eo: |
+    +alias org.eolang.collections.list    
+
+    [] > test
+      * 1 2 5 6 > input
+      [arr cnt val] > find-index
+        memory 0 > idx
+        memory -1 > res 
+        while. > eval-index
+          and.
+           idx.lt cnt
+           res.eq -1
+          [i]
+            seq > @
+              if.
+                and.
+                  eq.
+                    -1
+                    res
+                  eq.
+                    (arr.at i)
+                    val
+                res.write idx
+              idx.wirte
+                idx.plus 1
+              TRUE  
+        seq > @
+          eval-index
+          idx
+      .at > main
+        input
+        find-index
+         input
+         4
+         3
+  test.py: |
+    def find_index(source, count, val):
+        index = 0
+        for i in range(count):
+            if source[i] == val:
+                break
+            index = index + 1
+    
+        return index
+    
+    
+    if __name__ == "__main__":
+        arr = [1, 2, 5, 6]
+        arr[find_index(arr, 4, 3)] = 10
+good:
+  source.cpp: |
+    int find_index(const int* arr, const int count, const int val) {
+        int index;
+        for (index = 0; index < count; ++index) {
+            if (arr[index] == val) {
+                break;
+            }
+        }
+        return index;
+    }
+
+    int main() {
+        int arr[] = {1, 2, 5, 6};
+        int found = find_index(arr, 4, 3);
+        if (found < 4) {
+            arr[found] = 10;
+        }
+        return 0;
+    }
+  Test.java: |
+    public class Test {
+        public static int findIndex(final int[]  arr, final int count, final int val) {
+            int index;
+            for (index = 0; index < count; ++index) {
+                if (arr[index] == val) {
+                    break;
+                }
+            }
+            return index;
+        }
+
+        public static void main(String[] args) {
+            int[] arr = new int[] {1, 2, 5, 6};
+            int found = findIndex(arr, 4, 3);
+            if (found < 4) {
+                arr[found] = 10;
+            }
+        }
+    }
+  test.eo: |
+    +alias org.eolang.collections.list    
+
+    [] > test
+      * 1 2 5 6 > input
+      [arr cnt val] > find-index
+        memory 0 > idx
+        memory -1 > res 
+        while. > eval-index
+          and.
+           idx.lt cnt
+           res.eq -1
+          [i]
+            seq > @
+              if.
+                and.
+                  eq.
+                    -1
+                    res
+                  eq.
+                    (arr.at i)
+                    val
+                res.write idx
+              idx.wirte
+                idx.plus 1
+              TRUE  
+        seq > @
+          eval-index
+          res
+      .at > main
+        input
+        find-index
+         input
+         4
+         3
+  test.py: |
+    def find_index(source, count, val):
+        index = 0
+        for i in range(count):
+            if source[i] == val:
+                break
+            index = index + 1
+    
+        return index
+    
+    
+    if __name__ == "__main__":
+        arr = [1, 2, 5, 6]
+        found = find_index(arr, 4, 3)
+        if found < 4:
+            arr[found] = 10
