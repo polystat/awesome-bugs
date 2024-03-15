@@ -103,7 +103,7 @@ jobs:
         run: python3 -m analyze_reports true
 
       # Generate pdf
-      - uses: yegor256/latexmk-action@0.4.0
+      - uses: yegor256/latexmk-action@0.11.1
         with:
           cmd: latexmk
           path: results/report
